@@ -149,7 +149,7 @@ if %_erl%==4 cls && call :message "Настраиваю.." && goto MmagentSetup
 if %_erl%==5 cls && call :message && goto PowerSchemesMenu
 if %_erl%==6 cls && powercfg -h off && call :message "Режим гибернации отключен"
 if %_erl%==7 exit 
-if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner v1.4!" && goto CheerUpAuthorMenu
+if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner v1.5!" && goto CheerUpAuthorMenu
 goto MainMenu
 
 :offReservedStorage
@@ -567,11 +567,13 @@ title = Кручу верчу, на настройку sysmain дрочу
 
 call :message "На чем у вас установленна система?"
 echo 1) SSD
-echo 1) HDD
-choice /C:12 /N
+echo 2) HDD
+echo 3) Выйти
+choice /C:123 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message "Настраиваю.." && goto MmagentSetupSSD
 if %_erl%==2 cls && call :message "Настраиваю.." && goto MmagentSetupHDD
+if %_erl%==3 cls && call :message && goto MainMenu
 
 :MmagentSetupHDD
 call :regEditImport "prefetcherhdd"
@@ -644,19 +646,19 @@ call :message "Удалил!"
 goto MainMenu
 
 :applyPowerSchemes
-MD %Temp%\schemes > nul
+MD %Temp%\schemes
 
-robocopy .\powerschemes %Temp%\schemes diohas_D.pow >nul
-robocopy .\powerschemes %Temp%\schemes diohas_MS.pow >nul
-robocopy .\powerschemes %Temp%\schemes diohas_U.pow >nul
-robocopy .\powerschemes %Temp%\schemes diohas_Ultra.pow >nul
-robocopy .\powerschemes %Temp%\schemes Shingeki_no_Windows.pow >nul
+robocopy .\powerschemes %Temp%\schemes diohas_D.pow >nul 2>&1
+robocopy .\powerschemes %Temp%\schemes diohas_MS.pow >nul 2>&1
+robocopy .\powerschemes %Temp%\schemes diohas_U.pow >nul 2>&1
+robocopy .\powerschemes %Temp%\schemes diohas_Ultra.pow >nul 2>&1
+robocopy .\powerschemes %Temp%\schemes Shingeki_no_Windows.pow >nul 2>&1
 
-powercfg /import %Temp%\schemes\diohas_D.pow >nul
-powercfg /import %Temp%\schemes\diohas_MS.pow >nul
-powercfg /import %Temp%\schemes\diohas_U.pow >nul
-powercfg /import %Temp%\schemes\diohas_Ultra.pow >nul
-powercfg /import %Temp%\schemes\Shingeki_no_Windows.pow >nul
+powercfg /import %Temp%\schemes\diohas_D.pow >nul 2>&1
+powercfg /import %Temp%\schemes\diohas_MS.pow >nul 2>&1
+powercfg /import %Temp%\schemes\diohas_U.pow >nul 2>&1
+powercfg /import %Temp%\schemes\diohas_Ultra.pow >nul 2>&1
+powercfg /import %Temp%\schemes\Shingeki_no_Windows.pow >nul 2>&1
 
 start powercfg.cpl
 CD %Temp% && RMDIR /S /Q schemes
