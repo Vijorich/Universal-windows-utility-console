@@ -6,6 +6,8 @@ SET v=1.5
 verify on
 cd /d "%~dp0"
 COLOR A
+
+
 rem													Startup check
 rem ========================================================================================================
 rem Created by Vijorich
@@ -32,9 +34,11 @@ for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]
 	)
 )
 
+
 rem													Updater
 rem ========================================================================================================
 rem Created by Vijorich
+
 
 :Updater
 title = Поиск обновлений...
@@ -114,8 +118,8 @@ if %_build% GEQ 22000 (
 	set _winver=10
 )
 
-
 call :message
+
 
 rem													Main menu
 rem ========================================================================================================
@@ -175,7 +179,7 @@ if %_erl%==1 cls && goto checkUp
 if %_erl%==2 cls && goto fastCleanup
 if %_erl%==3 cls && goto recommendedCleanup
 if %_erl%==4 cls && call :message && goto MainMenu
-if %_erl%==5 cls && call :message && goto MainMenu
+if %_erl%==5 cls && goto cleanupInfo
 goto CleanupMenu
 
 :checkUp
@@ -656,6 +660,7 @@ powercfg /import %Temp%\schemes\Shingeki_no_Windows.pow >nul
 start powercfg.cpl
 CD %Temp% && RMDIR /S /Q schemes
 goto :eof
+
 
 rem													Functions
 rem ========================================================================================================
