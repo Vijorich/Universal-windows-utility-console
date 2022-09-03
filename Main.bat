@@ -574,10 +574,11 @@ if %_erl%==1 cls && call :message "Настраиваю.." && goto MmagentSetupSSD
 if %_erl%==2 cls && call :message "Настраиваю.." && goto MmagentSetupHDD
 
 :MmagentSetupHDD
-call :regEditImport "prefetcher"
+call :regEditImport "prefetcherhdd"
 cls && call :message "Настроено для hdd!" && goto MainMenu
 
 :MmagentSetupSSD
+call :regEditImport "prefetcherssd"
 set /a _mmMemory=%_memory%*32
 
 if %_mmMemory% LEQ 128 (
