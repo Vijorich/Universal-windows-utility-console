@@ -429,7 +429,7 @@ choice /C:12389 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto latestCLR
 if %_erl%==2 cls && goto exploitsCFG
-if %_erl%==3 cls && goto exploitsCFG
+if %_erl%==3 cls && goto edge
 if %_erl%==4 cls && call :message && goto RegEditSecondPage
 if %_erl%==5 cls && call :message && goto RegEditMenu
 goto RegEditThirdPage
