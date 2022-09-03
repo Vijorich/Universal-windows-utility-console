@@ -47,7 +47,7 @@ if not "!_myname:~0,9!"=="[updated]" (
 		if not "!errorlevel!"=="0" (
 			ren "[updated]!_myname!.bat" "[updated]!_myname!.bat.old"
 			del /f "!_myname!.bat.old" "[updated]!_myname!.bat.old"
-			call :download https://raw.githubusercontent.com/Vijorich/Uber-anal/main/UpdateLog.txt "UpdateLog.txt"
+			call :download https://raw.githubusercontent.com/Vijorich/Uber-cleaner/main/UpdateLog.txt "UpdateLog.txt"
 			call :message "Uber cleaner обновлен до версии !v!"
 			title = Список обновлений!
 			type UpdateLog.txt
@@ -60,7 +60,7 @@ if not "!_myname:~0,9!"=="[updated]" (
 		cls && goto ConfigCheck
 	)
 	call :message "Ищу обновления UC..."
-	call :download https://raw.githubusercontent.com/Vijorich/Uber-anal/main/Main.bat "[updated]%_myname%.bat"
+	call :download https://raw.githubusercontent.com/Vijorich/Uber-cleaner/main/Main.bat "[updated]%_myname%.bat"
 	if exist "[updated]!_myname!.bat" (
 	
 		fc "[updated]!_myname!.bat" "!_myname!.bat" >nul
@@ -95,7 +95,7 @@ rem Created by Vijorich
 title = Ищу конфиг очистки...
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders" /v StateFlags0777"
 cls
-if %errorlevel% == 0 (echo Конфиг очистки найден) else (call :CleanerSetup)
+if %errorlevel% == 0 (goto GatherInfo) else (call :CleanerSetup)
 
 
 rem													System config
