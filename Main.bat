@@ -568,8 +568,8 @@ title = Кручу верчу, на настройку sysmain дрочу
 call :message "На чем у вас установленна система?"
 echo 1) SSD
 echo 2) HDD
-echo 3) Выйти
-choice /C:123 /N
+echo 9) Выйти
+choice /C:129 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message "Настраиваю.." && goto MmagentSetupSSD
 if %_erl%==2 cls && call :message "Настраиваю.." && goto MmagentSetupHDD
