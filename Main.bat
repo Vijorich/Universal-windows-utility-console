@@ -245,7 +245,7 @@ endlocal
 exit
 
 :cleanupInfo
-start .\cleanmgrplus\readme.txt
+start %~dp0\cleanmgrplus\readme.txt
 call :message && goto CleanupMenu
 
 
@@ -354,7 +354,7 @@ call :message "Гей бар отключен!"
 goto RegEditFirstPage
 
 :regEditInfo
-start .\regpack\readme.txt
+start %~dp0\regpack\readme.txt
 call :message && goto RegEditFirstPage
 
 
@@ -623,7 +623,7 @@ goto PowerSchemesMenu
 :powerSchemesMix
 call :message "Выберите нужную схему!"
 call :applyPowerSchemes
-type .\powerschemes\readme.txt
+type %~dp0\powerschemes\readme.txt
 pause
 for /f "skip=2 tokens=2,4 delims=:()" %%G in ('powercfg -list') do (powercfg -delete %%G)
 cls
@@ -633,7 +633,8 @@ goto MainMenu
 :powerSchemesImport
 call :message "Выберите нужную схему!"
 call :applyPowerSchemes
-type .\powerschemes\readme.txt
+
+type %~dp0\powerschemes\readme.txt
 pause
 cls
 call :message "Готово!"
@@ -646,22 +647,15 @@ call :message "Удалил!"
 goto MainMenu
 
 :applyPowerSchemes
-MD %Temp%\schemes
 
-robocopy .\powerschemes %Temp%\schemes diohas_D.pow >nul 2>&1
-robocopy .\powerschemes %Temp%\schemes diohas_MS.pow >nul 2>&1
-robocopy .\powerschemes %Temp%\schemes diohas_U.pow >nul 2>&1
-robocopy .\powerschemes %Temp%\schemes diohas_Ultra.pow >nul 2>&1
-robocopy .\powerschemes %Temp%\schemes Shingeki_no_Windows.pow >nul 2>&1
-
-powercfg /import %Temp%\schemes\diohas_D.pow >nul 2>&1
-powercfg /import %Temp%\schemes\diohas_MS.pow >nul 2>&1
-powercfg /import %Temp%\schemes\diohas_U.pow >nul 2>&1
-powercfg /import %Temp%\schemes\diohas_Ultra.pow >nul 2>&1
-powercfg /import %Temp%\schemes\Shingeki_no_Windows.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\diohas_D.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\diohas_MS.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\diohas_U.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\diohas_Ultra.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows.pow >nul 2>&1
 
 start powercfg.cpl
-CD %Temp% && RMDIR /S /Q schemes
+
 goto :eof
 
 
@@ -692,13 +686,13 @@ goto :eof
 
 :regEditImport
 setlocal DisableDelayedExpansion
-regedit /s ".\regpack\%~1.reg" ; ".\regpack\%~2.reg" ; ".\regpack\%~3.reg" ; ".\regpack\%~4.reg" ; ".\regpack\%~5.reg" ; ".\regpack\%~6.reg" ; ".\regpack\%~7.reg" ; ".\regpack\%~8.reg" ; ".\regpack\%~9.reg"
+regedit /s "%~dp0\regpack\%~1.reg" ; "%~dp0\regpack\%~2.reg" ; "%~dp0\regpack\%~3.reg" ; "%~dp0\regpack\%~4.reg" ; "%~dp0\regpack\%~5.reg" ; "%~dp0\regpack\%~6.reg" ; "%~dp0\regpack\%~7.reg" ; "%~dp0\regpack\%~8.reg" ; "%~dp0\regpack\%~9.reg"
 endlocal
 goto :eof
 
 :regEditTrustedImport
 setlocal DisableDelayedExpansion
-".\regpack\PowerRun\PowerRun.exe" Regedit.exe /S ".\regpack\%~1.reg" ; ".\regpack\%~2.reg" ; ".\regpack\%~3.reg"
+"%~dp0\regpack\PowerRun\PowerRun.exe" Regedit.exe /S "%~dp0\regpack\%~1.reg" ; "%~dp0\regpack\%~2.reg" ; "%~dp0\regpack\%~3.reg"
 endlocal
 goto :eof
 
