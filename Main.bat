@@ -1,7 +1,7 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
 
-SET v=1.5
+SET v=1.51
 
 verify on
 cd /d "%~dp0"
@@ -149,7 +149,7 @@ if %_erl%==4 cls && call :message "Настраиваю.." && goto MmagentSetup
 if %_erl%==5 cls && call :message && goto PowerSchemesMenu
 if %_erl%==6 cls && powercfg -h off && call :message "Режим гибернации отключен"
 if %_erl%==7 exit 
-if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner v1.5!" && goto CheerUpAuthorMenu
+if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner !v!!" && goto CheerUpAuthorMenu
 goto MainMenu
 
 :offReservedStorage
@@ -365,7 +365,7 @@ echo		2. Убрать задержку показа менюшек
 echo		3. Установить нормальный форматы даты, времени и метрическую систему 
 echo		4. Отключить веб поиск в меню поиска
 echo		5. Уменьшение процента используемых ресурсов для лоу-приорити задач
-echo		6. Отключение точек восстановления
+echo		6. Отключить точки восстановления
 echo		7. Глобальное отключение оптимизации во весь экран
 echo		8. Следующая страница
 echo		9. Предыдущая страница
@@ -424,18 +424,24 @@ goto RegEditSecondPage
 :RegEditThirdPage
 title = Третья страница
 echo		1. Использование только последних версий .NET
-echo		2. Отключение всех эксплойтов, кроме CFG
-echo		3. Отключение служб автообновления и фоновых процессов Edge браузера
+echo		2. Отключить все эксплойты, кроме CFG
+echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
+echo		4. Отключить телеметрию NVIDIA
+echo		5. Полностью отключить службы Центра обновлений Windows
+echo		6. Поставить префетч в значение 2
 echo		8. Предыдущая страница
 echo		9. Вернуться
 call :message
-choice /C:12389 /N
+choice /C:1234589 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto latestCLR
 if %_erl%==2 cls && goto exploitsCFG
 if %_erl%==3 cls && goto edge
-if %_erl%==4 cls && call :message && goto RegEditSecondPage
-if %_erl%==5 cls && call :message && goto RegEditMenu
+if %_erl%==4 cls && goto nvdiaTelemetry
+if %_erl%==5 cls && goto updateSVC
+if %_erl%==6 cls && goto prefetcher2
+if %_erl%==7 cls && call :message && goto RegEditSecondPage
+if %_erl%==8 cls && call :message && goto RegEditMenu
 goto RegEditThirdPage
 
 :latestCLR
@@ -452,6 +458,22 @@ goto RegEditThirdPage
 call :regEditImport "edge"
 call :message "О нет! Они убили edge("
 goto RegEditThirdPage
+
+:nvdiaTelemetry
+call :regEditImport "nvtelemetry"
+call :message "Телеметрия убита"
+goto RegEditThirdPage
+
+:updateSVC
+call :regEditImport "updatesvc"
+call :message "Службы отключены"
+goto RegEditThirdPage
+
+:prefetcher2
+call :regEditImport "prefetcher 2"
+call :message "Настроил prefetch"
+goto RegEditThirdPage
+
 
 :RegEditWindows10Only
 title = Только для 10 шиндуса
@@ -576,11 +598,11 @@ if %_erl%==2 cls && call :message "Настраиваю.." && goto MmagentSetupHDD
 if %_erl%==3 cls && call :message && goto MainMenu
 
 :MmagentSetupHDD
-call :regEditImport "prefetcherhdd"
+call :regEditImport "prefetcher 0"
 cls && call :message "Настроено для hdd!" && goto MainMenu
 
 :MmagentSetupSSD
-call :regEditImport "prefetcherssd"
+call :regEditImport "prefetcher 3"
 set /a _mmMemory=%_memory%*32
 
 if %_mmMemory% LEQ 128 (
@@ -592,10 +614,10 @@ if %_mmMemory% LEQ 128 (
 )
 
 if %_build% GEQ 22000 (
-	call :powershell "enable-mmagent -ApplicationPreLaunch" "enable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -MaxOperationAPIFiles %_mmMemory%"
+	call :powershell "enable-mmagent -ApplicationPreLaunch" "enable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
 	cls && call :message "Настроено для ssd, windows 11!" && goto MainMenu
 ) else (
-	call :powershell "enable-mmagent -ApplicationPreLaunch" "disable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -MaxOperationAPIFiles %_mmMemory%"
+	call :powershell "enable-mmagent -ApplicationPreLaunch" "disable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
 	cls && call :message "Настроено для ssd, windows 10!" && goto MainMenu
 )
 
