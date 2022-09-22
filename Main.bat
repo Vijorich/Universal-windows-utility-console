@@ -1,7 +1,7 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
 
-SET v=1.51
+SET v=1.53
 
 verify on
 cd /d "%~dp0"
@@ -747,3 +747,33 @@ if %_erl%==4 cls && start https://new.donatepay.ru/@906344 && call :message
 if %_erl%==5 cls && start https://boosty.to/vijor && call :message
 if %_erl%==6 cls && call :message && goto MainMenu
 goto CheerUpAuthorMenu
+
+rem													Cleaner setup
+rem ========================================================================================================
+rem Created by Vijorich
+
+
+:CleanerSetup
+SET FLAG=StateFlags0777 && SET REG_VALUE=00000002
+SET REG_LOC=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches
+Set "NUM_ENTRIES=0" && Set "LAST_ENTRY=0"
+SET VOLUME_LOCATIONS=("Active Setup Temp Folders", "Content Indexer Cleaner", "Downloaded Program Files", "Internet Cache Files", "Memory Dump Files", "Microsoft_Event_Reporting_2.0_Temp_Files", "Offline Pages Files", "Old ChkDsk Files", "Previous Installations", "Remote Desktop Cache Files", "ServicePack Cleanup", "Setup Log Files", "System error memory dump files", "System error minidump files", "Temporary Files", "Temporary Setup Files", "Temporary Sync Files", "Update Cleanup", "Upgrade Discarded Files", "WebClient and WebPublisher Cache", "Windows Defender", "Windows Error Reporting Archive Files", "Windows Error Reporting Queue Files", "Windows Error Reporting System Archive Files", "Windows Error Reporting System Queue Files", "Windows ESD installation files", "Windows Upgrade Log Files")
+for /F "delims=" %%i IN ('reg query "%REG_LOC%"') do set /a "NUM_ENTRIES+=1"
+FOR /F "delims=" %%G IN ('reg query "%REG_LOC%"') do (
+set /a "LAST_ENTRY+=1"
+Set DYNAMIC_ARRAY_VOLUMES=!DYNAMIC_ARRAY_VOLUMES!, "%%~nxG"
+Set DYNAMIC_ARRAY_VOLUMES[%%~nxG]=!LAST_ENTRY!
+if !LAST_ENTRY! == 1 Set DYNAMIC_ARRAY_VOLUMES="%%~nxG"
+if !LAST_ENTRY! == %NUM_ENTRIES% GOTO :ARRAY_BUILT
+)
+:ARRAY_BUILT
+echo. && echo (%DYNAMIC_ARRAY_VOLUMES%) && echo.
+SET OMITTED_LOCATIONS=("")
+for %%q in %OMITTED_LOCATIONS% do SET DYNAMIC_ARRAY_VOLUMES=!DYNAMIC_ARRAY_VOLUMES:%%q, =!
+for %%q in %OMITTED_LOCATIONS% do SET DYNAMIC_ARRAY_VOLUMES=!DYNAMIC_ARRAY_VOLUMES:, %%q=!
+echo The following would be a reduced list of locations: && echo (%DYNAMIC_ARRAY_VOLUMES%) && echo.
+for %%i in (%DYNAMIC_ARRAY_VOLUMES%) do (
+REG ADD "%REG_LOC%\%%~i" /v %FLAG% /t REG_DWORD /d %REG_VALUE% /f
+)
+cls
+goto :eof
