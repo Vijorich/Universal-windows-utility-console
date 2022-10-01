@@ -149,7 +149,7 @@ if %_erl%==4 cls && call :message "Настраиваю.." && goto MmagentSetup
 if %_erl%==5 cls && call :message && goto PowerSchemesMenu
 if %_erl%==6 cls && powercfg -h off && call :message "Режим гибернации отключен"
 if %_erl%==7 exit 
-if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner !v!!" && goto CheerUpAuthorMenu
+if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner %v%!" && goto CheerUpAuthorMenu
 goto MainMenu
 
 :offReservedStorage
