@@ -1,7 +1,7 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
 
-SET v=1.53
+SET v=1.54
 
 verify on
 cd /d "%~dp0"
@@ -132,10 +132,10 @@ title = UberCleaner !v!
 setlocal DisableDelayedExpansion
 
 echo		1. Меню очистки
-echo		2. Применить .reg файлы
-echo		3. Выключить резервное хранилище
+echo		2. Меню настроек реестра
+echo		3. Меню схем питания
 echo		4. Настроить mmagent
-echo		5. Применить схемы питания
+echo		5. Отключить резервное хранилище
 echo		6. Отключить режим гибернации
 echo		9. Выйти из программы
 echo		0. Поддержать автора!
@@ -144,9 +144,9 @@ choice /C:12345690 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto CleanupMenu
 if %_erl%==2 cls && call :message && goto RegEditMenu
-if %_erl%==3 cls && goto offReservedStorage
+if %_erl%==3 cls && call :message && goto PowerSchemesMenu
 if %_erl%==4 cls && call :message "Настраиваю.." && goto MmagentSetup
-if %_erl%==5 cls && call :message && goto PowerSchemesMenu
+if %_erl%==5 cls && goto offReservedStorage 
 if %_erl%==6 cls && powercfg -h off && call :message "Режим гибернации отключен"
 if %_erl%==7 exit 
 if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner %v%!" && goto CheerUpAuthorMenu
@@ -256,24 +256,28 @@ rem Created by Vijorich
 
 :RegEditMenu
 title = Хихихи применю рег и импут лага как не бывало
-echo		1. Просто применить рекомендуемые .reg файлы
-echo		2. Применить каждый точечно (для любой версии шиндус)
+echo		1. Просто применить рекомендуемые настройки
+echo		2. Точечная настройка (для любой версии шиндус)
 echo		3. Только для 10 шиндуса
 echo		4. Только для 11 шиндуса
 echo		9. Вернуться в главное меню!
+echo		0. Це шо? .тхт
 call :message
-choice /C:12349 /N
+choice /C:123490 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto RegEditFullReg
 if %_erl%==2 cls && call :message && goto RegEditFirstPage
 if %_erl%==3 cls && call :message && goto RegEditWindows10Only
 if %_erl%==4 cls && call :message && goto RegEditWindows11Only
 if %_erl%==5 cls && call :message && goto MainMenu
+if %_erl%==6 cls && goto regEditInfo
 goto RegEditMenu
 
+:regEditInfo
+start %~dp0\regpack\readme.txt
+call :message && goto RegEditFirstPage
 
 :RegEditFullReg
-
 if %_build% GEQ 22000 (
 	call :regEditImport "\Windows 11 Only\w11 context menu fix" "\Windows 11 Only\w11 notifications" "\Windows 11 Only\w11 priority" "\Windows 11 Only\w11 share item"
     call :regEditTrustedImport "\Windows 11 Only\w11 defender X"
@@ -301,9 +305,8 @@ echo		6. Включить функцию largesystemcache
 echo		7. Отключение гей бара
 echo		8. Следующая страница
 echo		9. Вернуться
-echo		0. Це шо.тхт
 call :message
-choice /C:1234567890 /N
+choice /C:123456789 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto telemetry
 if %_erl%==2 cls && goto autoUpdate
@@ -314,7 +317,6 @@ if %_erl%==6 cls && goto largesystemCache
 if %_erl%==7 cls && goto gameDVR
 if %_erl%==8 cls && call :message && goto RegEditSecondPage
 if %_erl%==9 cls && call :message && goto RegEditMenu
-if %_erl%==10 cls && goto regEditInfo
 goto RegEditFirstPage
 
 :telemetry
@@ -352,10 +354,6 @@ goto RegEditFirstPage
 call :regEditImport "gamedvr"
 call :message "Гей бар отключен!"
 goto RegEditFirstPage
-
-:regEditInfo
-start %~dp0\regpack\readme.txt
-call :message && goto RegEditFirstPage
 
 
 :RegEditSecondPage
