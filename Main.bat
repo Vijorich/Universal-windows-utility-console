@@ -1,7 +1,7 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
 
-SET v=1.54
+SET v=1.55
 
 verify on
 cd /d "%~dp0"
@@ -281,10 +281,12 @@ call :message && goto RegEditFirstPage
 if %_build% GEQ 22000 (
 	call :regEditImport "\Windows 11 Only\w11 context menu fix" "\Windows 11 Only\w11 notifications" "\Windows 11 Only\w11 priority" "\Windows 11 Only\w11 share item"
     call :regEditTrustedImport "\Windows 11 Only\w11 defender X"
+	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы и для шиндус 11!" && goto MainMenu
 ) else (
 	call :regEditImport "\Windows 10 Only\w10 3d objects" "\Windows 10 Only\w10 newnetworkwindowoff" "\Windows 10 Only\w10 notifications" "\Windows 10 Only\w10 priority" "\Windows 10 Only\w10 share item" "\Windows 10 Only\w10 showsecondsinsystemclock"
     call :regEditTrustedImport "\Windows 10 Only\w10 defender X"
+	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы и для шиндус 10!" && goto MainMenu
 )
 
@@ -293,6 +295,8 @@ call :regEditImport "appcompability" "attachmentmanager" "autoupdate" "backgroun
 call :regEditImport "systemprofile" "search" "regionalformats" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamedvr" "fse"
 call :regEditImport "uac" "telemetry" "systemrestore"
 call :regEditTrustedImport "networkfolder X"
+goto :eof
+
 
 :RegEditFirstPage
 title = Первая страница
@@ -425,7 +429,7 @@ echo		1. Использование только последних версий .NET
 echo		2. Отключить все эксплойты, кроме CFG
 echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
 echo		4. Отключить телеметрию NVIDIA
-echo		5. Полностью отключить службы Центра обновлений Windows
+echo		5. Отключить все эксплойты
 echo		6. Поставить префетч в значение 2
 echo		8. Предыдущая страница
 echo		9. Вернуться
@@ -436,7 +440,7 @@ if %_erl%==1 cls && goto latestCLR
 if %_erl%==2 cls && goto exploitsCFG
 if %_erl%==3 cls && goto edge
 if %_erl%==4 cls && goto nvdiaTelemetry
-if %_erl%==5 cls && goto updateSVC
+if %_erl%==5 cls && goto exploits
 if %_erl%==6 cls && goto prefetcher2
 if %_erl%==7 cls && call :message && goto RegEditSecondPage
 if %_erl%==8 cls && call :message && goto RegEditMenu
@@ -462,9 +466,9 @@ call :regEditImport "nvtelemetry"
 call :message "Телеметрия убита"
 goto RegEditThirdPage
 
-:updateSVC
-call :regEditImport "updatesvc"
-call :message "Службы отключены"
+:exploits
+call :regEditImport "exploits"
+call :message "Все эксплойты отключены"
 goto RegEditThirdPage
 
 :prefetcher2
