@@ -99,7 +99,7 @@ rem Created by Vijorich
 title = Ищу конфиг очистки...
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders" /v StateFlags0777"
 cls
-if %errorlevel% == 0 (goto GatherInfo) else (call :CleanerSetup)
+if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
 
 
 rem													System config
@@ -194,12 +194,11 @@ call :message && goto MainMenu
 setlocal DisableDelayedExpansion
 title = Чисти-чисти-чисти сука вот как блядь нужно чистить быстро раз-раз-раз! Чисти! Говно! Чисти!
 call :message "Чищу, чищу, чищу"
-
-Start /min /high %~dp0\cleanmgrplus\Cleanmgr+.exe /cp %~dp0\cleanmgrplus\std.cleanup
-CD %WINDIR%\Temp && RMDIR /S /Q .  >nul 2>&1
-CD %SYSTEMDRIVE%\Temp && RMDIR /S /Q .  >nul 2>&1
-CD %Temp% && RMDIR /S /Q .  >nul 2>&1
-CD %Tmp% && RMDIR /S /Q .  >nul 2>&1
+Start /min /high .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\std.cleanup
+CD %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
@@ -218,14 +217,13 @@ call :message "Готово!" && goto MainMenu
 setlocal DisableDelayedExpansion
 title = Что чисти, епта? Как я буду вилкой-то чистить? Чё, совсем мудак, что ли? Покажи мне, как я буду чистить-то, ёпта! 
 call :message "Чищу, чищу, чищу"
-
-Start /min /high %~dp0\cleanmgrplus\Cleanmgr+.exe /cp %~dp0\cleanmgrplus\max.cleanup
-CD %WINDIR%\Temp && RMDIR /S /Q . >nul 2>&1
-CD %SYSTEMDRIVE%\Temp && RMDIR /S /Q . >nul 2>&1
-CD %Temp% && RMDIR /S /Q . >nul 2>&1
-CD %Tmp% && RMDIR /S /Q . >nul 2>&1
-CD %WINDIR%\Prefetch && RMDIR /S /Q . >nul 2>&1
-CD %WINDIR%\SoftwareDistribution\Download && RMDIR /S /Q . >nul 2>&1
+Start /min /high .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\max.cleanup
+CD %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+CD %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
