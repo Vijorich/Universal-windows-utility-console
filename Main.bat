@@ -195,7 +195,7 @@ setlocal DisableDelayedExpansion
 title = Чисти-чисти-чисти сука вот как блядь нужно чистить быстро раз-раз-раз! Чисти! Говно! Чисти!
 call :message "Чищу, чищу, чищу"
 
-Start /min /high "%~dp0\cleanmgrplus\Cleanmgr+.exe" /cp "%~dp0\cleanmgrplus\std.cleanup"
+Start /min /high %~dp0\cleanmgrplus\Cleanmgr+.exe /cp %~dp0\cleanmgrplus\std.cleanup
 CD %WINDIR%\Temp && RMDIR /S /Q .  >nul 2>&1
 CD %SYSTEMDRIVE%\Temp && RMDIR /S /Q .  >nul 2>&1
 CD %Temp% && RMDIR /S /Q .  >nul 2>&1
@@ -219,7 +219,7 @@ setlocal DisableDelayedExpansion
 title = Что чисти, епта? Как я буду вилкой-то чистить? Чё, совсем мудак, что ли? Покажи мне, как я буду чистить-то, ёпта! 
 call :message "Чищу, чищу, чищу"
 
-Start /min /high "%~dp0\cleanmgrplus\Cleanmgr+.exe" /cp "%~dp0\cleanmgrplus\max.cleanup"
+Start /min /high %~dp0\cleanmgrplus\Cleanmgr+.exe /cp %~dp0\cleanmgrplus\max.cleanup
 CD %WINDIR%\Temp && RMDIR /S /Q . >nul 2>&1
 CD %SYSTEMDRIVE%\Temp && RMDIR /S /Q . >nul 2>&1
 CD %Temp% && RMDIR /S /Q . >nul 2>&1
