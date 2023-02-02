@@ -1,5 +1,6 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
+chcp 65001 >nul
 
 SET v=1.6
 
@@ -14,12 +15,12 @@ rem Created by Vijorich
 
 
 :StartupCheck
-title = Проверка...
+title = ╨Я╤А╨╛╨▓╨╡╤А╨║╨░...
 
 for /f "tokens=6 delims=[]. " %%G in ('ver') Do (
 	set _build=%%G
 	if "%%G" lss "10586" (
-		call :message "Эта версия windows не поддерживается!"
+		call :message "╨н╤В╨░ ╨▓╨╡╤А╤Б╨╕╤П windows ╨╜╨╡ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╨╡╤В╤Б╤П!"
 		pause
 		exit
 	)
@@ -27,8 +28,8 @@ for /f "tokens=6 delims=[]. " %%G in ('ver') Do (
 
 for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]) -contains 'Tls12'"') do (
 	if "%%i" == "False" (
-		call :message "Ваша версия PowerShell не поддерживает TLS1.2 !"
-		echo:  Обновите PowerShell https://aka.ms/PSWindows
+		call :message "╨Т╨░╤И╨░ ╨▓╨╡╤А╤Б╨╕╤П PowerShell ╨╜╨╡ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╨╡╤В TLS1.2 !"
+		echo:  ╨Ю╨▒╨╜╨╛╨▓╨╕╤В╨╡ PowerShell https://aka.ms/PSWindows
 		pause
 		exit
 	)
@@ -41,7 +42,7 @@ rem Created by Vijorich
 
 
 :ConfigCheck
-title = Ищу конфиг очистки...
+title = ╨Ш╤Й╤Г ╨║╨╛╨╜╤Д╨╕╨│ ╨╛╤З╨╕╤Б╤В╨║╨╕...
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders" /v StateFlags0777"
 cls
 if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
@@ -53,7 +54,7 @@ rem Created by Vijorich
 
 
 :GatherInfo
-title = Собираю информацию...
+title = ╨б╨╛╨▒╨╕╤А╨░╤О ╨╕╨╜╤Д╨╛╤А╨╝╨░╤Ж╨╕╤О...
 
 for /f %%a in ('powershell -command "Get-WmiObject Win32_PhysicalMemory | Measure-Object -Property capacity -Sum | Foreach {[int](($_.Sum/1GB))}"') do (set _memory=%%a)
 
@@ -76,32 +77,32 @@ setlocal EnableDelayedExpansion
 title = UberCleaner !v!
 setlocal DisableDelayedExpansion
 
-echo		1. Меню очистки
-echo		2. Меню настроек реестра
-echo		3. Меню схем питания
-echo		4. Настроить mmagent
-echo		5. Отключить резервное хранилище
-echo		6. Отключить режим гибернации
-echo		9. Выйти из программы
-echo		0. Поддержать автора!
+echo		1. ╨Ь╨╡╨╜╤О ╨╛╤З╨╕╤Б╤В╨║╨╕
+echo		2. ╨Ь╨╡╨╜╤О ╨╜╨░╤Б╤В╤А╨╛╨╡╨║ ╤А╨╡╨╡╤Б╤В╤А╨░
+echo		3. ╨Ь╨╡╨╜╤О ╤Б╤Е╨╡╨╝ ╨┐╨╕╤В╨░╨╜╨╕╤П
+echo		4. ╨Э╨░╤Б╤В╤А╨╛╨╕╤В╤М mmagent
+echo		5. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤А╨╡╨╖╨╡╤А╨▓╨╜╨╛╨╡ ╤Е╤А╨░╨╜╨╕╨╗╨╕╤Й╨╡
+echo		6. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤А╨╡╨╢╨╕╨╝ ╨│╨╕╨▒╨╡╤А╨╜╨░╤Ж╨╕╨╕
+echo		9. ╨Т╤Л╨╣╤В╨╕ ╨╕╨╖ ╨┐╤А╨╛╨│╤А╨░╨╝╨╝╤Л
+echo		0. ╨Я╨╛╨┤╨┤╨╡╤А╨╢╨░╤В╤М ╨░╨▓╤В╨╛╤А╨░!
 call :message
 choice /C:12345690 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto CleanupMenu
 if %_erl%==2 cls && call :message && goto RegEditMenu
 if %_erl%==3 cls && call :message && goto PowerSchemesMenu
-if %_erl%==4 cls && call :message "Настраиваю.." && goto MmagentSetup
+if %_erl%==4 cls && call :message "╨Э╨░╤Б╤В╤А╨░╨╕╨▓╨░╤О.." && goto MmagentSetup
 if %_erl%==5 cls && goto offReservedStorage 
-if %_erl%==6 cls && powercfg -h off && call :message "Режим гибернации отключен"
+if %_erl%==6 cls && powercfg -h off && call :message "╨а╨╡╨╢╨╕╨╝ ╨│╨╕╨▒╨╡╤А╨╜╨░╤Ж╨╕╨╕ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜"
 if %_erl%==7 exit 
-if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner %v%!" && goto CheerUpAuthorMenu
+if %_erl%==8 cls && call :message "╨Т╤Л ╨╝╨╛╨╢╨╡╤В╨╡ ╤Б╨┤╨╡╨╗╨░╤В╤М ╨┐╤А╨╕╤П╤В╨╜╨╛ ╨░╨▓╤В╨╛╤А╤Г uber cleaner %v%!" && goto CheerUpAuthorMenu
 goto MainMenu
 
 :offReservedStorage
-call :message "Ожидайте.."
+call :message "╨Ю╨╢╨╕╨┤╨░╨╣╤В╨╡.."
 start /wait /min %SystemRoot%\System32\Dism.exe /Online /Set-ReservedStorageState /State:Disabled
 cls
-call :message "Резервное хранилище отключено!"
+call :message "╨а╨╡╨╖╨╡╤А╨▓╨╜╨╛╨╡ ╤Е╤А╨░╨╜╨╕╨╗╨╕╤Й╨╡ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╨╛!"
 goto MainMenu
 
 
@@ -111,12 +112,12 @@ rem Created by Vijorich
 
 
 :CleanupMenu
-title = Меню очистки
-echo		1. Нужна ли мне очистка?
-echo		2. Быстрая ~1min-5min
-echo		3. Рекомендуемая ~5min-1hour
-echo		9. Вернуться в главное меню
-echo		0. Что? Каво? Куда? .тхт
+title = ╨Ь╨╡╨╜╤О ╨╛╤З╨╕╤Б╤В╨║╨╕
+echo		1. ╨Э╤Г╨╢╨╜╨░ ╨╗╨╕ ╨╝╨╜╨╡ ╨╛╤З╨╕╤Б╤В╨║╨░?
+echo		2. ╨С╤Л╤Б╤В╤А╨░╤П ~1min-5min
+echo		3. ╨а╨╡╨║╨╛╨╝╨╡╨╜╨┤╤Г╨╡╨╝╨░╤П ~5min-1hour
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨▓ ╨│╨╗╨░╨▓╨╜╨╛╨╡ ╨╝╨╡╨╜╤О
+echo		0. ╨з╤В╨╛? ╨Ъ╨░╨▓╨╛? ╨Ъ╤Г╨┤╨░? .╤В╤Е╤В
 call :message
 choice /C:12390 /N
 set _erl=%errorlevel%
@@ -128,8 +129,8 @@ if %_erl%==5 cls && goto cleanupInfo
 goto CleanupMenu
 
 :checkUp
-title = Вилкой или не вилкой, вот в чем вопрос
-call :message "Сейчас посмотрим.."
+title = ╨Т╨╕╨╗╨║╨╛╨╣ ╨╕╨╗╨╕ ╨╜╨╡ ╨▓╨╕╨╗╨║╨╛╨╣, ╨▓╨╛╤В ╨▓ ╤З╨╡╨╝ ╨▓╨╛╨┐╤А╨╛╤Б
+call :message "╨б╨╡╨╣╤З╨░╤Б ╨┐╨╛╤Б╨╝╨╛╤В╤А╨╕╨╝.."
 Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
 Pause
 cls
@@ -137,8 +138,8 @@ call :message && goto MainMenu
 
 :fastCleanup
 setlocal DisableDelayedExpansion
-title = Чисти-чисти-чисти сука вот как блядь нужно чистить быстро раз-раз-раз! Чисти! Говно! Чисти!
-call :message "Чищу, чищу, чищу"
+title = ╨з╨╕╤Б╤В╨╕-╤З╨╕╤Б╤В╨╕-╤З╨╕╤Б╤В╨╕ ╤Б╤Г╨║╨░ ╨▓╨╛╤В ╨║╨░╨║ ╨▒╨╗╤П╨┤╤М ╨╜╤Г╨╢╨╜╨╛ ╤З╨╕╤Б╤В╨╕╤В╤М ╨▒╤Л╤Б╤В╤А╨╛ ╤А╨░╨╖-╤А╨░╨╖-╤А╨░╨╖! ╨з╨╕╤Б╤В╨╕! ╨У╨╛╨▓╨╜╨╛! ╨з╨╕╤Б╤В╨╕!
+call :message "╨з╨╕╤Й╤Г, ╤З╨╕╤Й╤Г, ╤З╨╕╤Й╤Г"
 Start /min /high .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\std.cleanup
 CD %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 CD %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
@@ -156,12 +157,12 @@ ipconfig /flushdns >nul 2>&1
 ipconfig /renew >nul 2>&1
 endlocal
 cls
-call :message "Готово!" && goto MainMenu
+call :message "╨У╨╛╤В╨╛╨▓╨╛!" && goto MainMenu
 
 :recommendedCleanup
 setlocal DisableDelayedExpansion
-title = Что чисти, епта? Как я буду вилкой-то чистить? Чё, совсем мудак, что ли? Покажи мне, как я буду чистить-то, ёпта! 
-call :message "Чищу, чищу, чищу"
+title = ╨з╤В╨╛ ╤З╨╕╤Б╤В╨╕, ╨╡╨┐╤В╨░? ╨Ъ╨░╨║ ╤П ╨▒╤Г╨┤╤Г ╨▓╨╕╨╗╨║╨╛╨╣-╤В╨╛ ╤З╨╕╤Б╤В╨╕╤В╤М? ╨з╤С, ╤Б╨╛╨▓╤Б╨╡╨╝ ╨╝╤Г╨┤╨░╨║, ╤З╤В╨╛ ╨╗╨╕? ╨Я╨╛╨║╨░╨╢╨╕ ╨╝╨╜╨╡, ╨║╨░╨║ ╤П ╨▒╤Г╨┤╤Г ╤З╨╕╤Б╤В╨╕╤В╤М-╤В╨╛, ╤С╨┐╤В╨░! 
+call :message "╨з╨╕╤Й╤Г, ╤З╨╕╤Й╤Г, ╤З╨╕╤Й╤Г"
 Start /min /high .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\max.cleanup
 CD %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 CD %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
@@ -183,7 +184,7 @@ Dism /online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
 Dism /online /Cleanup-Image /SPSuperseded >nul 2>&1
 vssadmin delete shadows /all /quiet >nul 2>&1
 echo Y | chkdsk /f /r /b
-shutdown /r /t 60 /c "Через минуту перезагрузка, сохраните все данные!"
+shutdown /r /t 60 /c "╨з╨╡╤А╨╡╨╖ ╨╝╨╕╨╜╤Г╤В╤Г ╨┐╨╡╤А╨╡╨╖╨░╨│╤А╤Г╨╖╨║╨░, ╤Б╨╛╤Е╤А╨░╨╜╨╕╤В╨╡ ╨▓╤Б╨╡ ╨┤╨░╨╜╨╜╤Л╨╡!"
 endlocal
 exit
 
@@ -198,13 +199,13 @@ rem Created by Vijorich
 
 
 :RegEditMenu
-title = Хихихи применю рег и импут лага как не бывало
-echo		1. Просто применить рекомендуемые настройки
-echo		2. Точечная настройка (для любой версии шиндус)
-echo		3. Только для 10 шиндуса
-echo		4. Только для 11 шиндуса
-echo		9. Вернуться в главное меню!
-echo		0. Це шо? .тхт
+title = ╨е╨╕╤Е╨╕╤Е╨╕ ╨┐╤А╨╕╨╝╨╡╨╜╤О ╤А╨╡╨│ ╨╕ ╨╕╨╝╨┐╤Г╤В ╨╗╨░╨│╨░ ╨║╨░╨║ ╨╜╨╡ ╨▒╤Л╨▓╨░╨╗╨╛
+echo		1. ╨Я╤А╨╛╤Б╤В╨╛ ╨┐╤А╨╕╨╝╨╡╨╜╨╕╤В╤М ╤А╨╡╨║╨╛╨╝╨╡╨╜╨┤╤Г╨╡╨╝╤Л╨╡ ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨╕
+echo		2. ╨в╨╛╤З╨╡╤З╨╜╨░╤П ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╨░ (╨┤╨╗╤П ╨╗╤О╨▒╨╛╨╣ ╨▓╨╡╤А╤Б╨╕╨╕ ╤И╨╕╨╜╨┤╤Г╤Б)
+echo		3. ╨в╨╛╨╗╤М╨║╨╛ ╨┤╨╗╤П 10 ╤И╨╕╨╜╨┤╤Г╤Б╨░
+echo		4. ╨в╨╛╨╗╤М╨║╨╛ ╨┤╨╗╤П 11 ╤И╨╕╨╜╨┤╤Г╤Б╨░
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨▓ ╨│╨╗╨░╨▓╨╜╨╛╨╡ ╨╝╨╡╨╜╤О!
+echo		0. ╨ж╨╡ ╤И╨╛? .╤В╤Е╤В
 call :message
 choice /C:123490 /N
 set _erl=%errorlevel%
@@ -225,12 +226,12 @@ if %_build% GEQ 22000 (
 	call :regEditImport "\Windows 11 Only\w11 context menu fix" "\Windows 11 Only\w11 notifications" "\Windows 11 Only\w11 priority" "\Windows 11 Only\w11 share item"
     call :regEditTrustedImport "\Windows 11 Only\w11 defender X"
 	call :regEditFullRegForAll
-	cls && call :message "Применил общие .рег файлы и для шиндус 11!" && goto MainMenu
+	cls && call :message "╨Я╤А╨╕╨╝╨╡╨╜╨╕╨╗ ╨╛╨▒╤Й╨╕╨╡ .╤А╨╡╨│ ╤Д╨░╨╣╨╗╤Л ╨╕ ╨┤╨╗╤П ╤И╨╕╨╜╨┤╤Г╤Б 11!" && goto MainMenu
 ) else (
 	call :regEditImport "\Windows 10 Only\w10 3d objects" "\Windows 10 Only\w10 newnetworkwindowoff" "\Windows 10 Only\w10 notifications" "\Windows 10 Only\w10 priority" "\Windows 10 Only\w10 share item" "\Windows 10 Only\w10 showsecondsinsystemclock"
     call :regEditTrustedImport "\Windows 10 Only\w10 defender X"
 	call :regEditFullRegForAll
-	cls && call :message "Применил общие .рег файлы и для шиндус 10!" && goto MainMenu
+	cls && call :message "╨Я╤А╨╕╨╝╨╡╨╜╨╕╨╗ ╨╛╨▒╤Й╨╕╨╡ .╤А╨╡╨│ ╤Д╨░╨╣╨╗╤Л ╨╕ ╨┤╨╗╤П ╤И╨╕╨╜╨┤╤Г╤Б 10!" && goto MainMenu
 )
 
 :regEditFullRegForAll
@@ -242,16 +243,16 @@ goto :eof
 
 
 :RegEditFirstPage
-title = Первая страница
-echo		1. Отключить телеметрию и прочее (см. в тхт файле)
-echo		2. Отключить все автообновления
-echo		3. Отключение компонентов совместимости
-echo		4. Отключение фоновых приложений
-echo		5. Оптимизация файловой системы
-echo		6. Включить функцию largesystemcache
-echo		7. Отключение гей бара
-echo		8. Следующая страница
-echo		9. Вернуться
+title = ╨Я╨╡╤А╨▓╨░╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		1. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤В╨╡╨╗╨╡╨╝╨╡╤В╤А╨╕╤О ╨╕ ╨┐╤А╨╛╤З╨╡╨╡ (╤Б╨╝. ╨▓ ╤В╤Е╤В ╤Д╨░╨╣╨╗╨╡)
+echo		2. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╨▓╤Б╨╡ ╨░╨▓╤В╨╛╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П
+echo		3. ╨Ю╤В╨║╨╗╤О╤З╨╡╨╜╨╕╨╡ ╨║╨╛╨╝╨┐╨╛╨╜╨╡╨╜╤В╨╛╨▓ ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕
+echo		4. ╨Ю╤В╨║╨╗╤О╤З╨╡╨╜╨╕╨╡ ╤Д╨╛╨╜╨╛╨▓╤Л╤Е ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╨╣
+echo		5. ╨Ю╨┐╤В╨╕╨╝╨╕╨╖╨░╤Ж╨╕╤П ╤Д╨░╨╣╨╗╨╛╨▓╨╛╨╣ ╤Б╨╕╤Б╤В╨╡╨╝╤Л
+echo		6. ╨Т╨║╨╗╤О╤З╨╕╤В╤М ╤Д╤Г╨╜╨║╤Ж╨╕╤О largesystemcache
+echo		7. ╨Ю╤В╨║╨╗╤О╤З╨╡╨╜╨╕╨╡ ╨│╨╡╨╣ ╨▒╨░╤А╨░
+echo		8. ╨б╨╗╨╡╨┤╤Г╤О╤Й╨░╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
@@ -268,53 +269,53 @@ goto RegEditFirstPage
 
 :telemetry
 call :regEditImport "inspectre" "uac" "maintenance" "attachmentmanager" "telemetry"
-call :message "Жучки отключены!"
+call :message "╨Ц╤Г╤З╨║╨╕ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditFirstPage
 
 :autoUpdate
 call :regEditImport "autoupdate" "cloudcontent" "driversearching"
-call :message "Автообновления отключены!"
+call :message "╨Р╨▓╤В╨╛╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditFirstPage
 
 :appCompability
 call :regEditImport "appcompability"
-call :message "Компоненты совместимости отключены!"
+call :message "╨Ъ╨╛╨╝╨┐╨╛╨╜╨╡╨╜╤В╤Л ╤Б╨╛╨▓╨╝╨╡╤Б╤В╨╕╨╝╨╛╤Б╤В╨╕ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditFirstPage
 
 :backgroundApps
 call :regEditImport "backgroundapps"
-call :message "Фоновые приложения отключены!"
+call :message "╨д╨╛╨╜╨╛╨▓╤Л╨╡ ╨┐╤А╨╕╨╗╨╛╨╢╨╡╨╜╨╕╤П ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditFirstPage
 
 :filesystemOptimization
 call :regEditImport "filesystem" "explorer"
 call :regEditTrustedImport "networkfolder X"
-call :message "Файловая система оптимизирована!"
+call :message "╨д╨░╨╣╨╗╨╛╨▓╨░╤П ╤Б╨╕╤Б╤В╨╡╨╝╨░ ╨╛╨┐╤В╨╕╨╝╨╕╨╖╨╕╤А╨╛╨▓╨░╨╜╨░!"
 goto RegEditFirstPage
 
 :largesystemCache
 call :regEditImport "largesystemcache"
-call :message "Функция largesystemcache включена!"
+call :message "╨д╤Г╨╜╨║╤Ж╨╕╤П largesystemcache ╨▓╨║╨╗╤О╤З╨╡╨╜╨░!"
 goto RegEditFirstPage
 
 :gameDVR
 call :regEditImport "gamedvr"
-call :message "Гей бар отключен!"
+call :message "╨У╨╡╨╣ ╨▒╨░╤А ╨╛╤В╨║╨╗╤О╤З╨╡╨╜!"
 goto RegEditFirstPage
 
 
 :RegEditSecondPage
-title = Вторая страница
-echo		1. Возвращение старого просмотрщика фото
-echo		2. Убрать задержку показа менюшек
-echo		3. Установить нормальный форматы даты, времени и метрическую систему 
-echo		4. Отключить веб поиск в меню поиска
-echo		5. Уменьшение процента используемых ресурсов для лоу-приорити задач
-echo		6. Отключить точки восстановления
-echo		7. Глобальное отключение оптимизации во весь экран
-echo		8. Следующая страница
-echo		9. Предыдущая страница
-echo		0. Вернуться
+title = ╨Т╤В╨╛╤А╨░╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		1. ╨Т╨╛╨╖╨▓╤А╨░╤Й╨╡╨╜╨╕╨╡ ╤Б╤В╨░╤А╨╛╨│╨╛ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╤Й╨╕╨║╨░ ╤Д╨╛╤В╨╛
+echo		2. ╨г╨▒╤А╨░╤В╤М ╨╖╨░╨┤╨╡╤А╨╢╨║╤Г ╨┐╨╛╨║╨░╨╖╨░ ╨╝╨╡╨╜╤О╤И╨╡╨║
+echo		3. ╨г╤Б╤В╨░╨╜╨╛╨▓╨╕╤В╤М ╨╜╨╛╤А╨╝╨░╨╗╤М╨╜╤Л╨╣ ╤Д╨╛╤А╨╝╨░╤В╤Л ╨┤╨░╤В╤Л, ╨▓╤А╨╡╨╝╨╡╨╜╨╕ ╨╕ ╨╝╨╡╤В╤А╨╕╤З╨╡╤Б╨║╤Г╤О ╤Б╨╕╤Б╤В╨╡╨╝╤Г 
+echo		4. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╨▓╨╡╨▒ ╨┐╨╛╨╕╤Б╨║ ╨▓ ╨╝╨╡╨╜╤О ╨┐╨╛╨╕╤Б╨║╨░
+echo		5. ╨г╨╝╨╡╨╜╤М╤И╨╡╨╜╨╕╨╡ ╨┐╤А╨╛╤Ж╨╡╨╜╤В╨░ ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝╤Л╤Е ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ ╨┤╨╗╤П ╨╗╨╛╤Г-╨┐╤А╨╕╨╛╤А╨╕╤В╨╕ ╨╖╨░╨┤╨░╤З
+echo		6. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤В╨╛╤З╨║╨╕ ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П
+echo		7. ╨У╨╗╨╛╨▒╨░╨╗╤М╨╜╨╛╨╡ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╨╕╨╡ ╨╛╨┐╤В╨╕╨╝╨╕╨╖╨░╤Ж╨╕╨╕ ╨▓╨╛ ╨▓╨╡╤Б╤М ╤Н╨║╤А╨░╨╜
+echo		8. ╨б╨╗╨╡╨┤╤Г╤О╤Й╨░╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		9. ╨Я╤А╨╡╨┤╤Л╨┤╤Г╤Й╨░╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		0. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П
 call :message
 choice /C:1234567890 /N
 set _erl=%errorlevel%
@@ -332,50 +333,50 @@ goto RegEditSecondPage
 
 :backOldPhotoViewer
 call :regEditImport "backoldphotoviewer"
-call :message "Старый просмотрщик фото вернулся!"
+call :message "╨б╤В╨░╤А╤Л╨╣ ╨┐╤А╨╛╤Б╨╝╨╛╤В╤А╤Й╨╕╨║ ╤Д╨╛╤В╨╛ ╨▓╨╡╤А╨╜╤Г╨╗╤Б╤П!"
 goto RegEditSecondPage
 
 :menuShowDelay
 call :regEditImport "menushowdelay"
-call :message "Задержка показа меню убрана!"
+call :message "╨Ч╨░╨┤╨╡╤А╨╢╨║╨░ ╨┐╨╛╨║╨░╨╖╨░ ╨╝╨╡╨╜╤О ╤Г╨▒╤А╨░╨╜╨░!"
 goto RegEditSecondPage
 
 :regionalFormats
 call :regEditImport "regionalformats"
-call :message "Форматы установленны!"
+call :message "╨д╨╛╤А╨╝╨░╤В╤Л ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╜╤Л!"
 goto RegEditSecondPage
 
 :search
 call :regEditImport "search"
-call :message "Веб-поиск отключен!"
+call :message "╨Т╨╡╨▒-╨┐╨╛╨╕╤Б╨║ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜!"
 goto RegEditSecondPage
 
 :systemProfile
 call :regEditImport "systemprofile"
-call :message "Процент используемых ресурсов уменьшен!"
+call :message "╨Я╤А╨╛╤Ж╨╡╨╜╤В ╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╨╡╨╝╤Л╤Е ╤А╨╡╤Б╤Г╤А╤Б╨╛╨▓ ╤Г╨╝╨╡╨╜╤М╤И╨╡╨╜!"
 goto RegEditSecondPage
 
 :systemRestore
 call :regEditImport "systemrestore"
-call :message "Точки восстановления отключены!"
+call :message "╨в╨╛╤З╨║╨╕ ╨▓╨╛╤Б╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditSecondPage
 
 :fse
 call :regEditImport "fse"
-call :message "Оптимизация во весь экран отключена!"
+call :message "╨Ю╨┐╤В╨╕╨╝╨╕╨╖╨░╤Ж╨╕╤П ╨▓╨╛ ╨▓╨╡╤Б╤М ╤Н╨║╤А╨░╨╜ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╨░!"
 goto RegEditSecondPage
 
 
 :RegEditThirdPage
-title = Третья страница
-echo		1. Использование только последних версий .NET
-echo		2. Отключить все эксплойты, кроме CFG
-echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
-echo		4. Отключить телеметрию NVIDIA
-echo		5. Отключить все эксплойты
-echo		6. Поставить префетч в значение 2
-echo		8. Предыдущая страница
-echo		9. Вернуться
+title = ╨в╤А╨╡╤В╤М╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		1. ╨Ш╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╤В╨╛╨╗╤М╨║╨╛ ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╕╤Е ╨▓╨╡╤А╤Б╨╕╨╣ .NET
+echo		2. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╨▓╤Б╨╡ ╤Н╨║╤Б╨┐╨╗╨╛╨╣╤В╤Л, ╨║╤А╨╛╨╝╨╡ CFG
+echo		3. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤Б╨╗╤Г╨╢╨▒╤Л ╨░╨▓╤В╨╛╨╛╨▒╨╜╨╛╨▓╨╗╨╡╨╜╨╕╤П ╨╕ ╤Д╨╛╨╜╨╛╨▓╤Л╤Е ╨┐╤А╨╛╤Ж╨╡╤Б╤Б╨╛╨▓ Edge ╨▒╤А╨░╤Г╨╖╨╡╤А╨░
+echo		4. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤В╨╡╨╗╨╡╨╝╨╡╤В╤А╨╕╤О NVIDIA
+echo		5. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╨▓╤Б╨╡ ╤Н╨║╤Б╨┐╨╗╨╛╨╣╤В╤Л
+echo		6. ╨Я╨╛╤Б╤В╨░╨▓╨╕╤В╤М ╨┐╤А╨╡╤Д╨╡╤В╤З ╨▓ ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ 2
+echo		8. ╨Я╤А╨╡╨┤╤Л╨┤╤Г╤Й╨░╤П ╤Б╤В╤А╨░╨╜╨╕╤Ж╨░
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П
 call :message
 choice /C:1234589 /N
 set _erl=%errorlevel%
@@ -391,45 +392,45 @@ goto RegEditThirdPage
 
 :latestCLR
 call :regEditImport "latestclr"
-call :message "Использование только последних версий .NET включено!"
+call :message "╨Ш╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╤В╨╛╨╗╤М╨║╨╛ ╨┐╨╛╤Б╨╗╨╡╨┤╨╜╨╕╤Е ╨▓╨╡╤А╤Б╨╕╨╣ .NET ╨▓╨║╨╗╤О╤З╨╡╨╜╨╛!"
 goto RegEditThirdPage
 
 :exploitsCFG
 call :regEditImport "exploitscfg"
-call :message "Все эксплойты, кроме CFG отключены"
+call :message "╨Т╤Б╨╡ ╤Н╨║╤Б╨┐╨╗╨╛╨╣╤В╤Л, ╨║╤А╨╛╨╝╨╡ CFG ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л"
 goto RegEditThirdPage
 
 :edge
 call :regEditImport "edge"
-call :message "О нет! Они убили edge("
+call :message "╨Ю ╨╜╨╡╤В! ╨Ю╨╜╨╕ ╤Г╨▒╨╕╨╗╨╕ edge("
 goto RegEditThirdPage
 
 :nvdiaTelemetry
 call :regEditImport "nvtelemetry"
-call :message "Телеметрия убита"
+call :message "╨в╨╡╨╗╨╡╨╝╨╡╤В╤А╨╕╤П ╤Г╨▒╨╕╤В╨░"
 goto RegEditThirdPage
 
 :exploits
 call :regEditImport "exploits"
-call :message "Все эксплойты отключены"
+call :message "╨Т╤Б╨╡ ╤Н╨║╤Б╨┐╨╗╨╛╨╣╤В╤Л ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л"
 goto RegEditThirdPage
 
 :prefetcher2
 call :regEditImport "prefetcher 2"
-call :message "Настроил prefetch"
+call :message "╨Э╨░╤Б╤В╤А╨╛╨╕╨╗ prefetch"
 goto RegEditThirdPage
 
 
 :RegEditWindows10Only
-title = Только для 10 шиндуса
-echo		1. Полностью отключить уведомления и центр уведомлений
-echo		2. Увеличить приоритет для игр
-echo		3. Удалить "Отправить" из контекстного меню
-echo		4. Удалить папку "Объемные объекты"
-echo		5. Полностью отключить дефендер, smartscreen, эксплойты
-echo		6. Вывести секунды в системные часы
-echo		7. Отключить уведомления при подключении новой сети
-echo		9. Вернуться
+title = ╨в╨╛╨╗╤М╨║╨╛ ╨┤╨╗╤П 10 ╤И╨╕╨╜╨┤╤Г╤Б╨░
+echo		1. ╨Я╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨╛╤В╨║╨╗╤О╤З╨╕╤В╤М ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П ╨╕ ╤Ж╨╡╨╜╤В╤А ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╨╣
+echo		2. ╨г╨▓╨╡╨╗╨╕╤З╨╕╤В╤М ╨┐╤А╨╕╨╛╤А╨╕╤В╨╡╤В ╨┤╨╗╤П ╨╕╨│╤А
+echo		3. ╨г╨┤╨░╨╗╨╕╤В╤М "╨Ю╤В╨┐╤А╨░╨▓╨╕╤В╤М" ╨╕╨╖ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨╜╨╛╨│╨╛ ╨╝╨╡╨╜╤О
+echo		4. ╨г╨┤╨░╨╗╨╕╤В╤М ╨┐╨░╨┐╨║╤Г "╨Ю╨▒╤К╨╡╨╝╨╜╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л"
+echo		5. ╨Я╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨╛╤В╨║╨╗╤О╤З╨╕╤В╤М ╨┤╨╡╤Д╨╡╨╜╨┤╨╡╤А, smartscreen, ╤Н╨║╤Б╨┐╨╗╨╛╨╣╤В╤Л
+echo		6. ╨Т╤Л╨▓╨╡╤Б╤В╨╕ ╤Б╨╡╨║╤Г╨╜╨┤╤Л ╨▓ ╤Б╨╕╤Б╤В╨╡╨╝╨╜╤Л╨╡ ╤З╨░╤Б╤Л
+echo		7. ╨Ю╤В╨║╨╗╤О╤З╨╕╤В╤М ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П ╨┐╤А╨╕ ╨┐╨╛╨┤╨║╨╗╤О╤З╨╡╨╜╨╕╨╕ ╨╜╨╛╨▓╨╛╨╣ ╤Б╨╡╤В╨╕
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П
 call :message
 choice /C:12345679 /N
 set _erl=%errorlevel%
@@ -445,48 +446,48 @@ goto RegEditWindows10Only
 
 :windows10Notifications
 call :regEditImport "\Windows 10 Only\w10 notifications"
-call :message "Уведомления и центр уведомлений отключены!"
+call :message "╨г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П ╨╕ ╤Ж╨╡╨╜╤В╤А ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╨╣ ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditWindows10Only
 
 :windows10Priority
 call :regEditImport "\Windows 10 Only\w10 priority"
-call :message "Приоритет для игр увеличен!"
+call :message "╨Я╤А╨╕╨╛╤А╨╕╤В╨╡╤В ╨┤╨╗╤П ╨╕╨│╤А ╤Г╨▓╨╡╨╗╨╕╤З╨╡╨╜!"
 goto RegEditWindows10Only
 
 :windows10ShareItem
 call :regEditImport "\Windows 10 Only\w10 share item"
-call :message "Пункт отправить удален!"
+call :message "╨Я╤Г╨╜╨║╤В ╨╛╤В╨┐╤А╨░╨▓╨╕╤В╤М ╤Г╨┤╨░╨╗╨╡╨╜!"
 goto RegEditWindows10Only
 
 :windows103dObjects
 call :regEditImport "\Windows 10 Only\w10 3d objects"
-call :message "Пункт объемные объекты удален!"
+call :message "╨Я╤Г╨╜╨║╤В ╨╛╨▒╤К╨╡╨╝╨╜╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╤Г╨┤╨░╨╗╨╡╨╜!"
 goto RegEditWindows10Only
 
 :windows10Defender
 call :regEditTrustedImport "\Windows 10 Only\w10 defender X"
-call :message "Защита пала!"
+call :message "╨Ч╨░╤Й╨╕╤В╨░ ╨┐╨░╨╗╨░!"
 goto RegEditWindows10Only
 
 :windows10ShowSecondsInSystemClock
 call :regEditImport "\Windows 10 Only\w10 showsecondsinsystemclock"
-call :message "Секунды в часах включены!"
+call :message "╨б╨╡╨║╤Г╨╜╨┤╤Л ╨▓ ╤З╨░╤Б╨░╤Е ╨▓╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditWindows10Only
 
 :windows10NewnetworkWindow
 call :regEditImport "\Windows 10 Only\w10 newnetworkwindowoff"
-call :message "Уведомления при подключении новой сети выключены!"
+call :message "╨г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П ╨┐╤А╨╕ ╨┐╨╛╨┤╨║╨╗╤О╤З╨╡╨╜╨╕╨╕ ╨╜╨╛╨▓╨╛╨╣ ╤Б╨╡╤В╨╕ ╨▓╤Л╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditWindows10Only
 
 
 :RegEditWindows11Only
-title = Только для 11 шиндуса
-echo		1. Пофиксить новое контекстное меню
-echo		2. Увеличить приоритет для игр
-echo		3. Удалить "Отправить" из контекстного меню
-echo		4. Полностью отключить дефендер, smartscreen, эксплойты
-echo		5. Полностью отключить уведомления
-echo		9. Вернуться
+title = ╨в╨╛╨╗╤М╨║╨╛ ╨┤╨╗╤П 11 ╤И╨╕╨╜╨┤╤Г╤Б╨░
+echo		1. ╨Я╨╛╤Д╨╕╨║╤Б╨╕╤В╤М ╨╜╨╛╨▓╨╛╨╡ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨╜╨╛╨╡ ╨╝╨╡╨╜╤О
+echo		2. ╨г╨▓╨╡╨╗╨╕╤З╨╕╤В╤М ╨┐╤А╨╕╨╛╤А╨╕╤В╨╡╤В ╨┤╨╗╤П ╨╕╨│╤А
+echo		3. ╨г╨┤╨░╨╗╨╕╤В╤М "╨Ю╤В╨┐╤А╨░╨▓╨╕╤В╤М" ╨╕╨╖ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨╜╨╛╨│╨╛ ╨╝╨╡╨╜╤О
+echo		4. ╨Я╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨╛╤В╨║╨╗╤О╤З╨╕╤В╤М ╨┤╨╡╤Д╨╡╨╜╨┤╨╡╤А, smartscreen, ╤Н╨║╤Б╨┐╨╗╨╛╨╣╤В╤Л
+echo		5. ╨Я╨╛╨╗╨╜╨╛╤Б╤В╤М╤О ╨╛╤В╨║╨╗╤О╤З╨╕╤В╤М ╤Г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П
 call :message
 choice /C:123459 /N
 set _erl=%errorlevel%
@@ -500,27 +501,27 @@ goto RegEditWindows11Only
 
 :windows11ContextMenuFix
 call :regEditImport "\Windows 11 Only\w11 context menu fix"
-call :message "Новое контекстное меню исправлено!"
+call :message "╨Э╨╛╨▓╨╛╨╡ ╨║╨╛╨╜╤В╨╡╨║╤Б╤В╨╜╨╛╨╡ ╨╝╨╡╨╜╤О ╨╕╤Б╨┐╤А╨░╨▓╨╗╨╡╨╜╨╛!"
 goto RegEditWindows11Only
 
 :windows11Priority
 call :regEditImport "\Windows 11 Only\w11 priority"
-call :message "Приоритет для игр увеличен!"
+call :message "╨Я╤А╨╕╨╛╤А╨╕╤В╨╡╤В ╨┤╨╗╤П ╨╕╨│╤А ╤Г╨▓╨╡╨╗╨╕╤З╨╡╨╜!"
 goto RegEditWindows11Only
 
 :windows11ShareItem
 call :regEditImport "\Windows 11 Only\w11 share item"
-call :message "Пункт отправить удален!"
+call :message "╨Я╤Г╨╜╨║╤В ╨╛╤В╨┐╤А╨░╨▓╨╕╤В╤М ╤Г╨┤╨░╨╗╨╡╨╜!"
 goto RegEditWindows11Only
 
 :windows11Defender
 call :regEditTrustedImport "\Windows 11 Only\w11 defender X"
-call :message "Защита пала!"
+call :message "╨Ч╨░╤Й╨╕╤В╨░ ╨┐╨░╨╗╨░!"
 goto RegEditWindows11Only
 
 :windows11Notifications
 call :regEditImport "\Windows 11 Only\w11 notifications"
-call :message "Уведомления отключены!"
+call :message "╨г╨▓╨╡╨┤╨╛╨╝╨╗╨╡╨╜╨╕╤П ╨╛╤В╨║╨╗╤О╤З╨╡╨╜╤Л!"
 goto RegEditWindows11Only
 
 
@@ -530,21 +531,21 @@ rem Created by Vijorich
 
 
 :MmagentSetup
-title = Кручу верчу, на настройку sysmain дрочу
+title = ╨Ъ╤А╤Г╤З╤Г ╨▓╨╡╤А╤З╤Г, ╨╜╨░ ╨╜╨░╤Б╤В╤А╨╛╨╣╨║╤Г sysmain ╨┤╤А╨╛╤З╤Г
 
-call :message "На чем у вас установленна система?"
+call :message "╨Э╨░ ╤З╨╡╨╝ ╤Г ╨▓╨░╤Б ╤Г╤Б╤В╨░╨╜╨╛╨▓╨╗╨╡╨╜╨╜╨░ ╤Б╨╕╤Б╤В╨╡╨╝╨░?"
 echo 1) SSD
 echo 2) HDD
-echo 9) Выйти
+echo 9) ╨Т╤Л╨╣╤В╨╕
 choice /C:129 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message "Настраиваю.." && goto MmagentSetupSSD
-if %_erl%==2 cls && call :message "Настраиваю.." && goto MmagentSetupHDD
+if %_erl%==1 cls && call :message "╨Э╨░╤Б╤В╤А╨░╨╕╨▓╨░╤О.." && goto MmagentSetupSSD
+if %_erl%==2 cls && call :message "╨Э╨░╤Б╤В╤А╨░╨╕╨▓╨░╤О.." && goto MmagentSetupHDD
 if %_erl%==3 cls && call :message && goto MainMenu
 
 :MmagentSetupHDD
 call :regEditImport "prefetcher 0"
-cls && call :message "Настроено для hdd!" && goto MainMenu
+cls && call :message "╨Э╨░╤Б╤В╤А╨╛╨╡╨╜╨╛ ╨┤╨╗╤П hdd!" && goto MainMenu
 
 :MmagentSetupSSD
 call :regEditImport "prefetcher 3"
@@ -560,10 +561,10 @@ if %_mmMemory% LEQ 128 (
 
 if %_build% GEQ 22000 (
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "enable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
-	cls && call :message "Настроено для ssd, windows 11!" && goto MainMenu
+	cls && call :message "╨Э╨░╤Б╤В╤А╨╛╨╡╨╜╨╛ ╨┤╨╗╤П ssd, windows 11!" && goto MainMenu
 ) else (
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "disable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
-	cls && call :message "Настроено для ssd, windows 10!" && goto MainMenu
+	cls && call :message "╨Э╨░╤Б╤В╤А╨╛╨╡╨╜╨╛ ╨┤╨╗╤П ssd, windows 10!" && goto MainMenu
 )
 
 
@@ -573,11 +574,11 @@ rem Created by Vijorich
 
 
 :PowerSchemesMenu
-title = Схемка схемку покрывает
-echo		1. Импортировать схемы, выбрать нужную и удалить неиспользующиеся
-echo		2. Импортировать схемы и выбрать нужную
-echo		3. Удалить неиспользующиеся
-echo		9. Вернуться в главное меню
+title = ╨б╤Е╨╡╨╝╨║╨░ ╤Б╤Е╨╡╨╝╨║╤Г ╨┐╨╛╨║╤А╤Л╨▓╨░╨╡╤В
+echo		1. ╨Ш╨╝╨┐╨╛╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╤Б╤Е╨╡╨╝╤Л, ╨▓╤Л╨▒╤А╨░╤В╤М ╨╜╤Г╨╢╨╜╤Г╤О ╨╕ ╤Г╨┤╨░╨╗╨╕╤В╤М ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤Й╨╕╨╡╤Б╤П
+echo		2. ╨Ш╨╝╨┐╨╛╤А╤В╨╕╤А╨╛╨▓╨░╤В╤М ╤Б╤Е╨╡╨╝╤Л ╨╕ ╨▓╤Л╨▒╤А╨░╤В╤М ╨╜╤Г╨╢╨╜╤Г╤О
+echo		3. ╨г╨┤╨░╨╗╨╕╤В╤М ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╤Г╤О╤Й╨╕╨╡╤Б╤П
+echo		9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨▓ ╨│╨╗╨░╨▓╨╜╨╛╨╡ ╨╝╨╡╨╜╤О
 call :message
 choice /C:1239 /N
 set _erl=%errorlevel%
@@ -588,29 +589,29 @@ if %_erl%==4 cls && call :message && goto MainMenu
 goto PowerSchemesMenu
 
 :powerSchemesMix
-call :message "Выберите нужную схему!"
+call :message "╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ ╨╜╤Г╨╢╨╜╤Г╤О ╤Б╤Е╨╡╨╝╤Г!"
 call :applyPowerSchemes
 type %~dp0\powerschemes\readme.txt
 pause
 for /f "skip=2 tokens=2,4 delims=:()" %%G in ('powercfg -list') do (powercfg -delete %%G)
 cls
-call :message "Готово!"
+call :message "╨У╨╛╤В╨╛╨▓╨╛!"
 goto MainMenu
 
 :powerSchemesImport
-call :message "Выберите нужную схему!"
+call :message "╨Т╤Л╨▒╨╡╤А╨╕╤В╨╡ ╨╜╤Г╨╢╨╜╤Г╤О ╤Б╤Е╨╡╨╝╤Г!"
 call :applyPowerSchemes
 
 type %~dp0\powerschemes\readme.txt
 pause
 cls
-call :message "Готово!"
+call :message "╨У╨╛╤В╨╛╨▓╨╛!"
 goto MainMenu
 
 :powerSchemesDelete
 for /f "skip=2 tokens=2,4 delims=:()" %%G in ('powercfg -list') do (powercfg -delete %%G)
 cls
-call :message "Удалил!" 
+call :message "╨г╨┤╨░╨╗╨╕╨╗!" 
 goto MainMenu
 
 :applyPowerSchemes
@@ -670,18 +671,18 @@ rem Created by Vijorich
 
 
 :CheerUpAuthorMenu
-title = Я старался!
-echo 1. Скинув смешную гифку ребятам из техношахты!
-echo 2. Пощекотав кнопку подписки на youtube канале
+title = ╨п ╤Б╤В╨░╤А╨░╨╗╤Б╤П!
+echo 1. ╨б╨║╨╕╨╜╤Г╨▓ ╤Б╨╝╨╡╤И╨╜╤Г╤О ╨│╨╕╤Д╨║╤Г ╤А╨╡╨▒╤П╤В╨░╨╝ ╨╕╨╖ ╤В╨╡╤Е╨╜╨╛╤И╨░╤Е╤В╤Л!
+echo 2. ╨Я╨╛╤Й╨╡╨║╨╛╤В╨░╨▓ ╨║╨╜╨╛╨┐╨║╤Г ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨╜╨░ youtube ╨║╨░╨╜╨░╨╗╨╡
 echo.
-echo Скинув денюжку на покушать:
+echo ╨б╨║╨╕╨╜╤Г╨▓ ╨┤╨╡╨╜╤О╨╢╨║╤Г ╨╜╨░ ╨┐╨╛╨║╤Г╤И╨░╤В╤М:
 echo 3. donationalerts
 echo 4. donatepay
 echo.
-echo Начав поддерживать от 15 рублей в месяц!: 
+echo ╨Э╨░╤З╨░╨▓ ╨┐╨╛╨┤╨┤╨╡╤А╨╢╨╕╨▓╨░╤В╤М ╨╛╤В 15 ╤А╤Г╨▒╨╗╨╡╨╣ ╨▓ ╨╝╨╡╤Б╤П╤Ж!: 
 echo 5. boosty
 echo.
-echo 9. Вернуться в главное меню
+echo 9. ╨Т╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨▓ ╨│╨╗╨░╨▓╨╜╨╛╨╡ ╨╝╨╡╨╜╤О
 call :message
 choice /C:123459 /N
 set _erl=%errorlevel%
