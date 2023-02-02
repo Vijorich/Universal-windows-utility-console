@@ -1,0 +1,25 @@
+Windows Registry Editor Version 5.00
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\CloudContent]
+"DisableCloudOptimizedContent"=dword:1
+"DisableSoftLanding"=dword:1
+"DisableWindowsConsumerFeatures"=dword:1
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore]
+"AutoDownload"=dword:2
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+"ContentDeliveryAllowed"=dword:0
+"OemPreInstalledAppsEnabled"=dword:0
+"PreInstalledAppsEnabled"=dword:0
+"PreInstalledAppsEverEnabled"=dword:0
+"SilentInstalledAppsEnabled"=dword:0
+"SoftLandingEnabled"=dword:0
+"SubscribedContentEnabled"=dword:0
+"SystemPaneSuggestionsEnabled"=dword:0
+[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+"ContentDeliveryAllowed"=dword:0
+"OemPreInstalledAppsEnabled"=dword:0
+"PreInstalledAppsEnabled"=dword:0
+"PreInstalledAppsEverEnabled"=dword:0
+"SilentInstalledAppsEnabled"=dword:0
+"SoftLandingEnabled"=dword:0
+"SubscribedContentEnabled"=dword:0
+"SystemPaneSuggestionsEnabled"=dword:0
