@@ -1,7 +1,7 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
 
-SET v=1.55
+SET v=1.6
 
 verify on
 cd /d "%~dp0"
@@ -34,61 +34,6 @@ for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]
 	)
 )
 
-
-rem													Updater
-rem ========================================================================================================
-rem Created by Vijorich
-
-
-:Updater
-title = Поиск обновлений...
-set _myname=%~n0
-set _myparams=%*
-
-if not "!_myname:~0,9!"=="[updated]" (
-	if exist "[updated]!_myname!.bat" (
-		fc "[updated]!_myname!.bat" "!_myname!.bat.old" >nul
-		if not "!errorlevel!"=="0" (
-			ren "[updated]!_myname!.bat" "[updated]!_myname!.bat.old"
-			del /f "!_myname!.bat.old" "[updated]!_myname!.bat.old"
-			call :download https://raw.githubusercontent.com/Vijorich/Uber-cleaner/main/UpdateLog.txt "UpdateLog.txt"
-			call :message "Uber cleaner обновлен до версии !v!"
-			title = Список обновлений!
-			type UpdateLog.txt
-			del /f "UpdateLog.txt"
-			timeout 26 >nul
-			cls && goto ConfigCheck
-		)
-		ren "[updated]!_myname!.bat" "[updated]!_myname!.bat.old"
-		del /f "!_myname!.bat.old" "[updated]!_myname!.bat.old"
-		cls && goto ConfigCheck
-	)
-	call :message "Ищу обновления UC..."
-	call :download https://raw.githubusercontent.com/Vijorich/Uber-cleaner/main/Main.bat "[updated]%_myname%.bat"
-	if exist "[updated]!_myname!.bat" (
-	
-		fc "[updated]!_myname!.bat" "!_myname!.bat" >nul
-		if "!errorlevel!"=="0" (
-			
-			del /f "[updated]!_myname!.bat"
-			
-			cls && goto ConfigCheck
-		)
-		start /min cmd /c "[updated]!_myname!.bat" !_myparams!
-	) else (
-		cls && goto ConfigCheck
-	)
-) else (
-	if "!_myname!"=="[updated]" (
-		call :message "Вы не можете просто взять и назвать файл "[updated]" я как в скрипте это использовать должен?"
-		timeout 300 >nul
-	) else (
-		if exist "!_myname:~9!.bat" ( ren "!_myname:~9!.bat" "!_myname:~9!.bat.old" )
-		copy /b /y "!_myname!.bat" "!_myname:~9!.bat"
-		start cmd /c "!_myname:~9!.bat" !_myparams!
-	)
-)
-exit /b
 
 rem													Config check
 rem ========================================================================================================
