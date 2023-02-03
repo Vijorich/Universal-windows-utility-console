@@ -57,7 +57,7 @@ call :message "%_mynvver% последняя версия"
 		powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
 		del /f "UC.zip"
 		start %curpath%/Start
-		cls && goto ConfigCheck
+		exit /b
 	) else (
 		if "%_mynvver%" LSS "%v%" (
 			call :message "Ошибка, ваша версия выше последней, во избежание ошибок установите обновление"
@@ -65,7 +65,7 @@ call :message "%_mynvver% последняя версия"
 			powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
 			del /f "UC.zip"
 			start %curpath%/Start
-			cls && goto ConfigCheck
+			exit /b
 		) else (
 			call :message "Установлена последняя версия!"
 			timeout 26 >nul
