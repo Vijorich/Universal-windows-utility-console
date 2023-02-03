@@ -52,9 +52,9 @@ if exist "UpdateLog.txt" (
 		call :message "Uber cleaner обновлен до версии !v!"
 		title = Список обновлений!
 		type UpdateLog.txt
-		del /f "UpdateLog.txt" >nul
-		del /f "UC.zip" >nul
-		timeout 26 >nul
+		del /f "UpdateLog.txt" >nul 2>&1
+		del /f "UC.zip" >nul 2>&1
+		timeout 25
 		cls && goto ConfigCheck
 	)
 
@@ -95,7 +95,7 @@ goto UpdateMenu
 title = Обновляюсь...
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
 powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
-del /f "UC.zip" >nul
+del /f "UC.zip" >nul 2>&1
 start %curpath%/Start
 exit /b
 
@@ -287,22 +287,22 @@ call :message && goto RegEditFirstPage
 
 :RegEditFullReg
 if %_build% GEQ 22000 (
-	call :regEditImport "\Windows 11 Only\w11 context menu fix" "\Windows 11 Only\w11 notifications" "\Windows 11 Only\w11 priority" "\Windows 11 Only\w11 share item"
-    call :regEditTrustedImport "\Windows 11 Only\w11 defender X"
+	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11priority" "\Windows 11 Only\win11share item"
+	call :batTrustedImport "\Windows 11 Only\win11defenderX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы и для шиндус 11!" && goto MainMenu
 ) else (
-	call :regEditImport "\Windows 10 Only\w10 3d objects" "\Windows 10 Only\w10 newnetworkwindowoff" "\Windows 10 Only\w10 notifications" "\Windows 10 Only\w10 priority" "\Windows 10 Only\w10 share item" "\Windows 10 Only\w10 showsecondsinsystemclock"
-    call :regEditTrustedImport "\Windows 10 Only\w10 defender X"
+	call :regEditImport "\Windows 10 Only\win10folder3d" "\Windows 10 Only\win10networkwizard" "\Windows 10 Only\win10priority" "\Windows 10 Only\win10shareitem" "\Windows 10 Only\win10showsecondsinsystemclock"
+    call :regEditTrustedImport "\Windows 10 Only\win10defenderX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы и для шиндус 10!" && goto MainMenu
 )
 
 :regEditFullRegForAll
-call :regEditImport "appcompability" "attachmentmanager" "autoupdate" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
-call :regEditImport "systemprofile" "search" "regionalformats" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamedvr" "fse"
+call :regEditImport "appcompatibility" "attachmentmanager" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
+call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamedvr" "fse"
 call :regEditImport "uac" "telemetry" "systemrestore"
-call :regEditTrustedImport "networkfolder X"
+call :regEditTrustedImport "foldernetworkX"
 goto :eof
 
 
@@ -337,12 +337,12 @@ call :message "Жучки отключены!"
 goto RegEditFirstPage
 
 :autoUpdate
-call :regEditImport "autoupdate" "cloudcontent" "driversearching"
+call :regEditImport "cloudcontent" "driversearching"
 call :message "Автообновления отключены!"
 goto RegEditFirstPage
 
 :appCompability
-call :regEditImport "appcompability"
+call :regEditImport "appcompatibility"
 call :message "Компоненты совместимости отключены!"
 goto RegEditFirstPage
 
@@ -353,7 +353,7 @@ goto RegEditFirstPage
 
 :filesystemOptimization
 call :regEditImport "filesystem" "explorer"
-call :regEditTrustedImport "networkfolder X"
+call :regEditTrustedImport "foldernetworkX"
 call :message "Файловая система оптимизирована!"
 goto RegEditFirstPage
 
@@ -372,11 +372,10 @@ goto RegEditFirstPage
 title = Вторая страница
 echo		1. Возвращение старого просмотрщика фото
 echo		2. Убрать задержку показа менюшек
-echo		3. Установить нормальный форматы даты, времени и метрическую систему 
-echo		4. Отключить веб поиск в меню поиска
-echo		5. Уменьшение процента используемых ресурсов для лоу-приорити задач
-echo		6. Отключить точки восстановления
-echo		7. Глобальное отключение оптимизации во весь экран
+echo		3. Отключить веб поиск в меню поиска
+echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
+echo		5. Отключить точки восстановления
+echo		6. Глобальное отключение оптимизации во весь экран
 echo		8. Следующая страница
 echo		9. Предыдущая страница
 echo		0. Вернуться
@@ -385,29 +384,23 @@ choice /C:1234567890 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto backOldPhotoViewer
 if %_erl%==2 cls && goto menuShowDelay
-if %_erl%==3 cls && goto regionalFormats
-if %_erl%==4 cls && goto search
-if %_erl%==5 cls && goto systemProfile
-if %_erl%==6 cls && goto systemRestore
-if %_erl%==7 cls && goto fse
+if %_erl%==3 cls && goto search
+if %_erl%==4 cls && goto systemProfile
+if %_erl%==5 cls && goto systemRestore
+if %_erl%==6 cls && goto fse
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
 if %_erl%==10 cls && call :message && goto RegEditMenu
 goto RegEditSecondPage
 
 :backOldPhotoViewer
-call :regEditImport "backoldphotoviewer"
+call :regEditImport "oldphotoviewer"
 call :message "Старый просмотрщик фото вернулся!"
 goto RegEditSecondPage
 
 :menuShowDelay
 call :regEditImport "menushowdelay"
 call :message "Задержка показа меню убрана!"
-goto RegEditSecondPage
-
-:regionalFormats
-call :regEditImport "regionalformats"
-call :message "Форматы установленны!"
 goto RegEditSecondPage
 
 :search
@@ -437,8 +430,7 @@ echo		1. Использование только последних версий
 echo		2. Отключить все эксплойты, кроме CFG
 echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
 echo		4. Отключить телеметрию NVIDIA
-echo		5. Отключить все эксплойты
-echo		6. Поставить префетч в значение 2
+echo		5. Поставить префетч в значение 2
 echo		8. Предыдущая страница
 echo		9. Вернуться
 call :message
@@ -448,10 +440,9 @@ if %_erl%==1 cls && goto latestCLR
 if %_erl%==2 cls && goto exploitsCFG
 if %_erl%==3 cls && goto edge
 if %_erl%==4 cls && goto nvdiaTelemetry
-if %_erl%==5 cls && goto exploits
-if %_erl%==6 cls && goto prefetcher2
-if %_erl%==7 cls && call :message && goto RegEditSecondPage
-if %_erl%==8 cls && call :message && goto RegEditMenu
+if %_erl%==5 cls && goto prefetcher2
+if %_erl%==6 cls && call :message && goto RegEditSecondPage
+if %_erl%==7 cls && call :message && goto RegEditMenu
 goto RegEditThirdPage
 
 :latestCLR
@@ -465,18 +456,13 @@ call :message "Все эксплойты, кроме CFG отключены"
 goto RegEditThirdPage
 
 :edge
-call :regEditImport "edge"
+call :batTrustedImport "edgeX"
 call :message "О нет! Они убили edge("
 goto RegEditThirdPage
 
 :nvdiaTelemetry
 call :regEditImport "nvtelemetry"
 call :message "Телеметрия убита"
-goto RegEditThirdPage
-
-:exploits
-call :regEditImport "exploits"
-call :message "Все эксплойты отключены"
 goto RegEditThirdPage
 
 :prefetcher2
@@ -487,59 +473,52 @@ goto RegEditThirdPage
 
 :RegEditWindows10Only
 title = Только для 10 шиндуса
-echo		1. Полностью отключить уведомления и центр уведомлений
-echo		2. Увеличить приоритет для игр
-echo		3. Удалить "Отправить" из контекстного меню
-echo		4. Удалить папку "Объемные объекты"
-echo		5. Полностью отключить дефендер, smartscreen, эксплойты
-echo		6. Вывести секунды в системные часы
-echo		7. Отключить уведомления при подключении новой сети
+echo		1. Увеличить приоритет для игр
+echo		2. Удалить "Отправить" из контекстного меню
+echo		3. Удалить папку "Объемные объекты"
+echo		4. Полностью отключить дефендер, smartscreen, эксплойты
+echo		5. Вывести секунды в системные часы
+echo		6. Отключить уведомления при подключении новой сети
 echo		9. Вернуться
 call :message
 choice /C:12345679 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && goto windows10Notifications
-if %_erl%==2 cls && goto windows10Priority
-if %_erl%==3 cls && goto windows10ShareItem
-if %_erl%==4 cls && goto windows103dObjects
-if %_erl%==5 cls && goto windows10Defender
-if %_erl%==6 cls && goto windows10ShowSecondsInSystemClock
-if %_erl%==7 cls && goto windows10NewnetworkWindow
+if %_erl%==1 cls && goto windows10Priority
+if %_erl%==2 cls && goto windows10ShareItem
+if %_erl%==3 cls && goto windows103dObjects
+if %_erl%==4 cls && goto windows10Defender
+if %_erl%==5 cls && goto windows10ShowSecondsInSystemClock
+if %_erl%==6 cls && goto windows10NewnetworkWindow
 if %_erl%==8 cls && call :message && goto RegEditMenu
 goto RegEditWindows10Only
 
-:windows10Notifications
-call :regEditImport "\Windows 10 Only\w10 notifications"
-call :message "Уведомления и центр уведомлений отключены!"
-goto RegEditWindows10Only
-
 :windows10Priority
-call :regEditImport "\Windows 10 Only\w10 priority"
+call :regEditImport "\Windows 10 Only\win10priority"
 call :message "Приоритет для игр увеличен!"
 goto RegEditWindows10Only
 
 :windows10ShareItem
-call :regEditImport "\Windows 10 Only\w10 share item"
+call :regEditImport "\Windows 10 Only\win10shareitem"
 call :message "Пункт отправить удален!"
 goto RegEditWindows10Only
 
 :windows103dObjects
-call :regEditImport "\Windows 10 Only\w10 3d objects"
+call :regEditImport "\Windows 10 Only\win10folder3d"
 call :message "Пункт объемные объекты удален!"
 goto RegEditWindows10Only
 
 :windows10Defender
-call :regEditTrustedImport "\Windows 10 Only\w10 defender X"
+call :regEditTrustedImport "\Windows 10 Only\win10defenderX"
 call :message "Защита пала!"
 goto RegEditWindows10Only
 
 :windows10ShowSecondsInSystemClock
-call :regEditImport "\Windows 10 Only\w10 showsecondsinsystemclock"
+call :regEditImport "\Windows 10 Only\win10showsecondsinsystemclock"
 call :message "Секунды в часах включены!"
 goto RegEditWindows10Only
 
 :windows10NewnetworkWindow
-call :regEditImport "\Windows 10 Only\w10 newnetworkwindowoff"
+call :regEditImport "\Windows 10 Only\win10networkwizard"
 call :message "Уведомления при подключении новой сети выключены!"
 goto RegEditWindows10Only
 
@@ -550,42 +529,35 @@ echo		1. Пофиксить новое контекстное меню
 echo		2. Увеличить приоритет для игр
 echo		3. Удалить "Отправить" из контекстного меню
 echo		4. Полностью отключить дефендер, smartscreen, эксплойты
-echo		5. Полностью отключить уведомления
 echo		9. Вернуться
 call :message
-choice /C:123459 /N
+choice /C:12349 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto windows11ContextMenuFix
 if %_erl%==2 cls && goto windows11Priority
 if %_erl%==3 cls && goto windows11ShareItem
 if %_erl%==4 cls && goto windows11Defender
-if %_erl%==5 cls && goto windows11Notifications
-if %_erl%==6 cls && call :message && goto RegEditMenu
+if %_erl%==5 cls && call :message && goto RegEditMenu
 goto RegEditWindows11Only
 
 :windows11ContextMenuFix
-call :regEditImport "\Windows 11 Only\w11 context menu fix"
+call :regEditImport "\Windows 11 Only\win11contextmenu"
 call :message "Новое контекстное меню исправлено!"
 goto RegEditWindows11Only
 
 :windows11Priority
-call :regEditImport "\Windows 11 Only\w11 priority"
+call :regEditImport "\Windows 11 Only\win11priority"
 call :message "Приоритет для игр увеличен!"
 goto RegEditWindows11Only
 
 :windows11ShareItem
-call :regEditImport "\Windows 11 Only\w11 share item"
+call :regEditImport "\Windows 11 Only\win11share item"
 call :message "Пункт отправить удален!"
 goto RegEditWindows11Only
 
 :windows11Defender
-call :regEditTrustedImport "\Windows 11 Only\w11 defender X"
+call :batTrustedImport "\Windows 11 Only\win11defenderX"
 call :message "Защита пала!"
-goto RegEditWindows11Only
-
-:windows11Notifications
-call :regEditImport "\Windows 11 Only\w11 notifications"
-call :message "Уведомления отключены!"
 goto RegEditWindows11Only
 
 
@@ -728,6 +700,11 @@ setlocal DisableDelayedExpansion
 endlocal
 goto :eof
 
+:batTrustedImport
+setlocal DisableDelayedExpansion
+"%~dp0\regpack\PowerRun\PowerRun.exe" Regedit.exe /S "%~dp0\regpack\%~1.bat" ; "%~dp0\regpack\%~2.bat" ; "%~dp0\regpack\%~3.bat"
+endlocal
+goto :eof
 
 rem													Cheers
 rem ========================================================================================================
