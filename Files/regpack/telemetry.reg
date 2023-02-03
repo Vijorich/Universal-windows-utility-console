@@ -10,13 +10,3 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection]
 "AllowTelemetry"=dword:0
 "LimitEnhancedDiagnosticDataWindowsAnalytics"=dword:0
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform]
-"NoGenTicket"=dword:1
-[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Input\Settings]
-"InsightsEnabled"=dword:0
-[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Input\TIPC]
-"Enabled"=dword:0
-[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo]
-"Enabled"=dword:0
-[HKEY_USERS\.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Privacy]
-"TailoredExperiencesWithDiagnosticDataEnabled"=dword:0

@@ -1,24 +1,10 @@
 Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search]
 "AllowCloudSearch"=dword:0
-"AllowCortana"=dword:0
-"AllowCortanaAboveLock"=dword:0
-"ConnectedSearchUseWeb"=dword:0
-"ConnectedSearchUseWebOverMeteredConnections"=dword:0
 "DisableWebSearch"=dword:1
 [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Search]
-"AllowSearchToUseLocation"=dword:0
 "BingSearchEnabled"=dword:0
 "ConnectedSearchUseWeb"=dword:0
-"CortanaConsent"=dword:0
 "DisableWebSearch"=dword:1
 [HKEY_CURRENT_USER\SOFTWARE\Policies\Microsoft\Windows\Explorer]
-"DisableSearchBoxSuggestions"=dword:1
-[HKEY_USERS\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Search]
-"AllowSearchToUseLocation"=dword:0
-"BingSearchEnabled"=dword:0
-"ConnectedSearchUseWeb"=dword:0
-"CortanaConsent"=dword:0
-"DisableWebSearch"=dword:1
-[HKEY_USERS\.DEFAULT\Software\Policies\Microsoft\Windows\Explorer]
 "DisableSearchBoxSuggestions"=dword:1
