@@ -48,6 +48,16 @@ set curpath=%curpath:~0,-7%
 
 for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
 
+if exist "UpdateLog.txt"(
+		call :message "Uber cleaner обновлен до версии !v!"
+		title = Список обновлений!
+		type UpdateLog.txt
+		del /f "UpdateLog.txt"
+		del /f "UC.zip"
+		timeout 26 >nul
+		cls && goto ConfigCheck
+	)
+
 call :message "%v% ваша версия"
 call :message "%_mynvver% последняя версия"
 
