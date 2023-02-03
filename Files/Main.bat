@@ -41,7 +41,7 @@ rem ============================================================================
 rem Created by Vijorich
 
 
-:Updater
+:UpdateCheck
 title = Поиск обновлений...
 set curpath=%~dp0
 set curpath=%curpath:~0,-7%
@@ -53,22 +53,12 @@ call :message "%_mynvver% последняя версия"
 
 	if "%_mynvver%" GTR "%v%" ( 
 		call :message "Доступна новая версия!"
-		call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip
-		pause
-		powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
-		pause
-		del /f "UC.zip"
-		pause
-		start %curpath%/Start
-		pause
+		call :UpdateMenu
 		exit /b
 	) else (
 		if "%_mynvver%" LSS "%v%" (
-			call :message "Ошибка, ваша версия выше последней, во избежание ошибок установите обновление"
-			call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
-			powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
-			del /f "UC.zip"
-			start %curpath%/Start
+			call :message "Ошибка, ваша версия выше последней, во избежание ошибок установите последнюю версию"
+			call :UpdateMenu
 			exit /b
 		) else (
 			call :message "Установлена последняя версия!"
@@ -77,6 +67,26 @@ call :message "%_mynvver% последняя версия"
 		)
 	)
 	
+exit /b
+
+
+:UpdateMenu
+echo		1. Установить обновление
+echo		2. Позже		
+call :message
+choice /C:12345690 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto Update
+if %_erl%==2 cls && call :message && goto ConfigCheck
+goto UpdateMenu
+
+
+:Update
+title = Обновляюсь...
+call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
+powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
+del /f "UC.zip"
+start %curpath%/Start
 exit /b
 
 
