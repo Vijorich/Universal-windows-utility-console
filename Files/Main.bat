@@ -72,7 +72,7 @@ call :message "%_mynvver% последняя версия"
 			exit /b
 		) else (
 			call :message "Установлена последняя версия!"
-			timeout 25
+			timeout 1
 			cls && goto ConfigCheck
 		)
 	)
