@@ -53,10 +53,14 @@ call :message "%_mynvver% последняя версия"
 
 	if "%_mynvver%" GTR "%v%" ( 
 		call :message "Доступна новая версия!"
-		call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
+		call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip
+		pause
 		powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
+		pause
 		del /f "UC.zip"
+		pause
 		start %curpath%/Start
+		pause
 		exit /b
 	) else (
 		if "%_mynvver%" LSS "%v%" (
@@ -68,7 +72,7 @@ call :message "%_mynvver% последняя версия"
 			exit /b
 		) else (
 			call :message "Установлена последняя версия!"
-			timeout 26 >nul
+			timeout 25
 			cls && goto ConfigCheck
 		)
 	)
