@@ -57,9 +57,12 @@ if exist "UpdateLog.txt" (
 		timeout 25
 		cls && goto ConfigCheck
 	)
-
-call :message "%v% ваша версия"
-call :message "%_mynvver% последняя версия"
+		if "%_mynvver%" == "+" (
+		cls && goto ConfigCheck
+	) else (
+		call :message "%v% ваша версия"
+		call :message "%_mynvver% последняя версия"
+	)
 
 	if "%_mynvver%" GTR "%v%" ( 
 		call :message "Доступна новая версия!"
