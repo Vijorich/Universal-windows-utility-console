@@ -36,6 +36,46 @@ for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]
 )
 
 
+rem													Updater
+rem ========================================================================================================
+rem Created by Vijorich
+
+
+:Updater
+title = Поиск обновлений...
+set curpath=%~dp0
+set curpath=%curpath:~0,-7%
+
+for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
+
+call :message "%v% ваша версия"
+call :message "%_mynvver% последняя версия"
+
+	if "%_mynvver%" GTR "%v%" ( 
+		call :message "Доступна новая версия!"
+		call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
+		powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
+		del /f "UC.zip"
+		start %curpath%/Start
+		cls && goto ConfigCheck
+	) else (
+		if "%_mynvver%" LSS "%v%" (
+			call :message "Ошибка, ваша версия выше последней, во избежание ошибок установите обновление"
+			call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
+			powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
+			del /f "UC.zip"
+			start %curpath%/Start
+			cls && goto ConfigCheck
+		) else (
+			call :message "Установлена последняя версия!"
+			timeout 26 >nul
+			cls && goto ConfigCheck
+		)
+	)
+	
+exit /b
+
+
 rem													Config check
 rem ========================================================================================================
 rem Created by Vijorich
