@@ -52,8 +52,8 @@ if exist "UpdateLog.txt" (
 		call :message "Uber cleaner обновлен до версии !v!"
 		title = Список обновлений!
 		type UpdateLog.txt
-		del /f "UpdateLog.txt"
-		del /f "UC.zip"
+		del /f "UpdateLog.txt" >nul
+		del /f "UC.zip" >nul
 		timeout 26 >nul
 		cls && goto ConfigCheck
 	)
@@ -95,7 +95,7 @@ goto UpdateMenu
 title = Обновляюсь...
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
 powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
-del /f "UC.zip"
+del /f "UC.zip" >nul
 start %curpath%/Start
 exit /b
 
@@ -682,9 +682,9 @@ goto MainMenu
 
 powercfg /import %~dp0\powerschemes\diohas_D.pow >nul 2>&1
 powercfg /import %~dp0\powerschemes\diohas_MS.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\diohas_U.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\diohas_Ultra.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\diohas_NB_M.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.1.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.1_U.pow >nul 2>&1
 
 start powercfg.cpl
 
