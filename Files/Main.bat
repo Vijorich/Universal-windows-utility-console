@@ -705,7 +705,7 @@ goto :eof
 
 :batTrustedImport
 setlocal DisableDelayedExpansion
-"%~dp0\regpack\PowerRun\PowerRun.exe" Regedit.exe /S "%~dp0\regpack\%~1.bat" ; "%~dp0\regpack\%~2.bat" ; "%~dp0\regpack\%~3.bat"
+"%~dp0\regpack\PowerRun\PowerRun.exe" "%~dp0\regpack\%~1.bat" ; "%~dp0\regpack\%~2.bat" ; "%~dp0\regpack\%~3.bat"
 endlocal
 goto :eof
 
