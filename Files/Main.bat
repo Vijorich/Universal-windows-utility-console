@@ -63,57 +63,52 @@ set curpath=%curpath:~0,-7%
 
 for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
 
-if exist "UpdateLog.txt" (
-		call :message "Uber cleaner обновлен до версии !v!"
-		title = Список обновлений!
-		type UpdateLog.txt
-		del /f "UpdateLog.txt" >nul 2>&1
-		del /f "UC.zip" >nul 2>&1
-		timeout 25
-		cls && goto ConfigCheck
-	)
-		if "%_mynvver%" == "+" (
-		cls && goto ConfigCheck
-	) else (
+if "%_mynvver%" GTR "%v%" ( 
+	call :message "Доступна новая версия!"
+	call :message "%v% ваша версия"
+	call :message "%_mynvver% последняя версия"
+	call :UpdateMenu
+	exit /b
+) else (
+	if "%_mynvver%" LSS "%v%" (
+		call :message "Что-то здесь не так, ваша версия выше последней, во избежание ошибок установите последнюю версию"
 		call :message "%v% ваша версия"
-		call :message "%_mynvver% последняя версия"
-	)
-
-	if "%_mynvver%" GTR "%v%" ( 
-		call :message "Доступна новая версия!"
+	call :message "%_mynvver% последняя версия"
 		call :UpdateMenu
 		exit /b
 	) else (
-		if "%_mynvver%" LSS "%v%" (
-			call :message "Ошибка, ваша версия выше последней, во избежание ошибок установите последнюю версию"
-			call :UpdateMenu
-			exit /b
+		if exist "UpdateLog.txt" (
+			call :message "Uber cleaner обновлен до версии !v!"
+			title = Список обновлений!
+			type UpdateLog.txt
+			del /f "UpdateLog.txt" >nul 2>&1
+			del /f "UC.zip" >nul 2>&1
+			timeout 25
+			cls && goto ConfigCheck
 		) else (
-			call :message "Установлена последняя версия!"
-			timeout 1
 			cls && goto ConfigCheck
 		)
 	)
+)
 	
 exit /b
 
 
 :UpdateMenu
 echo		1. Установить обновление
-echo		2. Позже		
+echo		2. Не сейчас
 call :message
 choice /C:12345690 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto Update
+if %_erl%==1 cls && call :message && goto UpdateDownload
 if %_erl%==2 cls && call :message && goto ConfigCheck
 goto UpdateMenu
 
 
-:Update
+:UpdateDownload
 title = Обновляюсь...
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
 powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
-del /f "UC.zip" >nul 2>&1
 start %curpath%/Start
 exit /b
 
