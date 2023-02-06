@@ -389,6 +389,7 @@ echo		3. Отключить веб поиск в меню поиска
 echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
 echo		5. Отключить точки восстановления
 echo		6. Глобальное отключение оптимизации во весь экран
+echo		7. Убрать пункт «Изменить с помощью 3D» из контекстного меню файлов фотографий
 echo		8. Следующая страница
 echo		9. Предыдущая страница
 echo		0. Вернуться
@@ -401,6 +402,7 @@ if %_erl%==3 cls && goto search
 if %_erl%==4 cls && goto systemProfile
 if %_erl%==5 cls && goto systemRestore
 if %_erl%==6 cls && goto fse
+if %_erl%==7 cls && goto 3dedititem
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
 if %_erl%==10 cls && call :message && goto RegEditMenu
@@ -434,6 +436,11 @@ goto RegEditSecondPage
 :fse
 call :regEditImport "fse"
 call :message "Оптимизация во весь экран отключена!"
+goto RegEditSecondPage
+
+:3dedititem
+call :regEditImport "3dedititem"
+call :message "Готово!"
 goto RegEditSecondPage
 
 
