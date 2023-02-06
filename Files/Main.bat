@@ -2,7 +2,7 @@
 @title = UberCleaner
 chcp 65001 >nul
 
-SET v=1.6
+SET v=1.62
 
 verify on
 cd /d "%~dp0"
