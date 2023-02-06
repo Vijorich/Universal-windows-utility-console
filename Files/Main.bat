@@ -35,6 +35,21 @@ for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]
 	)
 )
 
+Set host1=wikipedia.org
+Set host2=google.com
+Set host3=yandex.ru
+ 
+>"nul"="%SystemRoot%\System32\ping.exe" %host1% -l 1 -n 1
+If "%errorlevel%"=="1" (>"nul"="%SystemRoot%\System32\ping.exe" %host2% -l 1 -n 2);
+If "%errorlevel%"=="1" (>"nul"="%SystemRoot%\System32\ping.exe" %host3% -l 1 -n 2);
+If "%errorlevel%"=="0" (Set "network_connection_state=True") Else (Set "network_connection_state=False");
+
+if "%network_connection_state%"=="True" (
+	cls && goto :UpdateCheck
+) else (
+	cls && goto :ConfigCheck
+)
+
 
 rem													Updater
 rem ========================================================================================================
@@ -123,7 +138,7 @@ rem Created by Vijorich
 :GatherInfo
 title = Собираю информацию...
 
-for /f %%a in ('powershell -command "Get-WmiObject Win32_PhysicalMemory | Measure-Object -Property capacity -Sum | Foreach {[int](($_.Sum/1GB))}"') do (set _memory=%%a)
+for /f %%a in ('powershell -command "(Get-WmiObject Win32_PhysicalMemory).capacity | Measure-Object -Sum | Foreach {[int]($_.Sum/1GB)}"') do (set _memory=%%a)
 
 if %_build% GEQ 22000 (
 	set _winver=11
