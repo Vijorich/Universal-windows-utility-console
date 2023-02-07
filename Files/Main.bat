@@ -1,6 +1,5 @@
 @echo off & setlocal EnableDelayedExpansion
 @title = UberCleaner
-chcp 65001 >nul
 
 SET v=1.62
 
@@ -61,7 +60,13 @@ title = Поиск обновлений...
 set curpath=%~dp0
 set curpath=%curpath:~0,-7%
 
-for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
+for /f %%a in ('PowerShell -Command "$PSVersionTable.PSVersion.Build"') do (set _powVer=%%a)
+
+if "%_powVer%" GEQ "22000" (
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
+) else (
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
+)
 
 if "%_mynvver%" GTR "%v%" ( 
 	call :message "Доступна новая версия!"
@@ -132,8 +137,6 @@ rem Created by Vijorich
 
 :GatherInfo
 title = Собираю информацию...
-
-for /f %%a in ('powershell -command "(Get-WmiObject Win32_PhysicalMemory).capacity | Measure-Object -Sum | Foreach {[int]($_.Sum/1GB)}"') do (set _memory=%%a)
 
 if %_build% GEQ 22000 (
 	set _winver=11
@@ -589,22 +592,27 @@ rem Created by Vijorich
 :MmagentSetup
 title = Кручу верчу, на настройку sysmain дрочу
 
-call :message "На чем у вас установленна система?"
-echo 1) SSD
-echo 2) HDD
-echo 9) Выйти
-choice /C:129 /N
-set _erl=%errorlevel%
-if %_erl%==1 cls && call :message "Настраиваю.." && goto MmagentSetupSSD
-if %_erl%==2 cls && call :message "Настраиваю.." && goto MmagentSetupHDD
-if %_erl%==3 cls && call :message && goto MainMenu
+set _SystemPath=%SystemRoot:~0,-8%
+set par1=solid state device
+set par2=ssd
+set par3=nvme
+
+smartctl -i %_SystemPath% |>NUL find /i "%par1%"
+If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%par2%")
+If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%par3%")
+If "%errorlevel%"=="0" (goto :MmagentSetupSSD) Else (goto :MmagentSetupHDD)
 
 :MmagentSetupHDD
-call :regEditImport "prefetcher 0"
-cls && call :message "Настроено для hdd!" && goto MainMenu
+call :regEditImport "prefetcher 0" && cls && call :message "Настроено для hdd!" && goto MainMenu
+call :message "ОШИБКА!"
+Pause
+goto MainMenu
 
 :MmagentSetupSSD
-call :regEditImport "prefetcher 3"
+call :regEditImport "prefetcher 3" 
+
+for /f %%a in ('powershell -command "(Get-WmiObject Win32_PhysicalMemory).capacity | Measure-Object -Sum | Foreach {[int]($_.Sum/1GB)}"') do (set _memory=%%a)
+
 set /a _mmMemory=%_memory%*32
 
 if %_mmMemory% LEQ 128 (
