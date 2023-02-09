@@ -192,15 +192,17 @@ echo		1. Отключить резервное хранилище
 echo		2. Отключить режим гибернации
 echo		3. Отключить виджеты (Windows Web Experience Pack)
 echo		4. Отключить xbox оверлеи
+echo		5. Отключить Nvidia Ansel
 echo		9. Вернуться в главное меню
 call :message
-choice /C:12349 /N
+choice /C:123459 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto offReservedStorage
 if %_erl%==2 cls && powercfg -h off && call :message "Режим гибернации отключен"
 if %_erl%==3 cls && goto offWindowsWebExperiencePack
 if %_erl%==4 cls && goto offXboxOverlays
-if %_erl%==5 cls && call :message && goto MainMenu
+if %_erl%==5 cls && goto offNvidiaAnsel
+if %_erl%==6 cls && call :message && goto MainMenu
 goto :AdditionalSettingsMenu
 
 :offReservedStorage
@@ -224,6 +226,18 @@ PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxSpeechToTextOverlay
 PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxGamingOverlay | Remove-AppxPackage"
 cls
 call :message "Xbox оверлеи отключены!"
+goto :AdditionalSettingsMenu
+
+:offNvidiaAnsel
+set _target=NvCameraEnable.exe
+
+for /f "delims=" %%x in ('"dir /b /s /a-d-l "%windir%\System32\DriverStore\%_target%" 2>nul"') do set _targetFullPath=%%x & goto Found
+
+if not defined _targetFullPath (echo %_target% не найден !!! & pause >nul & goto :eof)
+
+:Found
+%_targetFullPath% off
+call :message "Ansel отключен!"
 goto :AdditionalSettingsMenu
 
 
