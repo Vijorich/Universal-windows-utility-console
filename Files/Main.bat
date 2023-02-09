@@ -158,7 +158,7 @@ rem Created by Vijorich
 
 :MainMenu
 setlocal EnableDelayedExpansion
-title = UberCleaner !v!
+title = UberCleaner %v%
 setlocal DisableDelayedExpansion
 echo		1. Меню очистки..
 echo		2. Меню настроек реестра..
