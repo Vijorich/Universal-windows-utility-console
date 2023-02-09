@@ -6,7 +6,7 @@ set _version=1.65
 verify on
 cd /d "%~dp0"
 color 0A
-mode con:cols=85 lines=20
+mode con:cols=90 lines=20
 
 
 rem													Startup check
@@ -118,8 +118,7 @@ goto UpdateMenu
 :UpdateDownload
 title = Обновляюсь...
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_newVersion%/UC.zip "UC.zip"
-powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'"
-start %_currentPath%/Start
+powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && start %_currentPath%/Start
 exit /b
 
 
@@ -158,14 +157,16 @@ rem Created by Vijorich
 
 
 :MainMenu
-title = UberCleaner %_version%
+setlocal EnableDelayedExpansion
+title = UberCleaner !v!
+setlocal DisableDelayedExpansion
 echo		1. Меню очистки..
 echo		2. Меню настроек реестра..
 echo		3. Меню схем питания..
 echo		4. Меню дополнительных настрек..
 echo		5. Настроить mmagent..
 echo		9. Выйти из программы
-echo		0. Поддержать автора!
+echo		0. Поддержать автора!..
 call :message
 choice /C:1234590 /N
 set _erl=%errorlevel%
