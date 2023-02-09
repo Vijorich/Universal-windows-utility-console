@@ -1,11 +1,12 @@
-@echo off & setlocal EnableDelayedExpansion
-@title = UberCleaner
+@echo off & setlocal enabledelayedexpansion
+chcp 866 >nul
 
-SET v=1.62
+set _version=1.62
 
 verify on
 cd /d "%~dp0"
-COLOR A
+color 0A
+mode con:cols=85 lines=20
 
 
 rem													Startup check
@@ -16,17 +17,19 @@ rem Created by Vijorich
 :StartupCheck
 title = Проверка...
 
-for /f "tokens=6 delims=[]. " %%G in ('ver') Do (
+for /f "tokens=6 delims=[]. " %%G in ('ver') do (
 	set _build=%%G
 	if "%%G" lss "10586" (
+		color 04
 		call :message "Эта версия windows не поддерживается!"
 		pause
 		exit
 	)
 ) 
 
-for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]) -contains 'Tls12'"') do (
-	if "%%i" == "False" (
+for /f %%G in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]) -contains 'Tls12'"') do (
+	if "%%G"=="False" (
+		color 04
 		call :message "Ваша версия PowerShell не поддерживает TLS1.2 !"
 		echo:  Обновите PowerShell https://aka.ms/PSWindows
 		pause
@@ -34,19 +37,21 @@ for /f %%i in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]
 	)
 )
 
-Set host1=wikipedia.org
-Set host2=google.com
-Set host3=yandex.ru
- 
->"nul"="%SystemRoot%\System32\ping.exe" %host1% -l 1 -n 1
-If "%errorlevel%"=="1" (>"nul"="%SystemRoot%\System32\ping.exe" %host2% -l 1 -n 2);
-If "%errorlevel%"=="1" (>"nul"="%SystemRoot%\System32\ping.exe" %host3% -l 1 -n 2);
-If "%errorlevel%"=="0" (Set "network_connection_state=True") Else (Set "network_connection_state=False");
+set host1=wikipedia.org
+set host2=google.com
+set host3=ya.ru
 
-if "%network_connection_state%"=="True" (
-	cls && goto :UpdateCheck
+ping %host1% -l 1 -n 1 >nul
+if "%errorlevel%"=="1" (ping %host2% -l 1 -n 2 >nul)
+if "%errorlevel%"=="1" (ping %host3% -l 1 -n 2 >nul)
+if "%errorlevel%"=="0" (set "_networkState=True") else (set "_networkState=False")
+
+if "%_networkState%"=="True" (
+	cls
+	goto :UpdateCheck
 ) else (
-	cls && goto :ConfigCheck
+	cls
+	goto :ConfigCheck
 )
 
 
@@ -57,33 +62,33 @@ rem Created by Vijorich
 
 :UpdateCheck
 title = Поиск обновлений...
-set curpath=%~dp0
-set curpath=%curpath:~0,-7%
+set _currentPath=%~dp0
+set _currentPath=%_currentPath:~0,-7%
 
-for /f %%a in ('PowerShell -Command "$PSVersionTable.PSVersion.Build"') do (set _powVer=%%a)
+for /f %%a in ('PowerShell -Command "$PSVersionTable.PSVersion.Build"') do (set _powerShellVersion=%%a)
 
-if "%_powVer%" GEQ "22000" (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
+if "%_powerShellVersion%" GEQ "22000" (
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 ) else (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _mynvver=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 )
 
-if "%_mynvver%" GTR "%v%" ( 
+if "%_newVersion%" gtr "%_version%" (
 	call :message "Доступна новая версия!"
-	call :message "%v% ваша версия"
-	call :message "%_mynvver% последняя версия"
+	call :message "%_version% ваша версия"
+	call :message "%_newVersion% последняя версия"
 	call :UpdateMenu
 	exit /b
 ) else (
-	if "%_mynvver%" LSS "%v%" (
+	if "%_newVersion%" lss "%_version%" (
 		call :message "Что-то здесь не так, ваша версия выше последней, во избежание ошибок установите последнюю версию"
-		call :message "%v% ваша версия"
-	call :message "%_mynvver% последняя версия"
+		call :message "%_version% ваша версия"
+	call :message "%_newVersion% последняя версия"
 		call :UpdateMenu
 		exit /b
 	) else (
 		if exist "UpdateLog.txt" (
-			call :message "Uber cleaner обновлен до версии !v!"
+			call :message "Uber cleaner обновлен до версии !_version!"
 			title = Список обновлений!
 			type UpdateLog.txt
 			del /f "UpdateLog.txt" >nul 2>&1
@@ -112,9 +117,9 @@ goto UpdateMenu
 
 :UpdateDownload
 title = Обновляюсь...
-call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_mynvver%/UC.zip "UC.zip"
-powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%curpath%'"
-start %curpath%/Start
+call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_newVersion%/UC.zip "UC.zip"
+powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'"
+start %_currentPath%/Start
 exit /b
 
 
@@ -138,7 +143,7 @@ rem Created by Vijorich
 :GatherInfo
 title = Собираю информацию...
 
-if %_build% GEQ 22000 (
+if %_build% geq 22000 (
 	set _winver=11
 ) else (
 	set _winver=10
@@ -153,37 +158,72 @@ rem Created by Vijorich
 
 
 :MainMenu
-setlocal EnableDelayedExpansion
-title = UberCleaner !v!
-setlocal DisableDelayedExpansion
-
-echo		1. Меню очистки
-echo		2. Меню настроек реестра
-echo		3. Меню схем питания
-echo		4. Настроить mmagent
-echo		5. Отключить резервное хранилище
-echo		6. Отключить режим гибернации
+title = UberCleaner %_version%
+echo		1. Меню очистки..
+echo		2. Меню настроек реестра..
+echo		3. Меню схем питания..
+echo		4. Меню дополнительных настрек..
+echo		5. Настроить mmagent..
 echo		9. Выйти из программы
 echo		0. Поддержать автора!
 call :message
-choice /C:12345690 /N
+choice /C:1234590 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto CleanupMenu
 if %_erl%==2 cls && call :message && goto RegEditMenu
 if %_erl%==3 cls && call :message && goto PowerSchemesMenu
-if %_erl%==4 cls && call :message "Настраиваю.." && goto MmagentSetup
-if %_erl%==5 cls && goto offReservedStorage 
-if %_erl%==6 cls && powercfg -h off && call :message "Режим гибернации отключен"
-if %_erl%==7 exit 
-if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner %v%!" && goto CheerUpAuthorMenu
+if %_erl%==4 cls && call :message && goto AdditionalSettingsMenu
+if %_erl%==5 cls && call :message "Настраиваю.." && goto MmagentSetup
+if %_erl%==6 exit 
+if %_erl%==7 cls && call :message "Вы можете сделать приятно автору uber cleaner %_version%!" && goto CheerUpAuthorMenu
 goto MainMenu
+
+
+rem													Additional settings Menu
+rem ========================================================================================================
+rem Created by Vijorich
+
+
+:AdditionalSettingsMenu
+title = Дополнительные настройки
+
+echo		1. Отключить резервное хранилище
+echo		2. Отключить режим гибернации
+echo		3. Отключить виджеты (Windows Web Experience Pack)
+echo		4. Отключить xbox оверлеи
+echo		9. Вернуться в главное меню
+call :message
+choice /C:12349 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && goto offReservedStorage
+if %_erl%==2 cls && powercfg -h off && call :message "Режим гибернации отключен"
+if %_erl%==3 cls && goto offWindowsWebExperiencePack
+if %_erl%==4 cls && goto offXboxOverlays
+if %_erl%==5 cls && call :message && goto MainMenu
+goto :AdditionalSettingsMenu
 
 :offReservedStorage
 call :message "Ожидайте.."
 start /wait /min %SystemRoot%\System32\Dism.exe /Online /Set-ReservedStorageState /State:Disabled
 cls
 call :message "Резервное хранилище отключено!"
-goto MainMenu
+goto :AdditionalSettingsMenu
+
+:offWindowsWebExperiencePack
+call :message "Ожидайте.."
+winget uninstall "windows web experience pack"
+cls
+call :message "Виджеты отключены!"
+goto :AdditionalSettingsMenu
+
+:offXboxOverlays
+call :message "Ожидайте.."
+PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxGameOverlay | Remove-AppxPackage"
+PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxSpeechToTextOverlay | Remove-AppxPackage"
+PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxGamingOverlay | Remove-AppxPackage"
+cls
+call :message "Xbox оверлеи отключены!"
+goto :AdditionalSettingsMenu
 
 
 rem													Cleanup Menu
@@ -230,11 +270,6 @@ DEL /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
 start /min /wait WSReset.exe >nul 2>&1
 taskkill /f /im WinStore.App.exe >nul 2>&1
-ipconfig /release >nul 2>&1
-arp -d * >nul 2>&1
-nbtstat -R >nul 2>&1
-ipconfig /flushdns >nul 2>&1
-ipconfig /renew >nul 2>&1
 endlocal
 cls
 call :message "Готово!" && goto MainMenu
@@ -255,10 +290,12 @@ DEL /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 DEL /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
 start /min /wait WSReset.exe >nul 2>&1
 taskkill /f /im WinStore.App.exe >nul 2>&1
+ipconfig /flushdns >nul 2>&1
 ipconfig /release >nul 2>&1
 arp -d * >nul 2>&1
 nbtstat -R >nul 2>&1
-ipconfig /flushdns >nul 2>&1
+netsh int ip reset >nul 2>&1
+netsh winsock reset >nul 2>&1
 ipconfig /renew >nul 2>&1
 Dism /online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
 Dism /online /Cleanup-Image /SPSuperseded >nul 2>&1
