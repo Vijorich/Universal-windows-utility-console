@@ -224,6 +224,8 @@ call :message "Ожидайте.."
 PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxGameOverlay | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxSpeechToTextOverlay | Remove-AppxPackage"
 PowerShell -Command "Get-AppxPackage -AllUsers Microsoft.XboxGamingOverlay | Remove-AppxPackage"
+taskkill /f /im GameBarFTServer.exe >nul 2>&1
+taskkill /f /im GameBar.exe >nul 2>&1
 cls
 call :message "Xbox оверлеи отключены!"
 goto :AdditionalSettingsMenu
