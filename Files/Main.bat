@@ -214,7 +214,7 @@ goto :AdditionalSettingsMenu
 
 :offWindowsWebExperiencePack
 call :message "Ожидайте.."
-winget uninstall "windows web experience pack"
+echo Y | winget uninstall "windows web experience pack"
 cls
 call :message "Виджеты отключены!"
 goto :AdditionalSettingsMenu
@@ -230,12 +230,8 @@ goto :AdditionalSettingsMenu
 
 :offNvidiaAnsel
 set _target=NvCameraEnable.exe
-
-for /f "delims=" %%x in ('"dir /b /s /a-d-l "%windir%\System32\DriverStore\%_target%" 2>nul"') do set _targetFullPath=%%x & goto Found
-
-if not defined _targetFullPath (echo %_target% не найден !!! & pause >nul & goto :eof)
-
-:Found
+for /f "delims=" %%x in ('"dir /b /s /a-d-l "%windir%\System32\DriverStore\%_target%" 2>nul"') do set _targetFullPath=%%x
+if not defined _targetFullPath (call :message %_target% не найден !!! & pause >nul & goto :AdditionalSettingsMenu)
 %_targetFullPath% off
 call :message "Ansel отключен!"
 goto :AdditionalSettingsMenu
