@@ -263,7 +263,7 @@ goto CleanupMenu
 title = Вилкой или не вилкой, вот в чем вопрос
 call :message "Сейчас посмотрим.."
 Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
-Pause
+pause
 cls
 call :message && goto MainMenu
 
@@ -271,14 +271,15 @@ call :message && goto MainMenu
 setlocal DisableDelayedExpansion
 title = Чисти-чисти-чисти сука вот как блядь нужно чистить быстро раз-раз-раз! Чисти! Говно! Чисти!
 call :message "Чищу, чищу, чищу"
-Start /min /high .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\std.cleanup
-CD %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-DEL /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
-DEL /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
-DEL /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
+start AutoIt3.exe CleanerWindowCloser.au3
+start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\std.cleanup
+cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
 start /min /wait WSReset.exe >nul 2>&1
 taskkill /f /im WinStore.App.exe >nul 2>&1
 endlocal
@@ -289,16 +290,17 @@ call :message "Готово!" && goto MainMenu
 setlocal DisableDelayedExpansion
 title = Что чисти, епта? Как я буду вилкой-то чистить? Чё, совсем мудак, что ли? Покажи мне, как я буду чистить-то, ёпта! 
 call :message "Чищу, чищу, чищу"
-Start /min /high .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\max.cleanup
-CD %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-CD %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-DEL /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
-DEL /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
-DEL /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
+start AutoIt3.exe CleanerWindowCloser.au3
+start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\max.cleanup
+cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
 start /min /wait WSReset.exe >nul 2>&1
 taskkill /f /im WinStore.App.exe >nul 2>&1
 ipconfig /flushdns >nul 2>&1
