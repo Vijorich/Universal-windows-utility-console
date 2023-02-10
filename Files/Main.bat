@@ -191,7 +191,7 @@ title = Дополнительные настройки
 echo		1. Отключить резервное хранилище
 echo		2. Отключить режим гибернации
 echo		3. Отключить виджеты (Windows Web Experience Pack)
-echo		4. Отключить xbox оверлеи
+echo		4. Отключить Xbox оверлеи
 echo		5. Отключить Nvidia Ansel
 echo		9. Вернуться в главное меню
 call :message
