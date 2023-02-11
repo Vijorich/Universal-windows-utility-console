@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.65
+set _version=1.66
 
 verify on
 cd /d "%~dp0"
@@ -358,12 +358,12 @@ if %_build% GEQ 22000 (
 	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11priority" "\Windows 11 Only\win11share item"
 	call :batTrustedImport "\Windows 11 Only\win11defenderX"
 	call :regEditFullRegForAll
-	cls && call :message "Применил общие .рег файлы и для шиндус 11!" && goto MainMenu
+	cls && call :message "Применил общие .рег файлы для шиндус 11!" && goto MainMenu
 ) else (
 	call :regEditImport "\Windows 10 Only\win10folder3d" "\Windows 10 Only\win10networkwizard" "\Windows 10 Only\win10priority" "\Windows 10 Only\win10shareitem" "\Windows 10 Only\win10showsecondsinsystemclock"
     call :regEditTrustedImport "\Windows 10 Only\win10defenderX"
 	call :regEditFullRegForAll
-	cls && call :message "Применил общие .рег файлы и для шиндус 10!" && goto MainMenu
+	cls && call :message "Применил общие .рег файлы для шиндус 10!" && goto MainMenu
 )
 
 :regEditFullRegForAll
@@ -444,7 +444,7 @@ echo		3. Отключить веб поиск в меню поиска
 echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
 echo		5. Отключить точки восстановления
 echo		6. Глобальное отключение оптимизации во весь экран
-echo		7. Убрать пункт «Изменить с помощью 3D» из контекстного меню файлов фотографий
+echo		7. Убрать пункт "Изменить с помощью 3D" из контекстного меню файлов фотографий
 echo		8. Следующая страница
 echo		9. Предыдущая страница
 echo		0. Вернуться
