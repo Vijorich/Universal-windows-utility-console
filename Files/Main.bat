@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.66
+set _version=1.67
 
 verify on
 cd /d "%~dp0"
@@ -273,8 +273,7 @@ call :message && goto MainMenu
 setlocal DisableDelayedExpansion
 title = Чисти-чисти-чисти сука вот как блядь нужно чистить быстро раз-раз-раз! Чисти! Говно! Чисти!
 call :message "Чищу, чищу, чищу"
-start AutoIt3.exe CleanerWindowCloser.au3
-start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\std.cleanup
+start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\std.cleanup
 cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
@@ -292,12 +291,13 @@ call :message "Готово!" && goto MainMenu
 setlocal DisableDelayedExpansion
 title = Что чисти, епта? Как я буду вилкой-то чистить? Чё, совсем мудак, что ли? Покажи мне, как я буду чистить-то, ёпта! 
 call :message "Чищу, чищу, чищу"
-start AutoIt3.exe CleanerWindowCloser.au3
-start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp .\cleanmgrplus\max.cleanup
+start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\max.cleanup
 cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %userprofile%\Downloads >nul 2>&1
+cd %userprofile%\Загрузки >nul 2>&1
 cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
