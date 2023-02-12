@@ -1,4 +1,4 @@
-# Uber-cleaner
+<h1 align="center"> Uber-cleaner </h1>
 
 <p align="center">
  
@@ -8,7 +8,7 @@
 <a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
  <img alt="Downloads on GitHub" src="https://img.shields.io/github/downloads/Vijorich/Uber-cleaner/total.svg" />
 </a>
-
+ 
 </p>
 
 ## В чем цель программы
