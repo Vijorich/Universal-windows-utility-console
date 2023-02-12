@@ -2,10 +2,10 @@
 
 <p align="center">
  
-<a href="https://github.com/Vijorich/Uber-cleaner/releases//latest" target="_blank">
+<a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
  <img alt="Latest GitHub release" src="https://img.shields.io/github/v/release/Vijorich/Uber-cleaner.svg" />
 </a>
-<a href="https://github.com/builtbybel/CleanmgrPlus/releases" target="_blank">
+<a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
  <img alt="Downloads on GitHub" src="https://img.shields.io/github/downloads/Vijorich/Uber-cleaner/total.svg" />
 </a>
 
