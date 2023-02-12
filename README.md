@@ -3,10 +3,10 @@
 <p align="center">
  
 <a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
- <img alt="Latest GitHub release" src="https://img.shields.io/github/v/release/Vijorich/Uber-cleaner.svg" />
+ <img alt="Latest GitHub release" src="https://img.shields.io/github/v/release/Vijorich/Uber-cleaner?color=1271b5&label=%D0%A0%D0%B5%D0%BB%D0%B8%D0%B7&style=for-the-badge" />
 </a>
 <a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
- <img alt="Downloads on GitHub" src="https://img.shields.io/github/downloads/Vijorich/Uber-cleaner/total.svg" />
+ <img alt="Downloads on GitHub" src="https://img.shields.io/github/downloads/Vijorich/Uber-cleaner/total?color=%2371af13&label=%D0%97%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BE%D0%BA&style=for-the-badge" />
 </a>
  
 </p>
