@@ -108,7 +108,7 @@ exit /b
 echo		1. Установить обновление
 echo		2. Не сейчас
 call :message
-choice /C:12345690 /N
+choice /C:12 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto UpdateDownload
 if %_erl%==2 cls && call :message && goto ConfigCheck
