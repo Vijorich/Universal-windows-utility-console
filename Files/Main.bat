@@ -296,8 +296,8 @@ cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %userprofile%\Downloads >nul 2>&1
-cd %userprofile%\Загрузки >nul 2>&1
+cd %userprofile%\Downloads >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %userprofile%\Загрузки >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
