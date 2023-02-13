@@ -1,4 +1,4 @@
-<h1 align="center"> Uber-cleaner </h1>
+<h1 align="center"> Uber Cleaner </h1>
 
 <p align="center">
  
@@ -21,8 +21,6 @@
 <a href="https://github.com/Vijorich/Uber-cleaner/issues" target="_blank">
  <img alt="Issues open" src="https://img.shields.io/github/issues-raw/Vijorich/Uber-cleaner?label=%D0%9E%D1%82%D0%BA%D1%80%D1%8B%D1%82%D0%BE%20%D0%BF%D1%80%D0%BE%D0%B1%D0%BB%D0%B5%D0%BC&style=for-the-badge" />
 </a>
-
-
  
 </p>
 
