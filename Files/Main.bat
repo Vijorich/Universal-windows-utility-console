@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.67
+set _version=1.68
 
 verify on
 cd /d "%~dp0"
@@ -355,8 +355,9 @@ call :message && goto RegEditFirstPage
 
 :RegEditFullReg
 if %_build% GEQ 22000 (
-	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11priority" "\Windows 11 Only\win11share item"
-	call :batTrustedImport "\Windows 11 Only\win11defenderX"
+	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11priority" "\Windows 11 Only\win11shareitem"
+	call :regEditTrustedImport "\Windows 11 Only\win11defenderX"
+	call :batTrustedImport "\Windows 11 Only\win11defendersubserviceX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы для шиндус 11!" && goto MainMenu
 ) else (
@@ -444,12 +445,11 @@ echo		3. Отключить веб поиск в меню поиска
 echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
 echo		5. Отключить точки восстановления
 echo		6. Глобальное отключение оптимизации во весь экран
-echo		7. Убрать пункт "Изменить с помощью 3D" из контекстного меню файлов фотографий
 echo		8. Следующая страница
 echo		9. Предыдущая страница
 echo		0. Вернуться
 call :message
-choice /C:1234567890 /N
+choice /C:123456890 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto backOldPhotoViewer
 if %_erl%==2 cls && goto menuShowDelay
@@ -457,7 +457,6 @@ if %_erl%==3 cls && goto search
 if %_erl%==4 cls && goto systemProfile
 if %_erl%==5 cls && goto systemRestore
 if %_erl%==6 cls && goto fse
-if %_erl%==7 cls && goto 3dedititem
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
 if %_erl%==10 cls && call :message && goto RegEditMenu
@@ -493,29 +492,22 @@ call :regEditImport "fse"
 call :message "Оптимизация во весь экран отключена!"
 goto RegEditSecondPage
 
-:3dedititem
-call :regEditImport "3dedititem"
-call :message "Готово!"
-goto RegEditSecondPage
-
 
 :RegEditThirdPage
 title = Третья страница
 echo		1. Использование только последних версий .NET
-echo		2. Отключить все эксплойты, кроме CFG
+echo		2. Поставить префетч в значение 2
 echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
 echo		4. Отключить телеметрию NVIDIA
-echo		5. Поставить префетч в значение 2
 echo		8. Предыдущая страница
 echo		9. Вернуться
 call :message
-choice /C:1234589 /N
+choice /C:123489 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto latestCLR
-if %_erl%==2 cls && goto exploitsCFG
+if %_erl%==2 cls && goto prefetcher2
 if %_erl%==3 cls && goto edge
 if %_erl%==4 cls && goto nvdiaTelemetry
-if %_erl%==5 cls && goto prefetcher2
 if %_erl%==6 cls && call :message && goto RegEditSecondPage
 if %_erl%==7 cls && call :message && goto RegEditMenu
 goto RegEditThirdPage
@@ -525,24 +517,19 @@ call :regEditImport "latestclr"
 call :message "Использование только последних версий .NET включено!"
 goto RegEditThirdPage
 
-:exploitsCFG
-call :regEditImport "exploitscfg"
-call :message "Все эксплойты, кроме CFG отключены"
+:prefetcher2
+call :regEditImport "prefetcher 2"
+call :message "Настроил prefetch"
 goto RegEditThirdPage
 
 :edge
-call :batTrustedImport "edgeX"
+call :batTrustedImport "edge"
 call :message "О нет! Они убили edge("
 goto RegEditThirdPage
 
 :nvdiaTelemetry
 call :regEditImport "nvtelemetry"
 call :message "Телеметрия убита"
-goto RegEditThirdPage
-
-:prefetcher2
-call :regEditImport "prefetcher 2"
-call :message "Настроил prefetch"
 goto RegEditThirdPage
 
 
@@ -603,7 +590,7 @@ title = .reg файлы для windows 11
 echo		1. Пофиксить новое контекстное меню
 echo		2. Увеличить приоритет для игр
 echo		3. Удалить "Отправить" из контекстного меню
-echo		4. Полностью отключить дефендер, smartscreen, эксплойты
+echo		4. Полностью отключить дефендер
 echo		9. Вернуться
 call :message
 choice /C:12349 /N
@@ -626,15 +613,15 @@ call :message "Приоритет для игр увеличен!"
 goto RegEditWindows11Only
 
 :windows11ShareItem
-call :regEditImport "\Windows 11 Only\win11share item"
+call :regEditImport "\Windows 11 Only\win11shareitem"
 call :message "Пункт отправить удален!"
 goto RegEditWindows11Only
 
 :windows11Defender
-call :batTrustedImport "\Windows 11 Only\win11defenderX"
+call :regEditTrustedImport "\Windows 11 Only\win11defenderX"
+call :batTrustedImport "\Windows 11 Only\win11defendersubserviceX"
 call :message "Защита пала!"
 goto RegEditWindows11Only
-
 
 rem													mmagent
 rem ========================================================================================================
