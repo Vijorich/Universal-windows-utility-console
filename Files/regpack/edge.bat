@@ -11,4 +11,3 @@ for /f "delims=Endofsearch: " %%i in ('reg query HKLM\SYSTEM\CurrentControlSet\S
 if %elevation%==1 ( reg add HKLM\SYSTEM\CurrentControlSet\Services\MicrosoftEdgeElevationService /v Start /t REG_DWORD /d 4 /f ) else ( echo ERROR: MicrosoftEdgeElevationService service was not found. )
 schtasks /change /tn MicrosoftEdgeUpdateTaskMachineCore /disable
 schtasks /change /tn MicrosoftEdgeUpdateTaskMachineUA /disable
-pause
