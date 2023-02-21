@@ -746,7 +746,7 @@ powercfg /import %~dp0\powerschemes\diohas_D.pow >nul 2>&1
 powercfg /import %~dp0\powerschemes\diohas_MS.pow >nul 2>&1
 powercfg /import %~dp0\powerschemes\diohas_NB_M.pow >nul 2>&1
 powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.1.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.1_U.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.2_U.pow >nul 2>&1
 
 start powercfg.cpl
 
