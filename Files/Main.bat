@@ -15,7 +15,7 @@ rem Created by Vijorich
 
 
 :StartupCheck
-title = Проверка...
+title = Проверка..
 
 for /f "tokens=6 delims=[]. " %%G in ('ver') do (
 	set _build=%%G
@@ -61,7 +61,7 @@ rem Created by Vijorich
 
 
 :UpdateCheck
-title = Поиск обновлений...
+title = Поиск обновлений..
 set _currentPath=%~dp0
 set _currentPath=%_currentPath:~0,-7%
 
@@ -116,7 +116,7 @@ goto UpdateMenu
 
 
 :UpdateDownload
-title = Обновляюсь...
+title = Обновление..
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_newVersion%/UC.zip "UC.zip"
 powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && start %_currentPath%/Start
 exit /b
@@ -128,7 +128,7 @@ rem Created by Vijorich
 
 
 :ConfigCheck
-title = Ищу конфиг очистки...
+title = Поиск предустановок очистки...
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders" /v StateFlags0777"
 cls
 if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
@@ -140,7 +140,7 @@ rem Created by Vijorich
 
 
 :GatherInfo
-title = Собираю информацию...
+title = Распознавание версии Windows..
 
 if %_build% geq 22000 (
 	set _winver=11
@@ -271,7 +271,7 @@ call :message && goto MainMenu
 
 :fastCleanup
 setlocal DisableDelayedExpansion
-title = Чисти-чисти-чисти сука вот как блядь нужно чистить быстро раз-раз-раз! Чисти! Говно! Чисти!
+title = Производится быстрая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\std.cleanup
 cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
@@ -289,7 +289,7 @@ call :message "Готово!" && goto MainMenu
 
 :recommendedCleanup
 setlocal DisableDelayedExpansion
-title = Что чисти, епта? Как я буду вилкой-то чистить? Чё, совсем мудак, что ли? Покажи мне, как я буду чистить-то, ёпта! 
+title = Производится рекомендуемая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\max.cleanup
 cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
@@ -331,7 +331,7 @@ rem Created by Vijorich
 
 
 :RegEditMenu
-title = Хихихи применю рег и импут лага как не бывало
+title = Меню .reg файлов
 echo		1. Просто применить рекомендуемые настройки
 echo		2. Точечная настройка (для любой версии шиндус)
 echo		3. Только для 10 шиндуса
@@ -547,7 +547,7 @@ goto RegEditThirdPage
 
 
 :RegEditWindows10Only
-title = Только для 10 шиндуса
+title = .reg файлы для windows 10
 echo		1. Увеличить приоритет для игр
 echo		2. Удалить "Отправить" из контекстного меню
 echo		3. Удалить папку "Объемные объекты"
@@ -599,7 +599,7 @@ goto RegEditWindows10Only
 
 
 :RegEditWindows11Only
-title = Только для 11 шиндуса
+title = .reg файлы для windows 11
 echo		1. Пофиксить новое контекстное меню
 echo		2. Увеличить приоритет для игр
 echo		3. Удалить "Отправить" из контекстного меню
@@ -642,25 +642,47 @@ rem Created by Vijorich
 
 
 :MmagentSetup
-title = Кручу верчу, на настройку sysmain дрочу
+title = Настройка sysmain
 
 set _SystemPath=%SystemRoot:~0,-8%
 set par1=solid state device
 set par2=ssd
 set par3=nvme
 
+set err1=failed
+set err2=error
+
 smartctl -i %_SystemPath% |>NUL find /i "%par1%"
 If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%par2%")
 If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%par3%")
-If "%errorlevel%"=="0" (goto :MmagentSetupSSD) Else (goto :MmagentSetupHDD)
+If "%errorlevel%"=="0" (goto :MmagentSetupSSD)
+smartctl -i %_SystemPath% |>NUL find /i "%err1%"
+If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%err2%")
+If "%errorlevel%"=="0" (goto :IdentityFailed) Else (goto :MmagentSetupHDD)
+
+:IdentityFailed
+title = Ошибка в определении диска
+call :message "Ошибка в определении диска, проверьте его целостность и корректность работы"
+echo		1. HDD..
+echo		2. SSD..
+echo		9. Вернуться в главное меню..
+call :message
+choice /C:129 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && goto :MmagentSetupHDD
+if %_erl%==2 cls && goto :MmagentSetupSSD
+if %_erl%==3 cls && call :message && goto :MainMenu
+goto IdentityFailed
 
 :MmagentSetupHDD
-call :regEditImport "prefetcher 0" && cls && call :message "Настроено для hdd!" && goto MainMenu
+title = Настройка для HDD
+call :regEditImport "prefetcher 0" && cls && call :message "Настроено для HDD!" && goto MainMenu
 call :message "ОШИБКА!"
 Pause
 goto MainMenu
 
 :MmagentSetupSSD
+title = Настройка для SSD
 call :regEditImport "prefetcher 3" 
 
 for /f %%a in ('powershell -command "(Get-WmiObject Win32_PhysicalMemory).capacity | Measure-Object -Sum | Foreach {[int]($_.Sum/1GB)}"') do (set _memory=%%a)
@@ -676,13 +698,14 @@ if %_mmMemory% LEQ 128 (
 )
 
 if %_build% GEQ 22000 (
+	title = Настройка для SSD, windows 11
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "enable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
-	cls && call :message "Настроено для ssd, windows 11!" && goto MainMenu
+	cls && call :message "Настроено для SSD, windows 11!" && goto MainMenu
 ) else (
+	title = Настройка для SSD, windows 10
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "disable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
-	cls && call :message "Настроено для ssd, windows 10!" && goto MainMenu
+	cls && call :message "Настроено для SSD, windows 10!" && goto MainMenu
 )
-
 
 rem													Power Schemes
 rem ========================================================================================================
@@ -690,7 +713,7 @@ rem Created by Vijorich
 
 
 :PowerSchemesMenu
-title = Схемка схемку покрывает
+title = Меню схем питания
 echo		1. Импортировать схемы, выбрать нужную и удалить неиспользующиеся
 echo		2. Импортировать схемы и выбрать нужную
 echo		3. Удалить неиспользующиеся
