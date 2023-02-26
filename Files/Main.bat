@@ -274,10 +274,9 @@ setlocal DisableDelayedExpansion
 title = Производится быстрая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\std.cleanup
-cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %WINDIR%\Temp\ >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
