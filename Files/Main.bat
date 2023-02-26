@@ -292,10 +292,19 @@ setlocal DisableDelayedExpansion
 title = Производится рекомендуемая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\max.cleanup
-cd %WINDIR%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %Tmp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %WINDIR%\Temp\ >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %WINDIR%\minidump >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\WER >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\Temporary Internet Files >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\IECompatCache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\IECompatUaCache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\IEDownloadHistory >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\INetCache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Windows\INetCookies >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+cd %UserProfile%\AppData\Local\Microsoft\Terminal Server Client\Cache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 cd %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
