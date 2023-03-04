@@ -5,6 +5,14 @@ labels: ["ошибка"]
 assignees:
   - Vijorich
 body:
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Пожалуйста, для начала проверьте наличие дубликатов
+      description: Отправляя этот отчет об ошибке вы подтверждаете что предприняли минимальные усилия, для проверки уже существующих проблем, и понимаете что мы можем закрыть вашу проблему, если существует уже похожая или дано недостаточно информаци.
+      options:
+        - label: Я проверил систему отслеживания ошибок, и не нашел ответа или решения своей (возможно, закрытой) ошибки.
+          required: true
   - type: markdown
     attributes:
       value: |
@@ -52,11 +60,3 @@ body:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
-      options:
-        - label: I agree to follow this project's Code of Conduct
-          required: true
