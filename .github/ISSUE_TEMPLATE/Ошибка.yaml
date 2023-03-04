@@ -2,8 +2,6 @@ name: Сообщение об ошибке
 description: Шаблон для заполнения отчета об ошибке
 title: "[Ошибка]: "
 labels: ["ошибка"]
-assignees:
-  - Vijorich
 body:
   - type: checkboxes
     id: terms
