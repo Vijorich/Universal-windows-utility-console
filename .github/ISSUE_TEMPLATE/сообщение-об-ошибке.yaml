@@ -16,22 +16,23 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
-  - type: input
-    id: contact
-    attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
-    validations:
-      required: false
+        Спасибо, что нашли время заполнить этот отчет об ошибке!
   - type: textarea
     id: what-happened
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "A bug happened!"
+      label: Опишите ошибку
+      description: Так же опишите ожидаемый результат
+      placeholder: Четкое и краткое описание ошибки и что вы ожидали.
+      value: "Тут такое случилось! А ожидал то я не это("
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Опишите действия для воспроизведения ошибки
+      description: Please give us clear and concise steps to reproduce the problem you are experiencing.
+      placeholder: Четкое и краткое описание ошибки и что вы ожидали.
+      value: "Тут такое случилось! А ожидал то я не это("
     validations:
       required: true
   - type: dropdown
