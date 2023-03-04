@@ -1,18 +1,9 @@
----
 name: Сообщение об ошибке
-about: Шаблон для заполнения отчета об ошибке
-title: "[Ошибка] Дайте краткое название ошибки"
-labels: bug
-assignees: Vijorich
-
----
-
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug", "triage"]
+description: Шаблон для заполнения отчета об ошибке
+title: "[Ошибка]: "
+labels: ["ошибка"]
 assignees:
-  - octocat
+  - Vijorich
 body:
   - type: markdown
     attributes:
