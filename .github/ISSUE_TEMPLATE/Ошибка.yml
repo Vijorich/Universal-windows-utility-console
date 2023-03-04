@@ -1,0 +1,61 @@
+name: Сообщение об ошибке
+description: Шаблон для заполнения отчета об ошибке
+title: "[Ошибка]: "
+labels: ["ошибка"]
+body:
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Пожалуйста, для начала проверьте наличие дубликатов
+      description: Отправляя этот отчет об ошибке вы подтверждаете что предприняли минимальные усилия, для проверки уже существующих проблем, и понимаете что мы можем закрыть вашу проблему, если существует уже похожая или дано недостаточно информаци.
+      options:
+        - label: Я проверил систему отслеживания ошибок, и не нашел ответа или решения своей (возможно, закрытой) ошибки.
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что нашли время заполнить этот отчет об ошибке!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Опишите ошибку
+      description: Так же опишите ожидаемый результат
+      placeholder: Четкое и краткое описание ошибки и что вы ожидали.
+      value: "Тут такое случилось! А ожидал то я не это("
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Опишите действия для воспроизведения ошибки
+      description: Please give us clear and concise steps to reproduce the problem you are experiencing.
+      placeholder: Четкое и краткое описание ошибки и что вы ожидали.
+      value: "Тут такое случилось! А ожидал то я не это("
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      options:
+        - 1.0.2 (Default)
+        - 1.0.3 (Edge)
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
