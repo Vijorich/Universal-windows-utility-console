@@ -15,18 +15,15 @@ body:
     id: desc
     attributes:
       label: Опишите вашу идею максимально подробно и понятно
-      description: Btcb btcb tbcb
     validations:
       required: true
   - type: textarea
     id: help
     attributes:
       label: Опишите возможное решение/реализацию функции (если понимаете как это можно реализовать на Batch/Cmd/PowerShell)
-      description: What you expected to happen
   - type: textarea
     id: other
     attributes:
       label: Остальные мысли о предложенной функции
-      description: What actually happened
     validations:
       required: true
