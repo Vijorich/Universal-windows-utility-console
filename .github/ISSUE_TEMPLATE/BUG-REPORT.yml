@@ -1,0 +1,11 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - Vijorich
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что нашли время заполнить этот отчет об ошибке!
