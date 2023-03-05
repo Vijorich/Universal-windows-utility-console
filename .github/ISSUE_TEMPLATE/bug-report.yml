@@ -32,7 +32,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: steps
+    id: test
     attributes:
       label: Лабел
       description: Дескриптион
@@ -50,7 +50,6 @@ body:
     attributes:
       label: Версия Windows
       description: Какую версию Windows вы используете? Note that Insider builds are subject to frequent changes by Microsoft so a bug may not be addressed until the update becomes close to reaching public release.
-      
     validations:
       required: true
   - type: textarea
