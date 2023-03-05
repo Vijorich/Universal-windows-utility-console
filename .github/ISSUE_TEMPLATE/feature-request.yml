@@ -1,6 +1,6 @@
-name: Предложение функций
-description: Шаблон для заполнения предложения функций
-title: "[Предложение]: "
+name: Запрос функции
+description: Шаблон для заполнения запроса функции
+title: "[Запрос функции]: "
 labels: ["enhancement"]
 assignees: Vijorich
 body:
