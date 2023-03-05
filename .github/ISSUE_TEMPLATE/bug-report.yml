@@ -31,7 +31,9 @@ body:
       label: Опишите ожидаемый результат
       description: Четкое и краткое описание того, что вы ожидали.
       placeholder: |
-        Правильная настройка mmagent для SSD.
+        Правильная настройка mmagent для SSD, Windows 11.
+        MaxOperationAPIFiles         : 512
+        PageCombining                : False
     validations:
       required: true
   - type: textarea
@@ -40,7 +42,7 @@ body:
       label: Что произошло в результате
       description: Что на самом деле произошло
       placeholder: |
-        Программа настроила mmagent для HDD, но у меня SSD
+        Программа настроила mmagent для HDD, но у меня SSD и 11 windows
     validations:
       required: true
   - type: textarea
