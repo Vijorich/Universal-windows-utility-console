@@ -31,7 +31,7 @@ body:
       label: Опишите ожидаемый результат
       description: Четкое и краткое описание того, что вы ожидали.
       placeholder: |
-        Правильная настройка mmagent.
+        Правильная настройка mmagent для SSD.
     validations:
       required: true
   - type: textarea
@@ -40,7 +40,7 @@ body:
       label: Что произошло в результате
       description: Что на самом деле произошло
       placeholder: |
-        mmagent настроился для hdd, но у меня ssd
+        Программа настроила mmagent для HDD, но у меня SSD
     validations:
       required: true
   - type: textarea
