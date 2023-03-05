@@ -30,13 +30,17 @@ body:
     attributes:
       label: Опишите ожидаемый результат
       description: Четкое и краткое описание того, что вы ожидали.
+      placeholder: |
+        Правильная настройка mmagent.
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
-      label: Actual results
-      description: What actually happened
+      label: Что произошло в результате
+      description: Что на самом деле произошло
+      placeholder: |
+        mmagent настроился для hdd, но у меня ssd
     validations:
       required: true
   - type: textarea
@@ -47,7 +51,7 @@ body:
       placeholder: |
         Вы можете узнать версию Windows с помошью команды "winver" в командной строке
         Пример:
-        Windows 11, 22H2, 22621.1344
+        Windows 11 22H2 22621.1344
     validations:
       required: true
   - type: textarea
