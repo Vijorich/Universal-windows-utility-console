@@ -1,4 +1,4 @@
-name: "Bug Report"
+name: "Bug report"
 description: "File a bug report"
 title: "[Bug]: "
 labels: ["bug", "triage"]
@@ -6,10 +6,12 @@ assignees:
   - Vijorich
 body:
   - type: markdown
+    id: thx
     attributes:
       value: "Спасибо, что нашли время заполнить этот отчет об ошибке!"
 - type: textarea
-  attributes:
+    id: error
+    attributes:
     label: "Опишите ошибку"
     description: "Так же опишите ожидаемый результат"
     placeholder: "Четкое и краткое описание ошибки и что вы ожидали."
