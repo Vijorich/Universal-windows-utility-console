@@ -48,8 +48,8 @@ body:
   - type: textarea
     id: os-version
     attributes:
-      label: Версия Windows
-      description: Какую версию программы и Windows вы используете?
+      label: Версия UberCleaner и Windows
+      description: Какую версию UberCleaner и Windows вы используете?
       placeholder: |
         Вы можете узнать версию Windows с помошью команды "winver" в командной строке
         Пример:
