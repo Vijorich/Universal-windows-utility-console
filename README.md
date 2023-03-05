@@ -22,7 +22,7 @@
  <img alt="Issues open" src="https://img.shields.io/github/issues-raw/Vijorich/Uber-cleaner?style=for-the-badge" />
 </a>
 <br>
-<a href="https://discord.gg/s2nJXZy7">
+<a href="https://discord.gg/technoshahta-778615813011537942">
  <img src="https://img.shields.io/badge/-Discord-blue?style=for-the-badge&logo=discord&color=5865F2&logoColor=FFFFFF"/>
 </a>
 </p>
