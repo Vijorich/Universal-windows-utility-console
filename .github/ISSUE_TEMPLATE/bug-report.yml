@@ -1,30 +1,43 @@
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
+name: Сообщение об ошибке
+description: Шаблон для заполнения отчета об ошибке
+title: "[Ошибка]: "
 labels: ["bug"]
 body:
   - type: checkboxes
     id: dupes
     attributes:
-      label: Please check for a duplicate first
-      description: By submitting this issue, you agree that you've done the minimal effort of checking for an existing issue, and understand that we may close your issue if an issue already exists, our you do not provide enough information in your issue.
+      label: Пожалуйста, для начала проверьте наличие дубликатов
+      description: Отправляя этот отчет об ошибке вы подтверждаете что предприняли минимальные усилия, для проверки уже существующих проблем, и понимаете что мы можем закрыть вашу проблему, если существует уже похожая.
       options:
-        - label: I have checked the issue tracker if my bug has already been fixed or answered in another (possibly closed) issue.
+        - label: Я проверил систему отслеживания ошибок, и не нашел решения своей (возможно, закрытой) проблемы.
           required: true
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce the issue
-      description: Please give us clear and concise steps to reproduce the problem you are experiencing.
+      label: Действия для воспроизведения ошибки
+      description: Четкое, краткое описание ошибки и что вы ожидали.
+      value: |
+        1. Перейти в ...
+        2. Нажать на ...
+        3. Увидеть ошибку
+        ...
+      render: bash
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected results
-      description: What you expected to happen
+      label: Опишите ожидаемый результат
+      description: Четкое и краткое описание того, что вы ожидали.
     validations:
       required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Лабел
+      description: Дескриптион
+      placeholder: Пласехолдер
+      value: "Валуе"
   - type: textarea
     id: actual
     attributes:
@@ -32,17 +45,12 @@ body:
       description: What actually happened
     validations:
       required: true
-  - type: dropdown
+  - type: textarea
     id: os-version
     attributes:
-      label: Windows version
-      description: What version of Windows are you running? Note that Insider builds are subject to frequent changes by Microsoft so a bug may not be addressed until the update becomes close to reaching public release.
-      options:
-        - Windows 10 May/November 2019 Update (builds 18362 and 18363)
-        - Windows 10 2004-22H2 (builds 19041-19045)
-        - Windows 11 RTM (build 22000)
-        - Windows 11 SV2 (builds 22621-22622)
-        - Windows 11 Insider builds (builds 22623 and up). Please mention exact build.
+      label: Версия Windows
+      description: Какую версию Windows вы используете? Note that Insider builds are subject to frequent changes by Microsoft so a bug may not be addressed until the update becomes close to reaching public release.
+      
     validations:
       required: true
   - type: textarea
