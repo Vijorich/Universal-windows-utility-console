@@ -2,6 +2,7 @@ name: Предложение функций
 description: Шаблон для заполнения предложения функций
 title: "[Предложение]: "
 labels: ["enhancement"]
+assignees: Vijorich
 body:
   - type: checkboxes
     id: dupes
@@ -25,5 +26,3 @@ body:
     id: other
     attributes:
       label: Остальные мысли о предложенной функции
-    validations:
-      required: true
