@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.69
+set _version=1.7
 
 verify on
 cd /d "%~dp0"
@@ -165,18 +165,20 @@ echo		2. Меню настроек реестра..
 echo		3. Меню схем питания..
 echo		4. Меню дополнительных настрек..
 echo		5. Настроить mmagent..
+echo		6. Скачать и установить программы..
 echo		9. Выйти из программы
 echo		0. Поддержать автора!..
 call :message
-choice /C:1234590 /N
+choice /C:12345690 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto CleanupMenu
 if %_erl%==2 cls && call :message && goto RegEditMenu
 if %_erl%==3 cls && call :message && goto PowerSchemesMenu
 if %_erl%==4 cls && call :message && goto AdditionalSettingsMenu
 if %_erl%==5 cls && call :message "Настраиваю.." && goto MmagentSetup
-if %_erl%==6 exit 
-if %_erl%==7 cls && call :message "Вы можете сделать приятно автору uber cleaner %_version%!" && goto CheerUpAuthorMenu
+if %_erl%==6 cls && call :message && goto ProgramDownload
+if %_erl%==7 exit 
+if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner %_version%!" && goto CheerUpAuthorMenu
 goto MainMenu
 
 
@@ -274,9 +276,9 @@ setlocal DisableDelayedExpansion
 title = Производится быстрая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\std.cleanup
-cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %WINDIR%\Temp\ >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+call :delete %Temp%
+call :delete %WINDIR%\Temp
+call :delete %SYSTEMDRIVE%\Temp
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
@@ -291,21 +293,20 @@ setlocal DisableDelayedExpansion
 title = Производится рекомендуемая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\max.cleanup
-cd %Temp% >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %WINDIR%\Temp\ >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %SYSTEMDRIVE%\Temp >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %WINDIR%\minidump >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\WER >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\Temporary Internet Files >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\IECompatCache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\IECompatUaCache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\IEDownloadHistory >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\INetCache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Windows\INetCookies >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %UserProfile%\AppData\Local\Microsoft\Terminal Server Client\Cache >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %WINDIR%\Prefetch >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
-cd %WINDIR%\SoftwareDistribution\Download >nul 2>&1 && RMDIR /S /Q . >nul 2>&1
+call :delete %Temp%
+call :delete %WINDIR%\Temp
+call :delete %SYSTEMDRIVE%\Temp
+call :delete %WINDIR%\minidump
+call :delete %WINDIR%\Prefetch
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\WER
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\Temporary Internet Files
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\IECompatCache
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\IECompatUaCache
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\IEDownloadHistory
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\INetCache
+call :delete %UserProfile%\AppData\Local\Microsoft\Windows\INetCookies
+call :delete %UserProfile%\AppData\Local\Microsoft\Terminal Server Client\Cache
+call :delete %WINDIR%\SoftwareDistribution\Download
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
@@ -451,11 +452,12 @@ echo		3. Отключить веб поиск в меню поиска
 echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
 echo		5. Отключить точки восстановления
 echo		6. Глобальное отключение оптимизации во весь экран
+echo		7. Отключить телеметрию NVIDIA
 echo		8. Следующая страница
 echo		9. Предыдущая страница
 echo		0. Вернуться
 call :message
-choice /C:123456890 /N
+choice /C:1234567890 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto backOldPhotoViewer
 if %_erl%==2 cls && goto menuShowDelay
@@ -463,6 +465,7 @@ if %_erl%==3 cls && goto search
 if %_erl%==4 cls && goto systemProfile
 if %_erl%==5 cls && goto systemRestore
 if %_erl%==6 cls && goto fse
+if %_erl%==7 cls && goto nvdiaTelemetry
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
 if %_erl%==10 cls && call :message && goto RegEditMenu
@@ -498,24 +501,27 @@ call :regEditImport "fse"
 call :message "Оптимизация во весь экран отключена!"
 goto RegEditSecondPage
 
+:nvdiaTelemetry
+call :regEditImport "nvtelemetry"
+call :message "Телеметрия убита"
+goto RegEditSecondPage
+
 
 :RegEditThirdPage
 title = Третья страница
 echo		1. Использование только последних версий .NET
 echo		2. Поставить префетч в значение 2
 echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
-echo		4. Отключить телеметрию NVIDIA
 echo		8. Предыдущая страница
 echo		9. Вернуться
 call :message
-choice /C:123489 /N
+choice /C:12389 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto latestCLR
 if %_erl%==2 cls && goto prefetcher2
 if %_erl%==3 cls && goto edge
-if %_erl%==4 cls && goto nvdiaTelemetry
-if %_erl%==6 cls && call :message && goto RegEditSecondPage
-if %_erl%==7 cls && call :message && goto RegEditMenu
+if %_erl%==4 cls && call :message && goto RegEditSecondPage
+if %_erl%==5 cls && call :message && goto RegEditMenu
 goto RegEditThirdPage
 
 :latestCLR
@@ -531,11 +537,6 @@ goto RegEditThirdPage
 :edge
 call :batTrustedImport "edge"
 call :message "О нет! Они убили edge("
-goto RegEditThirdPage
-
-:nvdiaTelemetry
-call :regEditImport "nvtelemetry"
-call :message "Телеметрия убита"
 goto RegEditThirdPage
 
 
@@ -748,12 +749,55 @@ goto MainMenu
 
 :applyPowerSchemes
 
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.1.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.2_U.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3_U.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3_RN.pow >nul 2>&1
 
 start powercfg.cpl
 
 goto :eof
+
+
+::													ProgramDownload
+
+:ProgramDownload
+setlocal EnableDelayedExpansion
+title = UberCleaner %_version%
+setlocal DisableDelayedExpansion
+echo		1. 7-zip
+echo		2. autoruns
+echo		9. Вернуться в главное меню
+call :message
+choice /C:129 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto 7zip
+if %_erl%==2 cls && call :message && goto autoruns
+if %_erl%==3 exit 
+goto ProgramDownload
+
+:7zip
+if not exist "7z.exe" (
+	cls
+	call :message "7-zip Скачивается"
+	call :download https://www.7-zip.org/a/7z2201-x64.exe "7z.exe"
+	cls
+	call :message "7-zip Устанавливается"
+	start 7z.exe
+)
+goto ProgramDownload
+
+:autoruns
+if not exist "autoruns.exe" (
+	cls
+	call :message "autoruns Скачивается"
+	call :download https://live.sysinternals.com/autoruns.exe "autoruns.exe"
+	cls
+	call :message "autoruns Устанавливается"
+	start autoruns.exe
+) else (
+	start autoruns.exe
+)
+goto ProgramDownload
 
 
 rem													Functions
@@ -765,6 +809,10 @@ rem Created by Vijorich
 (
 	PowerShell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object Net.WebClient).DownloadFile('%~1', '%~2')"
 ) >nul 2>&1
+goto :eof
+
+:delete
+pushd "%~1" 2>nul && ( rd /Q /S . 2>nul & popd )
 goto :eof
 
 :message
@@ -813,7 +861,7 @@ echo Скинув денюжку на покушать:
 echo 3. donationalerts
 echo 4. donatepay
 echo.
-echo Начав поддерживать от 15 рублей в месяц!: 
+echo Подписавшись на бусти: 
 echo 5. boosty
 echo.
 echo 9. Вернуться в главное меню
