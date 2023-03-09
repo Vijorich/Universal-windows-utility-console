@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.7
+set _version=1.72
 
 verify on
 cd /d "%~dp0"
@@ -376,7 +376,7 @@ if %_build% GEQ 22000 (
 
 :regEditFullRegForAll
 call :regEditImport "appcompatibility" "attachmentmanager" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
-call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamedvr" "fse"
+call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "fse"
 call :regEditImport "uac" "telemetry" "systemrestore"
 call :regEditTrustedImport "foldernetworkX"
 goto :eof
@@ -439,7 +439,7 @@ call :message "Функция largesystemcache включена!"
 goto RegEditFirstPage
 
 :gameDVR
-call :regEditImport "gamedvr"
+call :regEditImport "gamebar"
 call :message "Гей бар отключен!"
 goto RegEditFirstPage
 
@@ -882,69 +882,50 @@ winget install "7zip.7zip"
 cls
 if "%errorlevel%" equ "0" (
 	call :message "Установка завершена"
-) Else (
+) If "%errorlevel%" equ "-1978335189" (
 	call :message "Программа уже установленна"
+) If "%errorlevel%" equ "9009" (
+	call :message "Отсутствует установщик пакетов winget"
+	call :message "Установите программу из офф источника https://learn.microsoft.com/ru-ru/windows/package-manager/winget/"
+) Else (
+	call :message "Неизвестная ошибка"
 )
 goto UsefullProgs
 
 :notepad
 winget install "notepad++"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto UsefullProgs
 
 :autoruns
 winget install "Autoruns"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto UsefullProgs
 
 :winMerge
 winget install "winmerge"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto UsefullProgs
 
 :ddu
 winget install "ddu"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto UsefullProgs
 
 :HWiNFO
 winget install "HWiNFO"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto UsefullProgs
 
 :rustDesk
 winget install "RustDesk"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto UsefullProgs
 
 
@@ -957,6 +938,7 @@ echo		4. BCUninstaller
 echo		5. Rufus
 echo		6. Win11-Coursor
 echo		7. Msi-Util
+echo		8. ExplorerPatcher
 echo		9. Предыдущая страница
 call :message
 choice /C:123456789 /N
@@ -968,57 +950,38 @@ if %_erl%==4 cls && call :message && goto BCU
 if %_erl%==5 cls && call :message && goto rufus
 if %_erl%==6 cls && call :message && goto coursor
 if %_erl%==7 cls && call :message && goto msiUtil
+if %_erl%==8 cls && call :message && goto explorerPatcher
 if %_erl%==9 cls && call :message && goto UsefullProgs
 goto SecondUsefullProgs
 
 :textGrab
 winget install "Text-Grab"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto SecondUsefullProgs
 
 :qBittorent
 winget install "qBittorrent.qBittorrent"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto SecondUsefullProgs
 
 :translucentTB
 winget install "TranslucentTB"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto SecondUsefullProgs
 
 :BCU
 winget install "BCUninstaller"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto SecondUsefullProgs
 
 :rufus
 winget install "Rufus.Rufus"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) Else (
-	call :message "Программа уже установленна"
-)
+call :errorCheck
 goto SecondUsefullProgs
 
 :coursor
@@ -1035,6 +998,12 @@ call :message "Архив скачан на рабочий стол"
 cd %~dp0
 goto SecondUsefullProgs
 
+:explorerPatcher
+winget install "ExplorerPatcher"
+cls
+call :errorCheck
+goto SecondUsefullProgs
+
 
 rem													Functions
 rem ========================================================================================================
@@ -1049,6 +1018,20 @@ goto :eof
 
 :delete
 pushd "%~1" 2>nul && ( rd /Q /S . 2>nul & popd )
+goto :eof
+
+:errorCheck
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) else if "%errorlevel%" equ "-1978335189" (
+	call :message "Программа уже установленна"
+) else if "%errorlevel%" equ "9009" (
+	call :message "Отсутствует установщик пакетов winget"
+	call :message "Установите программу из офф источника:"
+	call :message "https://learn.microsoft.com/ru-ru/windows/package-manager/winget/"
+) else (
+	call :message "Неизвестная ошибка"
+)
 goto :eof
 
 :message
