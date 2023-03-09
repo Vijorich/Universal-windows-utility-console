@@ -119,7 +119,7 @@ goto UpdateMenu
 title = Обновление..
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_newVersion%/UC.zip "UC.zip"
 powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && start %_currentPath%/Start
-exit /b
+exit
 
 
 rem													Config check
@@ -761,43 +761,279 @@ goto :eof
 ::													ProgramDownload
 
 :ProgramDownload
-setlocal EnableDelayedExpansion
-title = UberCleaner %_version%
-setlocal DisableDelayedExpansion
-echo		1. 7-zip
-echo		2. autoruns
-echo		9. Вернуться в главное меню
+title = Загрузка программ
+echo		1. Библиотеки..
+echo		2. Полезные программы..
+echo		9. Вернуться в главное меню..
 call :message
 choice /C:129 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto 7zip
-if %_erl%==2 cls && call :message && goto autoruns
+if %_erl%==1 cls && call :message && goto RuntimeMenu
+if %_erl%==2 cls && call :message && goto UsefullProgs
 if %_erl%==3 exit 
 goto ProgramDownload
 
+:RuntimeMenu
+title = Библиотеки
+echo		1. Visual C++
+echo		2. .Net
+echo		3. DirectX
+echo		9. Предыдущая страница
+call :message
+choice /C:1239 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto VisualC
+if %_erl%==2 cls && call :message && goto DotNet
+if %_erl%==3 cls && call :message && goto DirectX
+if %_erl%==4 cls && call :message && goto ProgramDownload
+goto RuntimeMenu
+
+:VisualC
+set is_64=0 && if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (set is_64=1) else (if "%PROCESSOR_ARCHITEW6432%"=="AMD64" (set is_64=1))
+
+if "%is_64%" == "1" goto 64
+
+call :message "2005.."
+winget install "Microsoft Visual C++ 2005 Redistributable"
+call :message "2008.."
+winget install "Microsoft Visual C++ 2008 Redistributable - x86"
+call :message "2010.."
+winget install "Microsoft Visual C++ 2010 x86 Redistributable"
+call :message "2012.."
+winget install "Microsoft Visual C++ 2012 Redistributable (x86)"
+call :message "2013.."
+winget install "Microsoft Visual C++ 2013 Redistributable (x86)"
+call :message "2015, 2017 ^& 2019.."
+winget install "Microsoft Visual C++ 2015-2022 Redistributable (x86)"
+cls
+call :message "Установка завершена"
+goto RuntimeMenu
+
+:64
+call :message "2005.."
+winget install "Microsoft Visual C++ 2005 Redistributable"
+winget install "Microsoft Visual C++ 2005 Redistributable (x64)"
+call :message "2008.."
+winget install "Microsoft Visual C++ 2008 Redistributable - x86"
+winget install "Microsoft Visual C++ 2008 Redistributable - x64"
+call :message "2010.."
+winget install "Microsoft Visual C++ 2010 x86 Redistributable"
+winget install "Microsoft Visual C++ 2010 x64 Redistributable"
+call :message "2012.."
+winget install "Microsoft Visual C++ 2012 Redistributable (x86)"
+winget install "Microsoft Visual C++ 2012 Redistributable (x64)"
+call :message "2013.."
+winget install "Microsoft Visual C++ 2013 Redistributable (x86)"
+winget install "Microsoft Visual C++ 2013 Redistributable (x64)"
+call :message "2015, 2017 ^& 2019.."
+winget install "Microsoft Visual C++ 2015-2022 Redistributable (x86)"
+winget install "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
+cls
+call :message "Установка завершена"
+goto RuntimeMenu
+
+:DotNet
+call :message "3.1.."
+winget install "Microsoft .NET Windows Desktop Runtime 3.1"
+call :message "5.0.."
+winget install "Microsoft .NET Windows Desktop Runtime 5.0"
+call :message "6.0.."
+winget install "Microsoft .NET Windows Desktop Runtime 6.0"
+call :message "7.0.."
+winget install "Microsoft .NET Windows Desktop Runtime 7.0"
+cls
+call :message "Установка завершена"
+goto RuntimeMenu
+
+:DirectX
+winget install "DirectX End-User Runtime Web Installer"
+cls
+call :message "Установка завершена"
+goto RuntimeMenu
+
+
+:UsefullProgs
+title = Полезные программы
+echo		1. 7-zip
+echo		2. Notepad++
+echo		3. Autoruns
+echo		4. WinMerge
+echo		5. DDU
+echo		6. HWiNFO
+echo		7. Rust desk
+echo		8. Следующая страница
+echo		9. Предыдущая страница
+call :message
+choice /C:123456789 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto 7zip
+if %_erl%==2 cls && call :message && goto notepad
+if %_erl%==3 cls && call :message && goto autoruns
+if %_erl%==4 cls && call :message && goto winMerge
+if %_erl%==5 cls && call :message && goto ddu
+if %_erl%==6 cls && call :message && goto HWiNFO
+if %_erl%==7 cls && call :message && goto rustDesk
+if %_erl%==8 cls && call :message && goto SecondUsefullProgs
+if %_erl%==9 cls && call :message && goto ProgramDownload
+goto UsefullProgs
+
 :7zip
-if not exist "7z.exe" (
-	cls
-	call :message "7-zip Скачивается"
-	call :download https://www.7-zip.org/a/7z2201-x64.exe "7z.exe"
-	cls
-	call :message "7-zip Устанавливается"
-	start 7z.exe
+winget install "7zip.7zip"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
 )
-goto ProgramDownload
+goto UsefullProgs
+
+:notepad
+winget install "notepad++"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto UsefullProgs
 
 :autoruns
-if not exist "autoruns.exe" (
-	cls
-	call :message "autoruns Скачивается"
-	call :download https://live.sysinternals.com/autoruns.exe "autoruns.exe"
-	cls
-	call :message "autoruns Устанавливается"
-	start autoruns.exe
-) else (
-	start autoruns.exe
+winget install "Autoruns"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
 )
-goto ProgramDownload
+goto UsefullProgs
+
+:winMerge
+winget install "winmerge"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto UsefullProgs
+
+:ddu
+winget install "ddu"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto UsefullProgs
+
+:HWiNFO
+winget install "HWiNFO"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto UsefullProgs
+
+:rustDesk
+winget install "RustDesk"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto UsefullProgs
+
+
+:SecondUsefullProgs
+title = Полезные программы
+echo		1. Text-Grab
+echo		2. qBittorent
+echo		3. TranslucentTB
+echo		4. BCUninstaller
+echo		5. Rufus
+echo		6. Win11-Coursor
+echo		7. Msi-Util
+echo		9. Предыдущая страница
+call :message
+choice /C:123456789 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto textGrab
+if %_erl%==2 cls && call :message && goto qBittorent
+if %_erl%==3 cls && call :message && goto translucentTB
+if %_erl%==4 cls && call :message && goto BCU
+if %_erl%==5 cls && call :message && goto rufus
+if %_erl%==6 cls && call :message && goto coursor
+if %_erl%==7 cls && call :message && goto msiUtil
+if %_erl%==9 cls && call :message && goto UsefullProgs
+goto SecondUsefullProgs
+
+:textGrab
+winget install "Text-Grab"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto SecondUsefullProgs
+
+:qBittorent
+winget install "qBittorrent.qBittorrent"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto SecondUsefullProgs
+
+:translucentTB
+winget install "TranslucentTB"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto SecondUsefullProgs
+
+:BCU
+winget install "BCUninstaller"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto SecondUsefullProgs
+
+:rufus
+winget install "Rufus.Rufus"
+cls
+if "%errorlevel%" equ "0" (
+	call :message "Установка завершена"
+) Else (
+	call :message "Программа уже установленна"
+)
+goto SecondUsefullProgs
+
+:coursor
+cd %UserProfile%\Desktop
+call :download "https://github.com/PSGitHubUser1/Windows-11-Cursor-Concept-Pro-v2.x/releases/download/v2.2pro_big-v2/Windows.Cursor.Concept.v2.2+big.v2.zip" "Win11Coursor.zip"
+call :message "Архив скачан на рабочий стол"
+cd %~dp0
+goto SecondUsefullProgs
+
+:msiUtil
+cd %UserProfile%\Desktop
+call :download "https://download2435.mediafire.com/poh28xtppbogFdzRwDj3cv6AYgiIjy7IWbog5nCfYFzaLd8vJYghZA47RDoxYXHlqqVHOmVP-FXWXi847vncp9baFLpJiA/ewpy1p0rr132thk/MSI_util_v3.zip" "MSI_util_v3.zip"
+call :message "Архив скачан на рабочий стол"
+cd %~dp0
+goto SecondUsefullProgs
 
 
 rem													Functions
