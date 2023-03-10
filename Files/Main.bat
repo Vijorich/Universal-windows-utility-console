@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.72
+set _version=1.73
 
 verify on
 cd /d "%~dp0"
@@ -117,8 +117,11 @@ goto UpdateMenu
 
 :UpdateDownload
 title = Обновление..
+rmdir /s /q cleanmgrplus
+rmdir /s /q powerschemes
+rmdir /s /q regpack
 call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_newVersion%/UC.zip "UC.zip"
-powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && start %_currentPath%/Start
+powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && start %_currentPath%/Start && exit
 exit
 
 
@@ -778,14 +781,16 @@ title = Библиотеки
 echo		1. Visual C++
 echo		2. .Net
 echo		3. DirectX
+echo		4. K-Lite Codec Pack..
 echo		9. Предыдущая страница
 call :message
-choice /C:1239 /N
+choice /C:12349 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto VisualC
 if %_erl%==2 cls && call :message && goto DotNet
 if %_erl%==3 cls && call :message && goto DirectX
-if %_erl%==4 cls && call :message && goto ProgramDownload
+if %_erl%==4 cls && call :message && goto klitecodecs
+if %_erl%==5 cls && call :message && goto ProgramDownload
 goto RuntimeMenu
 
 :VisualC
@@ -850,6 +855,48 @@ winget install "DirectX End-User Runtime Web Installer"
 cls
 call :message "Установка завершена"
 goto RuntimeMenu
+
+
+:klitecodecs
+title = Полезные программы
+echo		1. Basic
+echo		2. Standard - Рекомендуется
+echo		3. Full
+echo		4. Pack
+echo		9. Предыдущая страница
+call :message
+choice /C:12349 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto basic
+if %_erl%==2 cls && call :message && goto standard
+if %_erl%==3 cls && call :message && goto full
+if %_erl%==4 cls && call :message && goto mega
+if %_erl%==5 cls && call :message && goto ThirdUsefullProgs
+goto klitecodecs
+
+:basic
+winget install "K-Lite Codec Pack Basic"
+cls
+call :errorCheck
+goto klitecodecs
+
+:standard
+winget install "K-Lite Codec Pack Standard"
+cls
+call :errorCheck
+goto klitecodecs
+
+:full
+winget install "K-Lite Codec Pack Full"
+cls
+call :errorCheck
+goto klitecodecs
+
+:mega
+winget install "K-Lite Mega Codec Pack"
+cls
+call :errorCheck
+goto klitecodecs
 
 
 :UsefullProgs
@@ -941,7 +988,7 @@ if %_erl%==4 cls && call :message && goto BCU
 if %_erl%==5 cls && call :message && goto rufus
 if %_erl%==6 cls && call :message && goto coursor
 if %_erl%==7 cls && call :message && goto msiUtil
-if %_erl%==8 cls && call :message && goto explorerPatcher
+if %_erl%==8 cls && call :message && goto ThirdUsefullProgs
 if %_erl%==9 cls && call :message && goto UsefullProgs
 goto SecondUsefullProgs
 
@@ -993,26 +1040,12 @@ goto SecondUsefullProgs
 :ThirdUsefullProgs
 title = Полезные программы
 echo		1. ExplorerPatcher
-echo		2. K-Lite Codec Pack..
-echo		3. 
-echo		4. 
-echo		5. 
-echo		6. 
-echo		7. 
-echo		8. Следующая страница
 echo		9. Предыдущая страница
 call :message
-choice /C:123456789 /N
+choice /C:19 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto explorerPatcher
-if %_erl%==2 cls && call :message && goto klitecodecs
-if %_erl%==3 cls && call :message && goto 
-if %_erl%==4 cls && call :message && goto 
-if %_erl%==5 cls && call :message && goto 
-if %_erl%==6 cls && call :message && goto 
-if %_erl%==7 cls && call :message && goto 
-if %_erl%==8 cls && call :message && goto 
-if %_erl%==9 cls && call :message && goto UsefullProgs
+if %_erl%==2 cls && call :message && goto SecondUsefullProgs
 goto ThirdUsefullProgs
 
 :explorerPatcher
@@ -1020,47 +1053,6 @@ winget install "ExplorerPatcher"
 cls
 call :errorCheck
 goto ThirdUsefullProgs
-
-:klitecodecs
-title = Полезные программы
-echo		1. Basic
-echo		2. Standard - Рекомендуется
-echo		3. Full
-echo		4. Pack
-echo		9. Предыдущая страница
-call :message
-choice /C:12349 /N
-set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto basic
-if %_erl%==2 cls && call :message && goto standard
-if %_erl%==3 cls && call :message && goto full
-if %_erl%==4 cls && call :message && goto mega
-if %_erl%==5 cls && call :message && goto ThirdUsefullProgs
-goto klitecodecs
-
-:basic
-winget install "K-Lite Codec Pack Basic"
-cls
-call :errorCheck
-goto klitecodecs
-
-:standard
-winget install "K-Lite Codec Pack Standard"
-cls
-call :errorCheck
-goto klitecodecs
-
-:full
-winget install "K-Lite Codec Pack Full"
-cls
-call :errorCheck
-goto klitecodecs
-
-:mega
-winget install "K-Lite Mega Codec Pack"
-cls
-call :errorCheck
-goto klitecodecs
 
 
 rem													Functions
