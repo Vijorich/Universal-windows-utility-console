@@ -5,7 +5,7 @@ set _version=1.73
 
 verify on
 cd /d "%~dp0"
-color 0A
+@color 0A
 mode con:cols=90 lines=20
 
 
@@ -773,7 +773,7 @@ choice /C:129 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && call :message && goto RuntimeMenu
 if %_erl%==2 cls && call :message && goto UsefullProgs
-if %_erl%==3 exit 
+if %_erl%==3 cls && call :message && goto MainMenu
 goto ProgramDownload
 
 :RuntimeMenu
@@ -871,7 +871,7 @@ if %_erl%==1 cls && call :message && goto basic
 if %_erl%==2 cls && call :message && goto standard
 if %_erl%==3 cls && call :message && goto full
 if %_erl%==4 cls && call :message && goto mega
-if %_erl%==5 cls && call :message && goto ThirdUsefullProgs
+if %_erl%==5 cls && call :message && goto RuntimeMenu
 goto klitecodecs
 
 :basic
