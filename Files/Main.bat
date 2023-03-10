@@ -880,16 +880,7 @@ goto UsefullProgs
 :7zip
 winget install "7zip.7zip"
 cls
-if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
-) If "%errorlevel%" equ "-1978335189" (
-	call :message "Программа уже установленна"
-) If "%errorlevel%" equ "9009" (
-	call :message "Отсутствует установщик пакетов winget"
-	call :message "Установите программу из офф источника https://learn.microsoft.com/ru-ru/windows/package-manager/winget/"
-) Else (
-	call :message "Неизвестная ошибка"
-)
+call :errorCheck
 goto UsefullProgs
 
 :notepad
@@ -938,7 +929,7 @@ echo		4. BCUninstaller
 echo		5. Rufus
 echo		6. Win11-Coursor
 echo		7. Msi-Util
-echo		8. ExplorerPatcher
+echo		8. Следующая страница
 echo		9. Предыдущая страница
 call :message
 choice /C:123456789 /N
@@ -998,11 +989,78 @@ call :message "Архив скачан на рабочий стол"
 cd %~dp0
 goto SecondUsefullProgs
 
+
+:ThirdUsefullProgs
+title = Полезные программы
+echo		1. ExplorerPatcher
+echo		2. K-Lite Codec Pack..
+echo		3. 
+echo		4. 
+echo		5. 
+echo		6. 
+echo		7. 
+echo		8. Следующая страница
+echo		9. Предыдущая страница
+call :message
+choice /C:123456789 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto explorerPatcher
+if %_erl%==2 cls && call :message && goto klitecodecs
+if %_erl%==3 cls && call :message && goto 
+if %_erl%==4 cls && call :message && goto 
+if %_erl%==5 cls && call :message && goto 
+if %_erl%==6 cls && call :message && goto 
+if %_erl%==7 cls && call :message && goto 
+if %_erl%==8 cls && call :message && goto 
+if %_erl%==9 cls && call :message && goto UsefullProgs
+goto ThirdUsefullProgs
+
 :explorerPatcher
 winget install "ExplorerPatcher"
 cls
 call :errorCheck
-goto SecondUsefullProgs
+goto ThirdUsefullProgs
+
+:klitecodecs
+title = Полезные программы
+echo		1. Basic
+echo		2. Standard - Рекомендуется
+echo		3. Full
+echo		4. Pack
+echo		9. Предыдущая страница
+call :message
+choice /C:12349 /N
+set _erl=%errorlevel%
+if %_erl%==1 cls && call :message && goto basic
+if %_erl%==2 cls && call :message && goto standard
+if %_erl%==3 cls && call :message && goto full
+if %_erl%==4 cls && call :message && goto mega
+if %_erl%==5 cls && call :message && goto ThirdUsefullProgs
+goto klitecodecs
+
+:basic
+winget install "K-Lite Codec Pack Basic"
+cls
+call :errorCheck
+goto klitecodecs
+
+:standard
+winget install "K-Lite Codec Pack Standard"
+cls
+call :errorCheck
+goto klitecodecs
+
+:full
+winget install "K-Lite Codec Pack Full"
+cls
+call :errorCheck
+goto klitecodecs
+
+:mega
+winget install "K-Lite Mega Codec Pack"
+cls
+call :errorCheck
+goto klitecodecs
 
 
 rem													Functions
