@@ -862,7 +862,7 @@ title = Полезные программы
 echo		1. Basic
 echo		2. Standard - Рекомендуется
 echo		3. Full
-echo		4. Pack
+echo		4. Mega
 echo		9. Предыдущая страница
 call :message
 choice /C:12349 /N
