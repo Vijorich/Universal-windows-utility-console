@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.73
+set _version=1.74
 
 verify on
 cd /d "%~dp0"
@@ -9,9 +9,9 @@ cd /d "%~dp0"
 mode con:cols=90 lines=20
 
 
-rem													Startup check
-rem ========================================================================================================
-rem Created by Vijorich
+::													Startup check
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :StartupCheck
@@ -55,9 +55,9 @@ if "%_networkState%"=="True" (
 )
 
 
-rem													Updater
-rem ========================================================================================================
-rem Created by Vijorich
+::													Updater
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :UpdateCheck
@@ -125,9 +125,9 @@ powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && st
 exit
 
 
-rem													Config check
-rem ========================================================================================================
-rem Created by Vijorich
+::													Config check
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :ConfigCheck
@@ -137,9 +137,9 @@ cls
 if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
 
 
-rem													System config
-rem ========================================================================================================
-rem Created by Vijorich
+::													System config
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :GatherInfo
@@ -154,9 +154,9 @@ if %_build% geq 22000 (
 call :message
 
 
-rem													Main menu
-rem ========================================================================================================
-rem Created by Vijorich
+::													Main menu
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :MainMenu
@@ -185,9 +185,9 @@ if %_erl%==8 cls && call :message "Вы можете сделать приятн
 goto MainMenu
 
 
-rem													Additional settings Menu
-rem ========================================================================================================
-rem Created by Vijorich
+::													Additional settings Menu
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :AdditionalSettingsMenu
@@ -244,9 +244,9 @@ call :message "Ansel отключен!"
 goto :AdditionalSettingsMenu
 
 
-rem													Cleanup Menu
-rem ========================================================================================================
-rem Created by Vijorich
+::													Cleanup Menu
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :CleanupMenu
@@ -335,9 +335,9 @@ start %~dp0\cleanmgrplus\readme.txt
 call :message && goto CleanupMenu
 
 
-rem													Reg Edit Menu
-rem ========================================================================================================
-rem Created by Vijorich
+::													Reg Edit Menu
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :RegEditMenu
@@ -633,9 +633,9 @@ call :batTrustedImport "\Windows 11 Only\win11defendersubserviceX"
 call :message "Защита пала!"
 goto RegEditWindows11Only
 
-rem													mmagent
-rem ========================================================================================================
-rem Created by Vijorich
+::													mmagent
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :MmagentSetup
@@ -704,9 +704,9 @@ if %_build% GEQ 22000 (
 	cls && call :message "Настроено для SSD, windows 10!" && goto MainMenu
 )
 
-rem													Power Schemes
-rem ========================================================================================================
-rem Created by Vijorich
+::													Power Schemes
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :PowerSchemesMenu
@@ -762,6 +762,9 @@ goto :eof
 
 
 ::													ProgramDownload
+:: ========================================================================================================
+:: Created by Vijorich
+
 
 :ProgramDownload
 title = Загрузка программ
@@ -776,6 +779,7 @@ if %_erl%==2 cls && call :message && goto UsefullProgs
 if %_erl%==3 cls && call :message && goto MainMenu
 goto ProgramDownload
 
+
 :RuntimeMenu
 title = Библиотеки
 echo		1. Visual C++
@@ -786,9 +790,9 @@ echo		9. Предыдущая страница
 call :message
 choice /C:12349 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto VisualC
-if %_erl%==2 cls && call :message && goto DotNet
-if %_erl%==3 cls && call :message && goto DirectX
+if %_erl%==1 cls && goto VisualC
+if %_erl%==2 cls && goto DotNet
+if %_erl%==3 cls && goto DirectX
 if %_erl%==4 cls && call :message && goto klitecodecs
 if %_erl%==5 cls && call :message && goto ProgramDownload
 goto RuntimeMenu
@@ -798,62 +802,46 @@ set is_64=0 && if "%PROCESSOR_ARCHITECTURE%"=="AMD64" (set is_64=1) else (if "%P
 
 if "%is_64%" == "1" goto 64
 
-call :message "2005.."
-winget install "Microsoft Visual C++ 2005 Redistributable"
-call :message "2008.."
-winget install "Microsoft Visual C++ 2008 Redistributable - x86"
-call :message "2010.."
-winget install "Microsoft Visual C++ 2010 x86 Redistributable"
-call :message "2012.."
-winget install "Microsoft Visual C++ 2012 Redistributable (x86)"
-call :message "2013.."
-winget install "Microsoft Visual C++ 2013 Redistributable (x86)"
-call :message "2015, 2017 ^& 2019.."
-winget install "Microsoft Visual C++ 2015-2022 Redistributable (x86)"
+call :wingetInstall "Visual C++ 2005 Redistributable (x86)", "Microsoft Visual C++ 2005 Redistributable"
+call :wingetInstall "Visual C++ 2008 Redistributable (x86)", "Microsoft Visual C++ 2008 Redistributable - x86"
+call :wingetInstall "Visual C++ 2010 Redistributable (x86)", "Microsoft Visual C++ 2010 x86 Redistributable"
+call :wingetInstall "Visual C++ 2012 Redistributable (x86)", "Microsoft Visual C++ 2012 Redistributable (x86)"
+call :wingetInstall "Visual C++ 2013 Redistributable (x86)", "Microsoft Visual C++ 2013 Redistributable (x86)"
+call :wingetInstall "Visual C++ 2015-2022 Redistributable (x86)", "Microsoft Visual C++ 2015-2022 Redistributable (x86)"
 cls
-call :message "Установка завершена"
+call :message "Установка Visual C++ Redistributables завершена"
 goto RuntimeMenu
 
 :64
-call :message "2005.."
-winget install "Microsoft Visual C++ 2005 Redistributable"
-winget install "Microsoft Visual C++ 2005 Redistributable (x64)"
-call :message "2008.."
-winget install "Microsoft Visual C++ 2008 Redistributable - x86"
-winget install "Microsoft Visual C++ 2008 Redistributable - x64"
-call :message "2010.."
-winget install "Microsoft Visual C++ 2010 x86 Redistributable"
-winget install "Microsoft Visual C++ 2010 x64 Redistributable"
-call :message "2012.."
-winget install "Microsoft Visual C++ 2012 Redistributable (x86)"
-winget install "Microsoft Visual C++ 2012 Redistributable (x64)"
-call :message "2013.."
-winget install "Microsoft Visual C++ 2013 Redistributable (x86)"
-winget install "Microsoft Visual C++ 2013 Redistributable (x64)"
-call :message "2015, 2017 ^& 2019.."
-winget install "Microsoft Visual C++ 2015-2022 Redistributable (x86)"
-winget install "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
+call :wingetInstall "Visual C++ 2005 Redistributable (x86)", "Microsoft Visual C++ 2005 Redistributable"
+call :wingetInstall "Visual C++ 2005 Redistributable (x64)", "Microsoft Visual C++ 2005 Redistributable (x64)"
+call :wingetInstall "Visual C++ 2008 Redistributable (x86)", "Microsoft Visual C++ 2008 Redistributable - x86"
+call :wingetInstall "Visual C++ 2008 Redistributable (x64)", "Microsoft Visual C++ 2008 Redistributable - x64"
+call :wingetInstall "Visual C++ 2010 Redistributable (x86)", "Microsoft Visual C++ 2010 x86 Redistributable"
+call :wingetInstall "Visual C++ 2010 Redistributable (x86)", "Microsoft Visual C++ 2010 x64 Redistributable"
+call :wingetInstall "Visual C++ 2012 Redistributable (x86)", "Microsoft Visual C++ 2012 Redistributable (x86)"
+call :wingetInstall "Visual C++ 2012 Redistributable (x64)", "Microsoft Visual C++ 2012 Redistributable (x64)"
+call :wingetInstall "Visual C++ 2013 Redistributable (x86)", "Microsoft Visual C++ 2013 Redistributable (x86)"
+call :wingetInstall "Visual C++ 2013 Redistributable (x64)", "Microsoft Visual C++ 2013 Redistributable (x64)"
+call :wingetInstall "Visual C++ 2015-2022 Redistributable (x86)", "Microsoft Visual C++ 2015-2022 Redistributable (x86)"
+call :wingetInstall "Visual C++ 2015-2022 Redistributable (x64)", "Microsoft Visual C++ 2015-2022 Redistributable (x64)"
 cls
-call :message "Установка завершена"
+call :message "Установка Visual C++ Redistributables завершена"
 goto RuntimeMenu
 
 :DotNet
-call :message "3.1.."
-winget install "Microsoft .NET Windows Desktop Runtime 3.1"
-call :message "5.0.."
-winget install "Microsoft .NET Windows Desktop Runtime 5.0"
-call :message "6.0.."
-winget install "Microsoft .NET Windows Desktop Runtime 6.0"
-call :message "7.0.."
-winget install "Microsoft .NET Windows Desktop Runtime 7.0"
+call :wingetInstall ".NET 3.1", "Microsoft .NET Windows Desktop Runtime 3.1"
+call :wingetInstall ".NET 5.0", "Microsoft .NET Windows Desktop Runtime 5.0"
+call :wingetInstall ".NET 6.0", "Microsoft .NET Windows Desktop Runtime 6.0"
+call :wingetInstall ".NET 7.0", "Microsoft .NET Windows Desktop Runtime 7.0"
 cls
-call :message "Установка завершена"
+call :message "Установка .NET Runtimes завершена"
 goto RuntimeMenu
 
 :DirectX
-winget install "DirectX End-User Runtime Web Installer"
+call :wingetInstall "DirectX", "DirectX End-User Runtime Web Installer"
 cls
-call :message "Установка завершена"
+call :message "Установка DirectX завершена"
 goto RuntimeMenu
 
 
@@ -863,39 +851,31 @@ echo		1. Basic
 echo		2. Standard - Рекомендуется
 echo		3. Full
 echo		4. Mega
-echo		9. Предыдущая страница
+echo		9. Предыдущая страница..
 call :message
 choice /C:12349 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto basic
-if %_erl%==2 cls && call :message && goto standard
-if %_erl%==3 cls && call :message && goto full
-if %_erl%==4 cls && call :message && goto mega
+if %_erl%==1 cls && goto basic
+if %_erl%==2 cls && goto standard
+if %_erl%==3 cls && goto full
+if %_erl%==4 cls && goto mega
 if %_erl%==5 cls && call :message && goto RuntimeMenu
 goto klitecodecs
 
 :basic
-winget install "K-Lite Codec Pack Basic"
-cls
-call :errorCheck
+call :wingetInstall "K-Lite Codec Pack Basic", "K-Lite Codec Pack Basic"
 goto klitecodecs
 
 :standard
-winget install "K-Lite Codec Pack Standard"
-cls
-call :errorCheck
+call :wingetInstall "K-Lite Codec Pack Standard", "K-Lite Codec Pack Standard"
 goto klitecodecs
 
 :full
-winget install "K-Lite Codec Pack Full"
-cls
-call :errorCheck
+call :wingetInstall "K-Lite Codec Pack Full", "K-Lite Codec Pack Full"
 goto klitecodecs
 
 :mega
-winget install "K-Lite Mega Codec Pack"
-cls
-call :errorCheck
+call :wingetInstall "K-Lite Mega Codec Pack", "K-Lite Mega Codec Pack"
 goto klitecodecs
 
 
@@ -908,62 +888,48 @@ echo		4. WinMerge
 echo		5. DDU
 echo		6. HWiNFO
 echo		7. Rust desk
-echo		8. Следующая страница
-echo		9. Предыдущая страница
+echo		8. Следующая страница..
+echo		9. Предыдущая страница..
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto 7zip
-if %_erl%==2 cls && call :message && goto notepad
-if %_erl%==3 cls && call :message && goto autoruns
-if %_erl%==4 cls && call :message && goto winMerge
-if %_erl%==5 cls && call :message && goto ddu
-if %_erl%==6 cls && call :message && goto HWiNFO
-if %_erl%==7 cls && call :message && goto rustDesk
+if %_erl%==1 cls && goto 7zip
+if %_erl%==2 cls && goto notepad
+if %_erl%==3 cls && goto autoruns
+if %_erl%==4 cls && goto winMerge
+if %_erl%==5 cls && goto ddu
+if %_erl%==6 cls && goto HWiNFO
+if %_erl%==7 cls && goto rustDesk
 if %_erl%==8 cls && call :message && goto SecondUsefullProgs
 if %_erl%==9 cls && call :message && goto ProgramDownload
 goto UsefullProgs
 
 :7zip
-winget install "7zip.7zip"
-cls
-call :errorCheck
+call :wingetInstall "7-zip", "7zip.7zip"
 goto UsefullProgs
 
 :notepad
-winget install "notepad++"
-cls
-call :errorCheck
+call :wingetInstall "Notepad++", "notepad++"
 goto UsefullProgs
 
 :autoruns
-winget install "Autoruns"
-cls
-call :errorCheck
+call :wingetInstall "Autoruns", "Autoruns"
 goto UsefullProgs
 
 :winMerge
-winget install "winmerge"
-cls
-call :errorCheck
+call :wingetInstall "WinMerge", "winmerge"
 goto UsefullProgs
 
 :ddu
-winget install "ddu"
-cls
-call :errorCheck
+call :wingetInstall "Display Driver Uninstaller", "ddu"
 goto UsefullProgs
 
 :HWiNFO
-winget install "HWiNFO"
-cls
-call :errorCheck
+call :wingetInstall "HWiNFO", "HWiNFO"
 goto UsefullProgs
 
 :rustDesk
-winget install "RustDesk"
-cls
-call :errorCheck
+call :wingetInstall "RustDesk", "RustDesk"
 goto UsefullProgs
 
 
@@ -976,63 +942,57 @@ echo		4. BCUninstaller
 echo		5. Rufus
 echo		6. Win11-Coursor
 echo		7. Msi-Util
-echo		8. Следующая страница
-echo		9. Предыдущая страница
+echo		8. Следующая страница..
+echo		9. Предыдущая страница..
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto textGrab
-if %_erl%==2 cls && call :message && goto qBittorent
-if %_erl%==3 cls && call :message && goto translucentTB
-if %_erl%==4 cls && call :message && goto BCU
-if %_erl%==5 cls && call :message && goto rufus
-if %_erl%==6 cls && call :message && goto coursor
-if %_erl%==7 cls && call :message && goto msiUtil
+if %_erl%==1 cls && goto textGrab
+if %_erl%==2 cls && goto qBittorent
+if %_erl%==3 cls && goto translucentTB
+if %_erl%==4 cls && goto BCU
+if %_erl%==5 cls && goto rufus
+if %_erl%==6 cls && goto coursor
+if %_erl%==7 cls && goto msiUtil
 if %_erl%==8 cls && call :message && goto ThirdUsefullProgs
 if %_erl%==9 cls && call :message && goto UsefullProgs
 goto SecondUsefullProgs
 
 :textGrab
-winget install "Text-Grab"
-cls
-call :errorCheck
+call :wingetInstall "Text Grab", "Text-Grab"
 goto SecondUsefullProgs
 
 :qBittorent
-winget install "qBittorrent.qBittorrent"
-cls
-call :errorCheck
+call :wingetInstall "qBittorrent", "qBittorrent.qBittorrent"
 goto SecondUsefullProgs
 
 :translucentTB
-winget install "TranslucentTB"
-cls
-call :errorCheck
+call :wingetInstall "TranslucentTB", "TranslucentTB"
 goto SecondUsefullProgs
 
 :BCU
-winget install "BCUninstaller"
-cls
-call :errorCheck
+call :wingetInstall "BCUninstaller", "BCUninstaller"
 goto SecondUsefullProgs
 
 :rufus
-winget install "Rufus.Rufus"
-cls
-call :errorCheck
+call :wingetInstall "Rufus", "Rufus.Rufus"
 goto SecondUsefullProgs
 
 :coursor
 cd %UserProfile%\Desktop
+call :message "Загрузка Windows.Cursor.Concept.v2.2.."
 call :download "https://github.com/PSGitHubUser1/Windows-11-Cursor-Concept-Pro-v2.x/releases/download/v2.2pro_big-v2/Windows.Cursor.Concept.v2.2+big.v2.zip" "Win11Coursor.zip"
-call :message "Архив скачан на рабочий стол"
+cls
+call :message "Архив загружен на рабочий стол"
 cd %~dp0
 goto SecondUsefullProgs
 
 :msiUtil
 cd %UserProfile%\Desktop
+call :message "Загрузка MSI_util_v3.."
 call :download "https://download2435.mediafire.com/poh28xtppbogFdzRwDj3cv6AYgiIjy7IWbog5nCfYFzaLd8vJYghZA47RDoxYXHlqqVHOmVP-FXWXi847vncp9baFLpJiA/ewpy1p0rr132thk/MSI_util_v3.zip" "MSI_util_v3.zip"
-call :message "Архив скачан на рабочий стол"
+cls
+call :message "Архив загружен на рабочий стол"
 cd %~dp0
 goto SecondUsefullProgs
 
@@ -1040,24 +1000,22 @@ goto SecondUsefullProgs
 :ThirdUsefullProgs
 title = Полезные программы
 echo		1. ExplorerPatcher
-echo		9. Предыдущая страница
+echo		9. Предыдущая страница..
 call :message
 choice /C:19 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && call :message && goto explorerPatcher
+if %_erl%==1 cls && goto explorerPatcher
 if %_erl%==2 cls && call :message && goto SecondUsefullProgs
 goto ThirdUsefullProgs
 
 :explorerPatcher
-winget install "ExplorerPatcher"
-cls
-call :errorCheck
+call :wingetInstall "ExplorerPatcher", "ExplorerPatcher"
 goto ThirdUsefullProgs
 
 
-rem													Functions
-rem ========================================================================================================
-rem Created by Vijorich
+::													Functions
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :download
@@ -1070,18 +1028,29 @@ goto :eof
 pushd "%~1" 2>nul && ( rd /Q /S . 2>nul & popd )
 goto :eof
 
-:errorCheck
+:wingetInstall
+call :message "Установка %~1.."
+winget install "%~2"
+cls
 if "%errorlevel%" equ "0" (
-	call :message "Установка завершена"
+	color 0A
+	call :message "Установка %~1 завершена"
 ) else if "%errorlevel%" equ "-1978335189" (
-	call :message "Программа уже установленна"
+	color 0A
+	call :message "%~1 уже установлен и обновления не найдены"
+) else if "%errorlevel%" equ "-1978334963" (
+	color 0A
+	call :message "%~1 уже установлен и обновления не найдены"
 ) else if "%errorlevel%" equ "9009" (
+	color 0C
 	call :message "Отсутствует установщик пакетов winget"
 	call :message "Установите программу из офф источника:"
 	call :message "https://learn.microsoft.com/ru-ru/windows/package-manager/winget/"
 ) else (
+	color 0C
 	call :message "Неизвестная ошибка"
 )
+	color 0A
 goto :eof
 
 :message
@@ -1116,9 +1085,9 @@ setlocal DisableDelayedExpansion
 endlocal
 goto :eof
 
-rem													Cheers
-rem ========================================================================================================
-rem Created by Vijorich
+::													Cheers
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :CheerUpAuthorMenu
@@ -1145,9 +1114,9 @@ if %_erl%==5 cls && start https://boosty.to/vijor && call :message
 if %_erl%==6 cls && call :message && goto MainMenu
 goto CheerUpAuthorMenu
 
-rem													Cleaner setup
-rem ========================================================================================================
-rem Created by Vijorich
+::													Cleaner setup
+:: ========================================================================================================
+:: Created by Vijorich
 
 
 :CleanerSetup
