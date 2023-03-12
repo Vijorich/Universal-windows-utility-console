@@ -840,8 +840,6 @@ goto RuntimeMenu
 
 :DirectX
 call :wingetInstall "DirectX", "DirectX End-User Runtime Web Installer"
-cls
-call :message "Установка DirectX завершена"
 goto RuntimeMenu
 
 
@@ -909,27 +907,27 @@ call :wingetInstall "7-zip", "7zip.7zip"
 goto UsefullProgs
 
 :notepad
-call :wingetInstall "Notepad++", "notepad++"
+call :wingetInstall "Notepad++", "Notepad++.Notepad++"
 goto UsefullProgs
 
 :autoruns
-call :wingetInstall "Autoruns", "Autoruns"
+call :wingetInstall "Autoruns", "Microsoft.Sysinternals.Autoruns"
 goto UsefullProgs
 
 :winMerge
-call :wingetInstall "WinMerge", "winmerge"
+call :wingetInstall "WinMerge", "WinMerge.WinMerge"
 goto UsefullProgs
 
 :ddu
-call :wingetInstall "Display Driver Uninstaller", "ddu"
+call :wingetInstall "Display Driver Uninstaller", "Wagnardsoft.DisplayDriverUninstaller"
 goto UsefullProgs
 
 :HWiNFO
-call :wingetInstall "HWiNFO", "HWiNFO"
+call :wingetInstall "HWiNFO", "REALiX.HWiNFO"
 goto UsefullProgs
 
 :rustDesk
-call :wingetInstall "RustDesk", "RustDesk"
+call :wingetInstall "RustDesk", "RustDesk.RustDesk"
 goto UsefullProgs
 
 
@@ -959,7 +957,7 @@ if %_erl%==9 cls && call :message && goto UsefullProgs
 goto SecondUsefullProgs
 
 :textGrab
-call :wingetInstall "Text Grab", "Text-Grab"
+call :wingetInstall "Text Grab", "JosephFinney.Text-Grab"
 goto SecondUsefullProgs
 
 :qBittorent
@@ -967,11 +965,11 @@ call :wingetInstall "qBittorrent", "qBittorrent.qBittorrent"
 goto SecondUsefullProgs
 
 :translucentTB
-call :wingetInstall "TranslucentTB", "TranslucentTB"
+call :wingetInstall "TranslucentTB", "9PF4KZ2VN4W9"
 goto SecondUsefullProgs
 
 :BCU
-call :wingetInstall "BCUninstaller", "BCUninstaller"
+call :wingetInstall "BCUninstaller", "Klocman.BulkCrapUninstaller"
 goto SecondUsefullProgs
 
 :rufus
@@ -1000,16 +998,40 @@ goto SecondUsefullProgs
 :ThirdUsefullProgs
 title = Полезные программы
 echo		1. ExplorerPatcher
+echo		2. QEMU
+echo		3. PowerToys
+echo		4. LibreOffice
+echo		5. OpenOffice
 echo		9. Предыдущая страница..
 call :message
-choice /C:19 /N
+choice /C:123459 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto explorerPatcher
-if %_erl%==2 cls && call :message && goto SecondUsefullProgs
+if %_erl%==2 cls && goto qemu
+if %_erl%==3 cls && goto powerToys
+if %_erl%==4 cls && goto libreOffice
+if %_erl%==5 cls && goto openOffice
+if %_erl%==6 cls && call :message && goto SecondUsefullProgs
 goto ThirdUsefullProgs
 
 :explorerPatcher
-call :wingetInstall "ExplorerPatcher", "ExplorerPatcher"
+call :wingetInstall "ExplorerPatcher", "valinet.ExplorerPatcher"
+goto ThirdUsefullProgs
+
+:qemu
+call :wingetInstall "QEMU" ,"SoftwareFreedomConservancy.QEMU"
+goto ThirdUsefullProgs
+
+:powerToys
+call :wingetInstall "PowerToys" ,"Microsoft.PowerToys"
+goto ThirdUsefullProgs
+
+:libreOffice
+call :wingetInstall "LibreOffice" ,"TheDocumentFoundation.LibreOffice"
+goto ThirdUsefullProgs
+
+:openOffice
+call :wingetInstall "OpenOffice" ,"Apache.OpenOffice"
 goto ThirdUsefullProgs
 
 
