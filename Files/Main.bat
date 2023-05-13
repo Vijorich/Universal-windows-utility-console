@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.74
+set _version=1.75
 
 verify on
 cd /d "%~dp0"
@@ -393,7 +393,7 @@ echo		3. Отключение компонентов совместимости
 echo		4. Отключение фоновых приложений
 echo		5. Оптимизация файловой системы
 echo		6. Включить функцию largesystemcache
-echo		7. Отключение гей бара
+echo		7. Отключение гейм бара
 echo		8. Следующая страница
 echo		9. Вернуться
 call :message
@@ -443,7 +443,7 @@ goto RegEditFirstPage
 
 :gameDVR
 call :regEditImport "gamebar"
-call :message "Гей бар отключен!"
+call :message "Гейм бар отключен!"
 goto RegEditFirstPage
 
 
@@ -752,9 +752,8 @@ goto MainMenu
 
 :applyPowerSchemes
 
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3_U.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3_RN.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4_U.pow >nul 2>&1
 
 start powercfg.cpl
 
@@ -1114,7 +1113,7 @@ goto :eof
 
 :CheerUpAuthorMenu
 title = Я старался!
-echo 1. Скинув смешную гифку ребятам из техношахты!
+echo 1. Скинуть смешную гифку ребятам из техношахты!
 echo 2. Пощекотав кнопку подписки на youtube канале
 echo.
 echo Скинув денюжку на покушать:
