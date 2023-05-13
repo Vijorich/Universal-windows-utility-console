@@ -5,21 +5,21 @@
 </picture>
 <br>
 <br>
-<a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
- <img alt="Latest GitHub release" src="https://img.shields.io/github/v/release/Vijorich/Uber-cleaner?style=for-the-badge" />
+<a href="https://github.com/Vijorich/universal-windows-utility/releases/latest" target="_blank">
+ <img alt="Latest GitHub release" src="https://img.shields.io/github/v/release/Vijorich/universal-windows-utility?style=for-the-badge" />
  </a>
-<a href="https://github.com/Vijorich/Uber-cleaner/releases/latest" target="_blank">
- <img alt="Release date" src="https://img.shields.io/github/release-date/Vijorich/Uber-cleaner?style=for-the-badge" />
+<a href="https://github.com/Vijorich/universal-windows-utility/releases/latest" target="_blank">
+ <img alt="Release date" src="https://img.shields.io/github/release-date/Vijorich/universal-windows-utility?style=for-the-badge" />
 </a>
-<a href="https://github.com/Vijorich/Uber-cleaner/commits" target="_blank">
- <img alt="Last commit" src="https://img.shields.io/github/last-commit/Vijorich/Uber-cleaner?style=for-the-badge" />
+<a href="https://github.com/Vijorich/universal-windows-utility/commits" target="_blank">
+ <img alt="Last commit" src="https://img.shields.io/github/last-commit/Vijorich/universal-windows-utility?style=for-the-badge" />
 </a>
 <br>
-<a href="https://github.com/Vijorich/Uber-cleaner/releases" target="_blank">
- <img alt="Downloads on GitHub" src="https://img.shields.io/github/downloads/Vijorich/Uber-cleaner/total?style=for-the-badge" />
+<a href="https://github.com/Vijorich/universal-windows-utility/releases" target="_blank">
+ <img alt="Downloads on GitHub" src="https://img.shields.io/github/downloads/Vijorich/universal-windows-utility/total?style=for-the-badge" />
 </a>
-<a href="https://github.com/Vijorich/Uber-cleaner/issues" target="_blank">
- <img alt="Issues open" src="https://img.shields.io/github/issues-raw/Vijorich/Uber-cleaner?style=for-the-badge" />
+<a href="https://github.com/Vijorich/universal-windows-utility/issues" target="_blank">
+ <img alt="Issues open" src="https://img.shields.io/github/issues-raw/Vijorich/universal-windows-utility?style=for-the-badge" />
 </a>
 </p>
 
