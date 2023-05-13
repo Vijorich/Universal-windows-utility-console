@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.75
+set _version=1.75.1
 
 verify on
 cd /d "%~dp0"
