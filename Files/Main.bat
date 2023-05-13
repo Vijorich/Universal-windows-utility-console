@@ -68,9 +68,9 @@ set _currentPath=%_currentPath:~0,-7%
 for /f %%a in ('PowerShell -Command "$PSVersionTable.PSVersion.Build"') do (set _powerShellVersion=%%a)
 
 if "%_powerShellVersion%" GEQ "22000" (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/universal-windows-utility/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 ) else (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Uber-cleaner/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/universal-windows-utility/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 )
 
 if "%_newVersion%" gtr "%_version%" (
@@ -88,11 +88,11 @@ if "%_newVersion%" gtr "%_version%" (
 		exit /b
 	) else (
 		if exist "UpdateLog.txt" (
-			call :message "Uber cleaner обновлен до версии !_version!"
+			call :message "UniWin обновлен до версии !_version!"
 			title = Список обновлений!
 			type UpdateLog.txt
 			del /f "UpdateLog.txt" >nul 2>&1
-			del /f "UC.zip" >nul 2>&1
+			del /f "UWU.zip" >nul 2>&1
 			timeout 25
 			cls && goto ConfigCheck
 		) else (
@@ -120,8 +120,8 @@ title = Обновление..
 rmdir /s /q cleanmgrplus
 rmdir /s /q powerschemes
 rmdir /s /q regpack
-call :download https://github.com/Vijorich/Uber-cleaner/releases/download/%_newVersion%/UC.zip "UC.zip"
-powershell -command "Expand-Archive -Force '%~dp0UC.zip' '%_currentPath%'" && start %_currentPath%/Start && exit
+call :download https://github.com/Vijorich/universal-windows-utility/releases/download/%_newVersion%/UWU.zip "UWU.zip"
+powershell -command "Expand-Archive -Force '%~dp0UWU.zip' '%_currentPath%'" && start %_currentPath%/Start && exit
 exit
 
 
@@ -161,7 +161,7 @@ call :message
 
 :MainMenu
 setlocal EnableDelayedExpansion
-title = UberCleaner %_version%
+title = UniWinUtil %_version%
 setlocal DisableDelayedExpansion
 echo		1. Меню очистки..
 echo		2. Меню настроек реестра..
@@ -181,7 +181,7 @@ if %_erl%==4 cls && call :message && goto AdditionalSettingsMenu
 if %_erl%==5 cls && call :message "Настраиваю.." && goto MmagentSetup
 if %_erl%==6 cls && call :message && goto ProgramDownload
 if %_erl%==7 exit 
-if %_erl%==8 cls && call :message "Вы можете сделать приятно автору uber cleaner %_version%!" && goto CheerUpAuthorMenu
+if %_erl%==8 cls && call :message "Вы можете сделать приятно автору UniWin %_version%!" && goto CheerUpAuthorMenu
 goto MainMenu
 
 
