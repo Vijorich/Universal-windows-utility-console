@@ -752,9 +752,8 @@ goto MainMenu
 
 :applyPowerSchemes
 
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3_U.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.3_RN.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4_U.pow >nul 2>&1
 
 start powercfg.cpl
 
