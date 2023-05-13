@@ -1,7 +1,7 @@
 <p align="center">
 <picture>
- <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Vijorich/Uber-cleaner/main/.github/images/UC_Logo_Light.svg">
- <img src="https://raw.githubusercontent.com/Vijorich/Uber-cleaner/main/.github/images/UC_Logo_Dark.svg">
+ <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Vijorich/universal-windows-utility/main/.github/images/UWU_Logo_Light.svg">
+ <img src="https://raw.githubusercontent.com/Vijorich/universal-windows-utility/main/.github/images/UWU_Logo_Dark.svg">
 </picture>
 <br>
 <br>
