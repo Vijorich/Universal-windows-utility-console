@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.75.1
+set _version=1.75.2
 
 verify on
 cd /d "%~dp0"
@@ -752,8 +752,8 @@ goto MainMenu
 
 :applyPowerSchemes
 
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4_U.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.5.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.5_U.pow >nul 2>&1
 
 start powercfg.cpl
 
