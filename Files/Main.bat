@@ -1,7 +1,7 @@
 @echo off & setlocal enabledelayedexpansion
 chcp 866 >nul
 
-set _version=1.75.2
+set _version=1.8.0
 
 verify on
 cd /d "%~dp0"
@@ -68,9 +68,9 @@ set _currentPath=%_currentPath:~0,-7%
 for /f %%a in ('PowerShell -Command "$PSVersionTable.PSVersion.Build"') do (set _powerShellVersion=%%a)
 
 if "%_powerShellVersion%" GEQ "22000" (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/universal-windows-utility/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 ) else (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/universal-windows-utility/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 )
 
 if "%_newVersion%" gtr "%_version%" (
@@ -120,7 +120,7 @@ title = Обновление..
 rmdir /s /q cleanmgrplus
 rmdir /s /q powerschemes
 rmdir /s /q regpack
-call :download https://github.com/Vijorich/universal-windows-utility/releases/download/%_newVersion%/UWU.zip "UWU.zip"
+call :download https://github.com/Vijorich/Universal-windows-utility-console/releases/download/%_newVersion%/UWU.zip "UWU.zip"
 powershell -command "Expand-Archive -Force '%~dp0UWU.zip' '%_currentPath%'" && start %_currentPath%/Start && exit
 exit
 
@@ -379,7 +379,7 @@ if %_build% GEQ 22000 (
 
 :regEditFullRegForAll
 call :regEditImport "appcompatibility" "attachmentmanager" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
-call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "fse"
+call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "3dedit"
 call :regEditImport "uac" "telemetry" "systemrestore"
 call :regEditTrustedImport "foldernetworkX"
 goto :eof
@@ -454,7 +454,7 @@ echo		2. Убрать задержку показа менюшек
 echo		3. Отключить веб поиск в меню поиска
 echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
 echo		5. Отключить точки восстановления
-echo		6. Глобальное отключение оптимизации во весь экран
+echo		6. Убрать "Изменить с помощью Paint 3D"
 echo		7. Отключить телеметрию NVIDIA
 echo		8. Следующая страница
 echo		9. Предыдущая страница
@@ -467,7 +467,7 @@ if %_erl%==2 cls && goto menuShowDelay
 if %_erl%==3 cls && goto search
 if %_erl%==4 cls && goto systemProfile
 if %_erl%==5 cls && goto systemRestore
-if %_erl%==6 cls && goto fse
+if %_erl%==6 cls && goto 3dedit
 if %_erl%==7 cls && goto nvdiaTelemetry
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
@@ -499,9 +499,9 @@ call :regEditImport "systemrestore"
 call :message "Точки восстановления отключены!"
 goto RegEditSecondPage
 
-:fse
-call :regEditImport "fse"
-call :message "Оптимизация во весь экран отключена!"
+:3dedit
+call :regEditImport "3dedit"
+call :message "Изменить с помощью Paint 3D убран!"
 goto RegEditSecondPage
 
 :nvdiaTelemetry
@@ -753,7 +753,7 @@ goto MainMenu
 :applyPowerSchemes
 
 powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.5.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.5_U.pow >nul 2>&1
+powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.6_U.pow >nul 2>&1
 
 start powercfg.cpl
 
