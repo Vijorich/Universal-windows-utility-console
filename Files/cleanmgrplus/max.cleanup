@@ -18,7 +18,7 @@ ShowDescription=1
 UIColorDefault=Light (default)
 [Items]
 Windows=-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;-1;0
-Scripts=0;0;0;0;0;0;0;-1;-1;-1;-1;-1;-1;0;-1;-1;-1;0;-1;-1
+Scripts=-1;-1;-1;-1;-1;-1;-1;-1;-1;-1
 [WindowState]
 Left=0
 Top=0
