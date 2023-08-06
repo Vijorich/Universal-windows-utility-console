@@ -7,4 +7,5 @@ Windows Registry Editor Version 5.00
 "AlwaysInstallElevated"=dword:1
 "LimitSystemRestoreCheckpointing"=dword:1
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\VSS]
+"ErrorControl"=dword:0
 "Start"=dword:4

@@ -1,12 +1,10 @@
-@echo off & setlocal enabledelayedexpansion
-chcp 866 >nul
+@echo off
+@setlocal enabledelayedexpansion
+@chcp 65001 >nul
 
-set _version=1.75.1
-
+set _version=1.8.0
 verify on
 cd /d "%~dp0"
-@color 0A
-mode con:cols=90 lines=20
 
 
 ::													Startup check
@@ -15,7 +13,7 @@ mode con:cols=90 lines=20
 
 
 :StartupCheck
-title = Проверка..
+title Проверка..
 
 for /f "tokens=6 delims=[]. " %%G in ('ver') do (
 	set _build=%%G
@@ -31,7 +29,7 @@ for /f %%G in ('PowerShell -Command "[Enum]::GetNames([Net.SecurityProtocolType]
 	if "%%G"=="False" (
 		color 04
 		call :message "Ваша версия PowerShell не поддерживает TLS1.2 !"
-		echo:  Обновите PowerShell https://aka.ms/PSWindows
+		call :message "Обновите PowerShell https://aka.ms/PSWindows"
 		pause
 		exit
 	)
@@ -61,16 +59,17 @@ if "%_networkState%"=="True" (
 
 
 :UpdateCheck
-title = Поиск обновлений..
-set _currentPath=%~dp0
-set _currentPath=%_currentPath:~0,-7%
+title Поиск обновлений..
+cd..
+set _currentPath=%cd%
+cd /d "%~dp0"
 
 for /f %%a in ('PowerShell -Command "$PSVersionTable.PSVersion.Build"') do (set _powerShellVersion=%%a)
 
 if "%_powerShellVersion%" GEQ "22000" (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/universal-windows-utility/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest").content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 ) else (
-	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/universal-windows-utility/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
+	for /f %%a in ('PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).tag_name"') do (set _newVersion=%%a)
 )
 
 if "%_newVersion%" gtr "%_version%" (
@@ -87,26 +86,33 @@ if "%_newVersion%" gtr "%_version%" (
 		call :UpdateMenu
 		exit /b
 	) else (
-		if exist "UpdateLog.txt" (
+	    if "%1" equ "1" (
 			call :message "UniWin обновлен до версии !_version!"
-			title = Список обновлений!
-			type UpdateLog.txt
-			del /f "UpdateLog.txt" >nul 2>&1
+			title Список обновлений!
+			if "%_powerShellVersion%" GEQ "22000" (
+				PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest").content | ConvertFrom-Json).name"
+				echo.
+				PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest").content | ConvertFrom-Json).body"
+			) else (
+				PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).name"
+				echo.
+				PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest" -UseBasicParsing).content | ConvertFrom-Json).body"
+			)
+			call :message "Нажмите любую кнопку, чтобы продолжить"
 			del /f "UWU.zip" >nul 2>&1
-			timeout 25
+			timeout 60 > nul
 			cls && goto ConfigCheck
 		) else (
 			cls && goto ConfigCheck
 		)
 	)
 )
-	
 exit /b
 
 
 :UpdateMenu
-echo		1. Установить обновление
-echo		2. Не сейчас
+echo.	1. Установить обновление
+echo.	2. Не сейчас
 call :message
 choice /C:12 /N
 set _erl=%errorlevel%
@@ -116,12 +122,12 @@ goto UpdateMenu
 
 
 :UpdateDownload
-title = Обновление..
+title Обновление..
 rmdir /s /q cleanmgrplus
 rmdir /s /q powerschemes
 rmdir /s /q regpack
-call :download https://github.com/Vijorich/universal-windows-utility/releases/download/%_newVersion%/UWU.zip "UWU.zip"
-powershell -command "Expand-Archive -Force '%~dp0UWU.zip' '%_currentPath%'" && start %_currentPath%/Start && exit
+call :download "https://github.com/Vijorich/Universal-windows-utility-console/releases/download/%newVersion%/UWU.zip" "UWU.zip"
+powershell -command "Expand-Archive -Force '%~dp0UWU.zip' '%_currentPath%'" && start "" "%~dp0Start.lnk" 1 && exit /b
 exit
 
 
@@ -131,7 +137,7 @@ exit
 
 
 :ConfigCheck
-title = Поиск предустановок очистки...
+title Поиск предустановок очистки...
 reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders" /v StateFlags0777"
 cls
 if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
@@ -143,7 +149,7 @@ if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
 
 
 :GatherInfo
-title = Распознавание версии Windows..
+title Распознавание версии Windows..
 
 if %_build% geq 22000 (
 	set _winver=11
@@ -160,17 +166,15 @@ call :message
 
 
 :MainMenu
-setlocal EnableDelayedExpansion
-title = UniWinUtil %_version%
-setlocal DisableDelayedExpansion
-echo		1. Меню очистки..
-echo		2. Меню настроек реестра..
-echo		3. Меню схем питания..
-echo		4. Меню дополнительных настрек..
-echo		5. Настроить mmagent..
-echo		6. Скачать и установить программы..
-echo		9. Выйти из программы
-echo		0. Поддержать автора!..
+title UWU %_version%
+echo.	1. Меню очистки..
+echo.	2. Меню настроек реестра..
+echo.	3. Меню схем питания..
+echo.	4. Меню дополнительных настрек..
+echo.	5. Настроить mmagent..
+echo.	6. Скачать и установить программы..
+echo.	9. Выйти из программы
+echo.	0. Поддержать автора!..
 call :message
 choice /C:12345690 /N
 set _erl=%errorlevel%
@@ -180,7 +184,7 @@ if %_erl%==3 cls && call :message && goto PowerSchemesMenu
 if %_erl%==4 cls && call :message && goto AdditionalSettingsMenu
 if %_erl%==5 cls && call :message "Настраиваю.." && goto MmagentSetup
 if %_erl%==6 cls && call :message && goto ProgramDownload
-if %_erl%==7 exit 
+if %_erl%==7 exit /b
 if %_erl%==8 cls && call :message "Вы можете сделать приятно автору UniWin %_version%!" && goto CheerUpAuthorMenu
 goto MainMenu
 
@@ -191,14 +195,13 @@ goto MainMenu
 
 
 :AdditionalSettingsMenu
-title = Дополнительные настройки
-
-echo		1. Отключить резервное хранилище
-echo		2. Отключить режим гибернации
-echo		3. Отключить виджеты (Windows Web Experience Pack)
-echo		4. Отключить Xbox оверлеи
-echo		5. Отключить Nvidia Ansel
-echo		9. Вернуться в главное меню
+title Дополнительные настройки
+echo.	1. Отключить резервное хранилище
+echo.	2. Отключить режим гибернации
+echo.	3. Отключить виджеты (Windows Web Experience Pack)
+echo.	4. Отключить Xbox оверлеи
+echo.	5. Отключить Nvidia Ansel
+echo.	9. Вернуться в главное меню
 call :message
 choice /C:123459 /N
 set _erl=%errorlevel%
@@ -212,7 +215,7 @@ goto :AdditionalSettingsMenu
 
 :offReservedStorage
 call :message "Ожидайте.."
-start /wait /min %SystemRoot%\System32\Dism.exe /Online /Set-ReservedStorageState /State:Disabled
+start /wait /min "%SystemRoot%\System32\Dism.exe" /Online /Set-ReservedStorageState /State:Disabled
 cls
 call :message "Резервное хранилище отключено!"
 goto :AdditionalSettingsMenu
@@ -238,7 +241,7 @@ goto :AdditionalSettingsMenu
 :offNvidiaAnsel
 set _target=NvCameraEnable.exe
 for /f "delims=" %%x in ('"dir /b /s /a-d-l "%windir%\System32\DriverStore\%_target%" 2>nul"') do set _targetFullPath=%%x
-if not defined _targetFullPath (call :message %_target% не найден !!! & pause >nul & goto :AdditionalSettingsMenu)
+if not defined _targetFullPath (call :message "%_target% не найден" & goto :AdditionalSettingsMenu)
 %_targetFullPath% off
 call :message "Ansel отключен!"
 goto :AdditionalSettingsMenu
@@ -250,12 +253,12 @@ goto :AdditionalSettingsMenu
 
 
 :CleanupMenu
-title = Меню очистки
-echo		1. Нужна ли мне очистка?
-echo		2. Быстрая ~1min-5min
-echo		3. Рекомендуемая ~5min-1hour
-echo		9. Вернуться в главное меню
-echo		0. Что? Каво? Куда? .тхт
+title Меню очистки
+echo.	1. Нужна ли мне очистка?
+echo.	2. Быстрая ~1min-5min
+echo.	3. Рекомендуемая ~5min-1hour
+echo.	9. Вернуться в главное меню
+echo.	0. Прочитай меня.тхт
 call :message
 choice /C:12390 /N
 set _erl=%errorlevel%
@@ -266,8 +269,12 @@ if %_erl%==4 cls && call :message && goto MainMenu
 if %_erl%==5 cls && goto cleanupInfo
 goto CleanupMenu
 
+:cleanupInfo
+start "" "%~dp0cleanmgrplus\readme.txt"
+call :message && goto CleanupMenu
+
 :checkUp
-title = Вилкой или не вилкой, вот в чем вопрос
+title Вилкой или не вилкой, вот в чем вопрос
 call :message "Сейчас посмотрим.."
 Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
 pause
@@ -276,7 +283,7 @@ call :message && goto MainMenu
 
 :fastCleanup
 setlocal DisableDelayedExpansion
-title = Производится быстрая очистка
+title Производится быстрая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\std.cleanup
 call :delete %Temp%
@@ -293,7 +300,7 @@ call :message "Готово!" && goto MainMenu
 
 :recommendedCleanup
 setlocal DisableDelayedExpansion
-title = Производится рекомендуемая очистка
+title Производится рекомендуемая очистка
 call :message "Чищу, чищу, чищу"
 start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\max.cleanup
 call :delete %Temp%
@@ -330,10 +337,6 @@ shutdown /r /t 60 /c "Через минуту перезагрузка, сохр
 endlocal
 exit
 
-:cleanupInfo
-start %~dp0\cleanmgrplus\readme.txt
-call :message && goto CleanupMenu
-
 
 ::													Reg Edit Menu
 :: ========================================================================================================
@@ -341,13 +344,13 @@ call :message && goto CleanupMenu
 
 
 :RegEditMenu
-title = Меню .reg файлов
-echo		1. Просто применить рекомендуемые настройки
-echo		2. Точечная настройка (для любой версии шиндус)
-echo		3. Только для 10 шиндуса
-echo		4. Только для 11 шиндуса
-echo		9. Вернуться в главное меню!
-echo		0. Це шо? .тхт
+title Меню .reg файлов
+echo.	1. Просто применить рекомендуемые настройки
+echo.	2. Точечная настройка (для любой версии шиндус)
+echo.	3. Только для 10 шиндуса
+echo.	4. Только для 11 шиндуса
+echo.	9. Вернуться в главное меню!
+echo.	0. Прочитай меня.тхт
 call :message
 choice /C:123490 /N
 set _erl=%errorlevel%
@@ -360,7 +363,7 @@ if %_erl%==6 cls && goto regEditInfo
 goto RegEditMenu
 
 :regEditInfo
-start %~dp0\regpack\readme.txt
+start "" "%~dp0regpack\readme.txt"
 call :message && goto RegEditFirstPage
 
 :RegEditFullReg
@@ -379,23 +382,23 @@ if %_build% GEQ 22000 (
 
 :regEditFullRegForAll
 call :regEditImport "appcompatibility" "attachmentmanager" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
-call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "fse"
+call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "3dedit"
 call :regEditImport "uac" "telemetry" "systemrestore"
 call :regEditTrustedImport "foldernetworkX"
 goto :eof
 
 
 :RegEditFirstPage
-title = Первая страница
-echo		1. Отключить телеметрию и прочее (см. в тхт файле)
-echo		2. Отключить все автообновления
-echo		3. Отключение компонентов совместимости
-echo		4. Отключение фоновых приложений
-echo		5. Оптимизация файловой системы
-echo		6. Включить функцию largesystemcache
-echo		7. Отключение гейм бара
-echo		8. Следующая страница
-echo		9. Вернуться
+title Первая страница
+echo.	1. Отключить телеметрию и прочее (см. в тхт файле)
+echo.	2. Отключить все автообновления
+echo.	3. Отключение компонентов совместимости
+echo.	4. Отключение фоновых приложений
+echo.	5. Оптимизация файловой системы
+echo.	6. Включить функцию largesystemcache
+echo.	7. Отключение гейм бара
+echo.	8. Следующая страница
+echo.	9. Вернуться
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
@@ -448,17 +451,17 @@ goto RegEditFirstPage
 
 
 :RegEditSecondPage
-title = Вторая страница
-echo		1. Возвращение старого просмотрщика фото
-echo		2. Убрать задержку показа менюшек
-echo		3. Отключить веб поиск в меню поиска
-echo		4. Уменьшение процента используемых ресурсов для лоу-приорити задач
-echo		5. Отключить точки восстановления
-echo		6. Глобальное отключение оптимизации во весь экран
-echo		7. Отключить телеметрию NVIDIA
-echo		8. Следующая страница
-echo		9. Предыдущая страница
-echo		0. Вернуться
+title Вторая страница
+echo.	1. Возвращение старого просмотрщика фото
+echo.	2. Убрать задержку показа менюшек
+echo.	3. Отключить веб поиск в меню поиска
+echo.	4. Уменьшение процента используемых ресурсов для лоу-приорити задач
+echo.	5. Отключить точки восстановления
+echo.	6. Убрать "Изменить с помощью Paint 3D"
+echo.	7. Отключить телеметрию NVIDIA
+echo.	8. Следующая страница
+echo.	9. Предыдущая страница
+echo.	0. Вернуться
 call :message
 choice /C:1234567890 /N
 set _erl=%errorlevel%
@@ -467,7 +470,7 @@ if %_erl%==2 cls && goto menuShowDelay
 if %_erl%==3 cls && goto search
 if %_erl%==4 cls && goto systemProfile
 if %_erl%==5 cls && goto systemRestore
-if %_erl%==6 cls && goto fse
+if %_erl%==6 cls && goto 3dedit
 if %_erl%==7 cls && goto nvdiaTelemetry
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
@@ -499,9 +502,9 @@ call :regEditImport "systemrestore"
 call :message "Точки восстановления отключены!"
 goto RegEditSecondPage
 
-:fse
-call :regEditImport "fse"
-call :message "Оптимизация во весь экран отключена!"
+:3dedit
+call :regEditImport "3dedit"
+call :message "Изменить с помощью Paint 3D убран!"
 goto RegEditSecondPage
 
 :nvdiaTelemetry
@@ -511,12 +514,12 @@ goto RegEditSecondPage
 
 
 :RegEditThirdPage
-title = Третья страница
-echo		1. Использование только последних версий .NET
-echo		2. Поставить префетч в значение 2
-echo		3. Отключить службы автообновления и фоновых процессов Edge браузера
-echo		8. Предыдущая страница
-echo		9. Вернуться
+title Третья страница
+echo.	1. Использование только последних версий .NET
+echo.	2. Поставить префетч в значение 2
+echo.	3. Отключить службы автообновления и фоновых процессов Edge браузера
+echo.	8. Предыдущая страница
+echo.	9. Вернуться
 call :message
 choice /C:12389 /N
 set _erl=%errorlevel%
@@ -544,14 +547,14 @@ goto RegEditThirdPage
 
 
 :RegEditWindows10Only
-title = .reg файлы для windows 10
-echo		1. Увеличить приоритет для игр
-echo		2. Удалить "Отправить" из контекстного меню
-echo		3. Удалить папку "Объемные объекты"
-echo		4. Полностью отключить дефендер, smartscreen, эксплойты
-echo		5. Вывести секунды в системные часы
-echo		6. Отключить уведомления при подключении новой сети
-echo		9. Вернуться
+title .reg файлы для windows 10
+echo.	1. Увеличить приоритет для игр
+echo.	2. Удалить "Отправить" из контекстного меню
+echo.	3. Удалить папку "Объемные объекты"
+echo.	4. Полностью отключить дефендер, smartscreen, эксплойты
+echo.	5. Вывести секунды в системные часы
+echo.	6. Отключить уведомления при подключении новой сети
+echo.	9. Вернуться
 call :message
 choice /C:12345679 /N
 set _erl=%errorlevel%
@@ -596,12 +599,12 @@ goto RegEditWindows10Only
 
 
 :RegEditWindows11Only
-title = .reg файлы для windows 11
-echo		1. Пофиксить новое контекстное меню
-echo		2. Увеличить приоритет для игр
-echo		3. Удалить "Отправить" из контекстного меню
-echo		4. Полностью отключить дефендер
-echo		9. Вернуться
+title .reg файлы для windows 11
+echo.	1. Пофиксить новое контекстное меню
+echo.	2. Увеличить приоритет для игр
+echo.	3. Удалить "Отправить" из контекстного меню
+echo.	4. Полностью отключить дефендер
+echo.	9. Вернуться
 call :message
 choice /C:12349 /N
 set _erl=%errorlevel%
@@ -639,7 +642,7 @@ goto RegEditWindows11Only
 
 
 :MmagentSetup
-title = Настройка sysmain
+title Настройка sysmain
 
 set _SystemPath=%SystemRoot:~0,-8%
 set par1=solid state device
@@ -658,11 +661,11 @@ If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%err2%")
 If "%errorlevel%"=="0" (goto :IdentityFailed) Else (goto :MmagentSetupHDD)
 
 :IdentityFailed
-title = Ошибка в определении диска
+title Ошибка в определении диска
 call :message "Ошибка в определении диска, проверьте его целостность и корректность работы"
-echo		1. HDD..
-echo		2. SSD..
-echo		9. Вернуться в главное меню..
+echo.	1. HDD..
+echo.	2. SSD..
+echo.	9. Вернуться в главное меню..
 call :message
 choice /C:129 /N
 set _erl=%errorlevel%
@@ -672,14 +675,14 @@ if %_erl%==3 cls && call :message && goto :MainMenu
 goto IdentityFailed
 
 :MmagentSetupHDD
-title = Настройка для HDD
+title Настройка для HDD
 call :regEditImport "prefetcher 0" && cls && call :message "Настроено для HDD!" && goto MainMenu
 call :message "ОШИБКА!"
 Pause
 goto MainMenu
 
 :MmagentSetupSSD
-title = Настройка для SSD
+title Настройка для SSD
 call :regEditImport "prefetcher 3" 
 
 for /f %%a in ('powershell -command "(Get-WmiObject Win32_PhysicalMemory).capacity | Measure-Object -Sum | Foreach {[int]($_.Sum/1GB)}"') do (set _memory=%%a)
@@ -695,11 +698,11 @@ if %_mmMemory% LEQ 128 (
 )
 
 if %_build% GEQ 22000 (
-	title = Настройка для SSD, windows 11
+	title Настройка для SSD, windows 11
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "enable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
 	cls && call :message "Настроено для SSD, windows 11!" && goto MainMenu
 ) else (
-	title = Настройка для SSD, windows 10
+	title Настройка для SSD, windows 10
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "disable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
 	cls && call :message "Настроено для SSD, windows 10!" && goto MainMenu
 )
@@ -710,11 +713,11 @@ if %_build% GEQ 22000 (
 
 
 :PowerSchemesMenu
-title = Меню схем питания
-echo		1. Импортировать схемы, выбрать нужную и удалить неиспользующиеся
-echo		2. Импортировать схемы и выбрать нужную
-echo		3. Удалить неиспользующиеся
-echo		9. Вернуться в главное меню
+title Меню схем питания
+echo.	1. Импортировать схемы, выбрать нужную и удалить неиспользующиеся
+echo.	2. Импортировать схемы и выбрать нужную
+echo.	3. Удалить неиспользующиеся
+echo.	9. Вернуться в главное меню
 call :message
 choice /C:1239 /N
 set _erl=%errorlevel%
@@ -727,7 +730,7 @@ goto PowerSchemesMenu
 :powerSchemesMix
 call :message "Выберите нужную схему!"
 call :applyPowerSchemes
-type %~dp0\powerschemes\readme.txt
+call :powerSchemesDescription
 pause
 for /f "skip=2 tokens=2,4 delims=:()" %%G in ('powercfg -list') do (powercfg -delete %%G)
 cls
@@ -737,8 +740,7 @@ goto MainMenu
 :powerSchemesImport
 call :message "Выберите нужную схему!"
 call :applyPowerSchemes
-
-type %~dp0\powerschemes\readme.txt
+call :powerSchemesDescription
 pause
 cls
 call :message "Готово!"
@@ -750,13 +752,16 @@ cls
 call :message "Удалил!" 
 goto MainMenu
 
+:powerSchemesDescription
+echo.	Схема для статического множества имеет вид (x.y)
+echo.	Универсальная схема имеет вид (x.y_U)
+echo.	Если не знаете какую выбрать, то выбирайте универсальную
+echo.
+goto :eof
+
 :applyPowerSchemes
-
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4.pow >nul 2>&1
-powercfg /import %~dp0\powerschemes\Shingeki_no_Windows_2.4_U.pow >nul 2>&1
-
+for /f tokens^=* %%i in ('where "%~dp0powerschemes\:*.pow"') do powercfg /import "%%i" >nul
 start powercfg.cpl
-
 goto :eof
 
 
@@ -766,10 +771,10 @@ goto :eof
 
 
 :ProgramDownload
-title = Загрузка программ
-echo		1. Библиотеки..
-echo		2. Полезные программы..
-echo		9. Вернуться в главное меню..
+title Загрузка программ
+echo.	1. Библиотеки..
+echo.	2. Полезные программы..
+echo.	9. Вернуться в главное меню..
 call :message
 choice /C:129 /N
 set _erl=%errorlevel%
@@ -780,12 +785,12 @@ goto ProgramDownload
 
 
 :RuntimeMenu
-title = Библиотеки
-echo		1. Visual C++
-echo		2. .Net
-echo		3. DirectX
-echo		4. K-Lite Codec Pack..
-echo		9. Предыдущая страница
+title Библиотеки
+echo.	1. Visual C++
+echo.	2. .Net
+echo.	3. DirectX
+echo.	4. K-Lite Codec Pack..
+echo.	9. Предыдущая страница
 call :message
 choice /C:12349 /N
 set _erl=%errorlevel%
@@ -843,12 +848,12 @@ goto RuntimeMenu
 
 
 :klitecodecs
-title = Полезные программы
-echo		1. Basic
-echo		2. Standard - Рекомендуется
-echo		3. Full
-echo		4. Mega
-echo		9. Предыдущая страница..
+title Полезные программы
+echo.	1. Basic
+echo.	2. Standard - Рекомендуется
+echo.	3. Full
+echo.	4. Mega
+echo.	9. Предыдущая страница..
 call :message
 choice /C:12349 /N
 set _erl=%errorlevel%
@@ -877,16 +882,16 @@ goto klitecodecs
 
 
 :UsefullProgs
-title = Полезные программы
-echo		1. 7-zip
-echo		2. Notepad++
-echo		3. Autoruns
-echo		4. WinMerge
-echo		5. DDU
-echo		6. HWiNFO
-echo		7. Rust desk
-echo		8. Следующая страница..
-echo		9. Предыдущая страница..
+title Полезные программы
+echo.	1. 7-zip
+echo.	2. Notepad++
+echo.	3. Autoruns
+echo.	4. WinMerge
+echo.	5. DDU
+echo.	6. HWiNFO
+echo.	7. Rust desk
+echo.	8. Следующая страница..
+echo.	9. Предыдущая страница..
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
@@ -931,16 +936,16 @@ goto UsefullProgs
 
 
 :SecondUsefullProgs
-title = Полезные программы
-echo		1. Text-Grab
-echo		2. qBittorent
-echo		3. TranslucentTB
-echo		4. BCUninstaller
-echo		5. Rufus
-echo		6. Win11-Coursor
-echo		7. Msi-Util
-echo		8. Следующая страница..
-echo		9. Предыдущая страница..
+title Полезные программы
+echo.	1. Text-Grab
+echo.	2. qBittorent
+echo.	3. TranslucentTB
+echo.	4. BCUninstaller
+echo.	5. Rufus
+echo.	6. Win11-Coursor
+echo.	7. Msi-Util
+echo.	8. Следующая страница..
+echo.	9. Предыдущая страница..
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
@@ -976,32 +981,32 @@ call :wingetInstall "Rufus", "Rufus.Rufus"
 goto SecondUsefullProgs
 
 :coursor
-cd %UserProfile%\Desktop
+cd "%UserProfile%\Desktop"
 call :message "Загрузка Windows.Cursor.Concept.v2.2.."
 call :download "https://github.com/PSGitHubUser1/Windows-11-Cursor-Concept-Pro-v2.x/releases/download/v2.2pro_big-v2/Windows.Cursor.Concept.v2.2+big.v2.zip" "Win11Coursor.zip"
 cls
 call :message "Архив загружен на рабочий стол"
-cd %~dp0
+cd /d "%~dp0"
 goto SecondUsefullProgs
 
 :msiUtil
-cd %UserProfile%\Desktop
+cd "%UserProfile%\Desktop"
 call :message "Загрузка MSI_util_v3.."
 call :download "https://download2435.mediafire.com/poh28xtppbogFdzRwDj3cv6AYgiIjy7IWbog5nCfYFzaLd8vJYghZA47RDoxYXHlqqVHOmVP-FXWXi847vncp9baFLpJiA/ewpy1p0rr132thk/MSI_util_v3.zip" "MSI_util_v3.zip"
 cls
 call :message "Архив загружен на рабочий стол"
-cd %~dp0
+cd /d "%~dp0"
 goto SecondUsefullProgs
 
 
 :ThirdUsefullProgs
-title = Полезные программы
-echo		1. ExplorerPatcher
-echo		2. QEMU
-echo		3. PowerToys
-echo		4. LibreOffice
-echo		5. OpenOffice
-echo		9. Предыдущая страница..
+title Полезные программы
+echo.	1. ExplorerPatcher
+echo.	2. QEMU
+echo.	3. PowerToys
+echo.	4. LibreOffice
+echo.	5. OpenOffice
+echo.	9. Предыдущая страница..
 call :message
 choice /C:123459 /N
 set _erl=%errorlevel%
@@ -1076,9 +1081,9 @@ goto :eof
 
 :message
 setlocal DisableDelayedExpansion
-echo:
-echo:  %~1
-echo:
+echo.
+echo. %~1
+echo.
 endlocal
 goto :eof
 
@@ -1112,18 +1117,18 @@ goto :eof
 
 
 :CheerUpAuthorMenu
-title = Я старался!
-echo 1. Скинуть смешную гифку ребятам из техношахты!
-echo 2. Пощекотав кнопку подписки на youtube канале
+title Я старался!
+echo.	1. Скинуть смешную гифку ребятам из техношахты!
+echo.	2. Пощекотав кнопку подписки на youtube канале
 echo.
-echo Скинув денюжку на покушать:
-echo 3. donationalerts
-echo 4. donatepay
+echo.	Скинув денюжку на покушать:
+echo.	3. donationalerts
+echo.	4. donatepay
 echo.
-echo Подписавшись на бусти: 
-echo 5. boosty
+echo.	Подписавшись на бусти: 
+echo.	5. boosty
 echo.
-echo 9. Вернуться в главное меню
+echo.	9. Вернуться в главное меню
 call :message
 choice /C:123459 /N
 set _erl=%errorlevel%

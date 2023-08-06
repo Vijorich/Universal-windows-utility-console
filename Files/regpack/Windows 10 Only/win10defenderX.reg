@@ -1,10 +1,25 @@
 Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer]
 "SmartScreenEnabled"="Off"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender/Operational]
+"Enabled"=dword:0
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Windows Defender/WHC]
+"Enabled"=dword:0
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender]
+"DisableAntiSpyware"=dword:1
+"DisableAntiVirus"=dword:1
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System]
 "EnableSmartScreen"=dword:0
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender]
+"AllowFastServiceStartup"=dword:0
+"DisableAntiSpyware"=dword:1
+"ServiceKeepAlive"=dword:0
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender\SmartScreen]
 "ConfigureAppInstallControlEnabled"=dword:0
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Notifications]
+"DisableNotifications"=dword:1
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender Security Center\Systray]
+"HideSystray"=dword:1
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\CredentialGuard]
 "Enabled"=dword:0
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity]
@@ -17,30 +32,40 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\WMI\Autologger\DefenderAuditLogger]
 "Start"=dword:0
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SecurityHealthService]
+"ErrorControl"=dword:0
 "LaunchProtected"=dword:4
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Sense]
+"ErrorControl"=dword:0
 "LaunchProtected"=dword:4
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SgrmAgent]
+"ErrorControl"=dword:0
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SgrmBroker]
 "DelayedAutoStart"=dword:0
+"ErrorControl"=dword:0
 "LaunchProtected"=dword:4
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdBoot]
+"ErrorControl"=dword:0
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdFilter]
+"ErrorControl"=dword:0
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdNisDrv]
+"ErrorControl"=dword:0
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdNisSvc]
+"ErrorControl"=dword:0
 "LaunchProtected"=dword:4
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend]
+"ErrorControl"=dword:0
 "LaunchProtected"=dword:4
 "Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wscsvc]
 "DelayedAutoStart"=dword:0
+"ErrorControl"=dword:0
 "LaunchProtected"=dword:4
 "Start"=dword:4
