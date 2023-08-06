@@ -126,8 +126,9 @@ title Обновление..
 rmdir /s /q cleanmgrplus
 rmdir /s /q powerschemes
 rmdir /s /q regpack
-call :download "https://github.com/Vijorich/Universal-windows-utility-console/releases/download/%newVersion%/UWU.zip" "UWU.zip"
-powershell -command "Expand-Archive -Force '%~dp0UWU.zip' '%_currentPath%'" && start "" "%~dp0Start.lnk" 1 && exit /b
+call :download "https://github.com/Vijorich/Universal-windows-utility-console/releases/download/%_newVersion%/UWU.zip" "UWU.zip"
+powershell -command "Expand-Archive -Force '%~dp0UWU.zip' '%_currentPath%'" && start "" "%_currentPath%\Start.lnk" 1 && exit /b
+echo Произошла ошибка
 exit
 
 
