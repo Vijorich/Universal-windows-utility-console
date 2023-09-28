@@ -2,7 +2,7 @@
 @setlocal enabledelayedexpansion
 @chcp 65001 >nul
 
-set _version=1.8.1
+set _version=1.8.3
 verify on
 cd /d "%~dp0"
 
@@ -123,7 +123,6 @@ goto UpdateMenu
 
 :UpdateDownload
 title Обновление..
-rmdir /s /q cleanmgrplus
 rmdir /s /q powerschemes
 rmdir /s /q regpack
 call :download "https://github.com/Vijorich/Universal-windows-utility-console/releases/download/%_newVersion%/UWU.zip" "UWU.zip"
@@ -271,7 +270,7 @@ if %_erl%==5 cls && goto cleanupInfo
 goto CleanupMenu
 
 :cleanupInfo
-start "" "%~dp0cleanmgrplus\readme.txt"
+start "" "%~dp0CleanReadme.txt"
 call :message && goto CleanupMenu
 
 :checkUp
@@ -286,7 +285,6 @@ call :message && goto MainMenu
 setlocal DisableDelayedExpansion
 title Производится быстрая очистка
 call :message "Чищу, чищу, чищу"
-start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\std.cleanup
 call :delete %Temp%
 call :delete %WINDIR%\Temp
 call :delete %SYSTEMDRIVE%\Temp
@@ -303,7 +301,6 @@ call :message "Готово!" && goto MainMenu
 setlocal DisableDelayedExpansion
 title Производится рекомендуемая очистка
 call :message "Чищу, чищу, чищу"
-start /min /wait .\cleanmgrplus\Cleanmgr+.exe /cp /nowindow .\cleanmgrplus\max.cleanup
 call :delete %Temp%
 call :delete %WINDIR%\Temp
 call :delete %SYSTEMDRIVE%\Temp
