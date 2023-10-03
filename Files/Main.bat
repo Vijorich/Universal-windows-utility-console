@@ -2,7 +2,7 @@
 @setlocal enabledelayedexpansion
 @chcp 65001 >nul
 
-set _version=1.8.3
+set _version=1.8.4
 verify on
 cd /d "%~dp0"
 
