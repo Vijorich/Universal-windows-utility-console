@@ -1,13 +1,5 @@
 Windows Registry Editor Version 5.00
-[HKEY_CLASSES_ROOT\ms-gamebar]
-"URL Protocol"=""
-[HKEY_CLASSES_ROOT\ms-gamebar\shell\open\command]
-[HKEY_CLASSES_ROOT\ms-gamebarservices]
-"URL Protocol"=""
-[HKEY_CLASSES_ROOT\ms-gamebarservices\shell\open\command]
 [HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR]
 "AppCaptureEnabled"=dword:0
 [HKEY_CURRENT_USER\System\GameConfigStore]
 "GameDVR_Enabled"=dword:0
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR]
-"value"=dword:0

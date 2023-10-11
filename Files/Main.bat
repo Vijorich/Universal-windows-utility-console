@@ -2,7 +2,7 @@
 @setlocal enabledelayedexpansion
 @chcp 65001 >nul
 
-set _version=1.8.4
+set _version=1.8.5
 verify on
 cd /d "%~dp0"
 
@@ -366,13 +366,13 @@ call :message && goto RegEditFirstPage
 
 :RegEditFullReg
 if %_build% GEQ 22000 (
-	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11priority" "\Windows 11 Only\win11shareitem"
+	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11shareitem"
 	call :regEditTrustedImport "\Windows 11 Only\win11defenderX"
-	call :batTrustedImport "\Windows 11 Only\win11defendersubserviceX"
+	call :batTrustedImport "\Windows 11 Only\win11defsubsvcX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы для шиндус 11!" && goto MainMenu
 ) else (
-	call :regEditImport "\Windows 10 Only\win10folder3d" "\Windows 10 Only\win10networkwizard" "\Windows 10 Only\win10priority" "\Windows 10 Only\win10shareitem" "\Windows 10 Only\win10showsecondsinsystemclock"
+	call :regEditImport "\Windows 10 Only\win10folder3d" "\Windows 10 Only\win10networkwizard" "\Windows 10 Only\win10shareitem" "\Windows 10 Only\win10showsecondsinsystemclock"
     call :regEditTrustedImport "\Windows 10 Only\win10defenderX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы для шиндус 10!" && goto MainMenu
@@ -380,15 +380,15 @@ if %_build% GEQ 22000 (
 
 :regEditFullRegForAll
 call :regEditImport "appcompatibility" "attachmentmanager" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
-call :regEditImport "systemprofile" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "3dedit"
-call :regEditImport "uac" "telemetry" "systemrestore"
+call :regEditImport "responsiveness" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "3dedit"
+call :regEditImport "uac" "priority" "systemrestore" "accessibility"
 call :regEditTrustedImport "foldernetworkX"
 goto :eof
 
 
 :RegEditFirstPage
 title Первая страница
-echo.	1. Отключить телеметрию и прочее (см. в тхт файле)
+echo.	1. Отключение защиты Spectre, Meltdown и т.д
 echo.	2. Отключить все автообновления
 echo.	3. Отключение компонентов совместимости
 echo.	4. Отключение фоновых приложений
@@ -400,7 +400,7 @@ echo.	9. Вернуться
 call :message
 choice /C:123456789 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && goto telemetry
+if %_erl%==1 cls && goto maintenance
 if %_erl%==2 cls && goto autoUpdate
 if %_erl%==3 cls && goto appCompability
 if %_erl%==4 cls && goto backgroundApps
@@ -411,8 +411,8 @@ if %_erl%==8 cls && call :message && goto RegEditSecondPage
 if %_erl%==9 cls && call :message && goto RegEditMenu
 goto RegEditFirstPage
 
-:telemetry
-call :regEditImport "inspectre" "uac" "maintenance" "attachmentmanager" "telemetry"
+:maintenance
+call :regEditImport "inspectre" "uac" "maintenance"
 call :message "Жучки отключены!"
 goto RegEditFirstPage
 
@@ -456,7 +456,7 @@ echo.	3. Отключить веб поиск в меню поиска
 echo.	4. Уменьшение процента используемых ресурсов для лоу-приорити задач
 echo.	5. Отключить точки восстановления
 echo.	6. Убрать "Изменить с помощью Paint 3D"
-echo.	7. Отключить телеметрию NVIDIA
+echo.	7. Увеличить приоритет для игр
 echo.	8. Следующая страница
 echo.	9. Предыдущая страница
 echo.	0. Вернуться
@@ -466,10 +466,10 @@ set _erl=%errorlevel%
 if %_erl%==1 cls && goto backOldPhotoViewer
 if %_erl%==2 cls && goto menuShowDelay
 if %_erl%==3 cls && goto search
-if %_erl%==4 cls && goto systemProfile
+if %_erl%==4 cls && goto responsiveness
 if %_erl%==5 cls && goto systemRestore
 if %_erl%==6 cls && goto 3dedit
-if %_erl%==7 cls && goto nvdiaTelemetry
+if %_erl%==7 cls && goto priority
 if %_erl%==8 cls && call :message && goto RegEditThirdPage
 if %_erl%==9 cls && call :message && goto RegEditFirstPage
 if %_erl%==10 cls && call :message && goto RegEditMenu
@@ -490,8 +490,8 @@ call :regEditImport "search"
 call :message "Веб-поиск отключен!"
 goto RegEditSecondPage
 
-:systemProfile
-call :regEditImport "systemprofile"
+:responsiveness
+call :regEditImport "responsiveness"
 call :message "Процент используемых ресурсов уменьшен!"
 goto RegEditSecondPage
 
@@ -505,8 +505,8 @@ call :regEditImport "3dedit"
 call :message "Изменить с помощью Paint 3D убран!"
 goto RegEditSecondPage
 
-:nvdiaTelemetry
-call :regEditImport "nvtelemetry"
+:priority
+call :regEditImport "priority"
 call :message "Телеметрия убита"
 goto RegEditSecondPage
 
@@ -516,16 +516,18 @@ title Третья страница
 echo.	1. Использование только последних версий .NET
 echo.	2. Поставить префетч в значение 2
 echo.	3. Отключить службы автообновления и фоновых процессов Edge браузера
+echo.	4. Отключение настроек для людей с ограниченными возможностями
 echo.	8. Предыдущая страница
 echo.	9. Вернуться
 call :message
-choice /C:12389 /N
+choice /C:123489 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto latestCLR
 if %_erl%==2 cls && goto prefetcher2
 if %_erl%==3 cls && goto edge
-if %_erl%==4 cls && call :message && goto RegEditSecondPage
-if %_erl%==5 cls && call :message && goto RegEditMenu
+if %_erl%==4 cls && goto accessibility
+if %_erl%==5 cls && call :message && goto RegEditSecondPage
+if %_erl%==6 cls && call :message && goto RegEditMenu
 goto RegEditThirdPage
 
 :latestCLR
@@ -539,35 +541,33 @@ call :message "Настроил prefetch"
 goto RegEditThirdPage
 
 :edge
-call :batTrustedImport "edge"
+call :regEditImport "edgeupdate"
 call :message "О нет! Они убили edge("
+goto RegEditThirdPage
+
+:accessibility
+call :regEditImport "accessibility"
+call :message "Отключил"
 goto RegEditThirdPage
 
 
 :RegEditWindows10Only
 title .reg файлы для windows 10
-echo.	1. Увеличить приоритет для игр
-echo.	2. Удалить "Отправить" из контекстного меню
-echo.	3. Удалить папку "Объемные объекты"
-echo.	4. Полностью отключить дефендер, smartscreen, эксплойты
-echo.	5. Вывести секунды в системные часы
-echo.	6. Отключить уведомления при подключении новой сети
+echo.	1. Удалить "Отправить" из контекстного меню
+echo.	2. Удалить папку "Объемные объекты"
+echo.	3. Полностью отключить дефендер, smartscreen, эксплойты
+echo.	4. Вывести секунды в системные часы
+echo.	5. Отключить уведомления при подключении новой сети
 echo.	9. Вернуться
 call :message
-choice /C:12345679 /N
+choice /C:123459 /N
 set _erl=%errorlevel%
-if %_erl%==1 cls && goto windows10Priority
-if %_erl%==2 cls && goto windows10ShareItem
-if %_erl%==3 cls && goto windows103dObjects
-if %_erl%==4 cls && goto windows10Defender
-if %_erl%==5 cls && goto windows10ShowSecondsInSystemClock
-if %_erl%==6 cls && goto windows10NewnetworkWindow
-if %_erl%==8 cls && call :message && goto RegEditMenu
-goto RegEditWindows10Only
-
-:windows10Priority
-call :regEditImport "\Windows 10 Only\win10priority"
-call :message "Приоритет для игр увеличен!"
+if %_erl%==1 cls && goto windows10ShareItem
+if %_erl%==2 cls && goto windows103dObjects
+if %_erl%==3 cls && goto windows10Defender
+if %_erl%==4 cls && goto windows10ShowSecondsInSystemClock
+if %_erl%==5 cls && goto windows10NewnetworkWindow
+if %_erl%==6 cls && call :message && goto RegEditMenu
 goto RegEditWindows10Only
 
 :windows10ShareItem
@@ -599,28 +599,21 @@ goto RegEditWindows10Only
 :RegEditWindows11Only
 title .reg файлы для windows 11
 echo.	1. Пофиксить новое контекстное меню
-echo.	2. Увеличить приоритет для игр
-echo.	3. Удалить "Отправить" из контекстного меню
-echo.	4. Полностью отключить дефендер
+echo.	2. Удалить "Отправить" из контекстного меню
+echo.	3. Полностью отключить дефендер
 echo.	9. Вернуться
 call :message
-choice /C:12349 /N
+choice /C:1239 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto windows11ContextMenuFix
-if %_erl%==2 cls && goto windows11Priority
-if %_erl%==3 cls && goto windows11ShareItem
-if %_erl%==4 cls && goto windows11Defender
-if %_erl%==5 cls && call :message && goto RegEditMenu
+if %_erl%==2 cls && goto windows11ShareItem
+if %_erl%==3 cls && goto windows11Defender
+if %_erl%==4 cls && call :message && goto RegEditMenu
 goto RegEditWindows11Only
 
 :windows11ContextMenuFix
 call :regEditImport "\Windows 11 Only\win11contextmenu"
 call :message "Новое контекстное меню исправлено!"
-goto RegEditWindows11Only
-
-:windows11Priority
-call :regEditImport "\Windows 11 Only\win11priority"
-call :message "Приоритет для игр увеличен!"
 goto RegEditWindows11Only
 
 :windows11ShareItem
@@ -630,7 +623,7 @@ goto RegEditWindows11Only
 
 :windows11Defender
 call :regEditTrustedImport "\Windows 11 Only\win11defenderX"
-call :batTrustedImport "\Windows 11 Only\win11defendersubserviceX"
+call :batTrustedImport "\Windows 11 Only\win11defsubsvcX"
 call :message "Защита пала!"
 goto RegEditWindows11Only
 

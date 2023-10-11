@@ -1,8 +1,11 @@
 Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\DisplayPostProcessing]
-"GPU Priority"=dword:c
+"GPU Priority"=dword:1f
 "Scheduling Category"="High"
+"SFIO Priority"="Normal"
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games]
-"GPU Priority"=dword:c
-"Priority"=dword:7
-"Scheduling Category"="High"
+"BackgroundPriority"=dword:6
+"GPU Priority"=dword:1f
+"Priority"=dword:6
+"Scheduling Category"="Medium"
+"SFIO Priority"="Normal"
