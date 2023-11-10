@@ -6,6 +6,10 @@ set _version=1.8.5
 verify on
 cd /d "%~dp0"
 
+FOR /F "tokens=3" %%a IN ('reg query "HKEY_USERS\S-1-5-18\Control Panel\Desktop\MuiCached" /v MachinePreferredUILanguages ^| find "MachinePreferredUILanguages"') DO set UILanguage=%%a
+
+if %UILanguage% == ru-RU (call :RU & goto :StartupCheck) 
+call :EN
 
 ::													Startup check
 :: ========================================================================================================
@@ -13,8 +17,7 @@ cd /d "%~dp0"
 
 
 :StartupCheck
-title Проверка..
-
+title UWU %_version%
 for /f "tokens=6 delims=[]. " %%G in ('ver') do (
 	set _build=%%G
 	if "%%G" lss "10586" (
@@ -59,7 +62,6 @@ if "%_networkState%"=="True" (
 
 
 :UpdateCheck
-title Поиск обновлений..
 cd..
 set _currentPath=%cd%
 cd /d "%~dp0"
@@ -88,7 +90,6 @@ if "%_newVersion%" gtr "%_version%" (
 	) else (
 	    if "%1" equ "1" (
 			call :message "UniWin обновлен до версии !_version!"
-			title Список обновлений!
 			if "%_powerShellVersion%" GEQ "22000" (
 				PowerShell -Command "((Invoke-WebRequest -Uri "https://api.github.com/repos/Vijorich/Universal-windows-utility-console/releases/latest").content | ConvertFrom-Json).name"
 				echo.
@@ -122,7 +123,6 @@ goto UpdateMenu
 
 
 :UpdateDownload
-title Обновление..
 rmdir /s /q powerschemes
 rmdir /s /q regpack
 call :download "https://github.com/Vijorich/Universal-windows-utility-console/releases/download/%_newVersion%/UWU.zip" "UWU.zip"
@@ -131,25 +131,12 @@ echo Произошла ошибка
 exit
 
 
-::													Config check
-:: ========================================================================================================
-:: Created by Vijorich
-
-
-:ConfigCheck
-title Поиск предустановок очистки...
-reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches\Active Setup Temp Folders" /v StateFlags0777"
-cls
-if %errorlevel% == 0 (goto :GatherInfo) else (call :CleanerSetup)
-
-
 ::													System config
 :: ========================================================================================================
 :: Created by Vijorich
 
 
 :GatherInfo
-title Распознавание версии Windows..
 
 if %_build% geq 22000 (
 	set _winver=11
@@ -166,15 +153,14 @@ call :message
 
 
 :MainMenu
-title UWU %_version%
-echo.	1. Меню очистки..
-echo.	2. Меню настроек реестра..
-echo.	3. Меню схем питания..
-echo.	4. Меню дополнительных настрек..
-echo.	5. Настроить mmagent..
-echo.	6. Скачать и установить программы..
-echo.	9. Выйти из программы
-echo.	0. Поддержать автора!..
+echo.	1. %MainMenu_CleanupMenu%
+echo.	2. %MainMenu_RegSettingsMenu%
+echo.	3. %MainMenu_PowerSchemesMenu%
+echo.	4. %MainMenu_AdditionalSettingsMenu%
+echo.	5. %MainMenu_ConfigureMMAgent%
+echo.	6. %MainMenu_DownloadInstallMenu%
+echo.	9. %MainMenu_Exit%
+echo.	0. %MainMenu_SupportAuthorMenu%
 call :message
 choice /C:12345690 /N
 set _erl=%errorlevel%
@@ -195,13 +181,12 @@ goto MainMenu
 
 
 :AdditionalSettingsMenu
-title Дополнительные настройки
-echo.	1. Отключить резервное хранилище
-echo.	2. Отключить режим гибернации
-echo.	3. Отключить виджеты (Windows Web Experience Pack)
-echo.	4. Отключить Xbox оверлеи
-echo.	5. Отключить Nvidia Ansel
-echo.	9. Вернуться в главное меню
+echo.	1. %AdditionalSettingsMenu_BackupStorage%
+echo.	2. %AdditionalSettingsMenu_HibernationMode%
+echo.	3. %AdditionalSettingsMenu_WindgetsWWEP%
+echo.	4. %AdditionalSettingsMenu_XboxOverlays%
+echo.	5. %AdditionalSettingsMenu_NvidiaAnsel%
+echo.	9. %AdditionalSettingsMenu_Return%
 call :message
 choice /C:123459 /N
 set _erl=%errorlevel%
@@ -253,12 +238,11 @@ goto :AdditionalSettingsMenu
 
 
 :CleanupMenu
-title Меню очистки
-echo.	1. Нужна ли мне очистка?
-echo.	2. Быстрая ~1min-5min
-echo.	3. Рекомендуемая ~5min-1hour
-echo.	9. Вернуться в главное меню
-echo.	0. Прочитай меня.тхт
+echo.	1. %CleanupMenu_CleanupCheck%
+echo.	2. %CleanupMenu_Fast%
+echo.	3. %CleanupMenu_Recommended%
+echo.	9. %CleanupMenu_Return%
+echo.	0. %CleanupMenu_Return%
 call :message
 choice /C:12390 /N
 set _erl=%errorlevel%
@@ -274,7 +258,6 @@ start "" "%~dp0CleanReadme.txt"
 call :message && goto CleanupMenu
 
 :checkUp
-title Вилкой или не вилкой, вот в чем вопрос
 call :message "Сейчас посмотрим.."
 Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
 pause
@@ -283,7 +266,6 @@ call :message && goto MainMenu
 
 :fastCleanup
 setlocal DisableDelayedExpansion
-title Производится быстрая очистка
 call :message "Чищу, чищу, чищу"
 call :delete %Temp%
 call :delete %WINDIR%\Temp
@@ -299,7 +281,6 @@ call :message "Готово!" && goto MainMenu
 
 :recommendedCleanup
 setlocal DisableDelayedExpansion
-title Производится рекомендуемая очистка
 call :message "Чищу, чищу, чищу"
 call :delete %Temp%
 call :delete %WINDIR%\Temp
@@ -342,8 +323,7 @@ exit
 
 
 :RegEditMenu
-title Меню .reg файлов
-echo.	1. Просто применить рекомендуемые настройки
+echo.	1. %RegEditMenu_Recommended%
 echo.	2. Точечная настройка (для любой версии шиндус)
 echo.	3. Только для 10 шиндуса
 echo.	4. Только для 11 шиндуса
@@ -387,7 +367,6 @@ goto :eof
 
 
 :RegEditFirstPage
-title Первая страница
 echo.	1. Отключение защиты Spectre, Meltdown и т.д
 echo.	2. Отключить все автообновления
 echo.	3. Отключение компонентов совместимости
@@ -449,7 +428,6 @@ goto RegEditFirstPage
 
 
 :RegEditSecondPage
-title Вторая страница
 echo.	1. Возвращение старого просмотрщика фото
 echo.	2. Убрать задержку показа менюшек
 echo.	3. Отключить веб поиск в меню поиска
@@ -512,7 +490,6 @@ goto RegEditSecondPage
 
 
 :RegEditThirdPage
-title Третья страница
 echo.	1. Использование только последних версий .NET
 echo.	2. Поставить префетч в значение 2
 echo.	3. Отключить службы автообновления и фоновых процессов Edge браузера
@@ -552,7 +529,6 @@ goto RegEditThirdPage
 
 
 :RegEditWindows10Only
-title .reg файлы для windows 10
 echo.	1. Удалить "Отправить" из контекстного меню
 echo.	2. Удалить папку "Объемные объекты"
 echo.	3. Полностью отключить дефендер, smartscreen, эксплойты
@@ -597,7 +573,6 @@ goto RegEditWindows10Only
 
 
 :RegEditWindows11Only
-title .reg файлы для windows 11
 echo.	1. Пофиксить новое контекстное меню
 echo.	2. Удалить "Отправить" из контекстного меню
 echo.	3. Полностью отключить дефендер
@@ -633,7 +608,6 @@ goto RegEditWindows11Only
 
 
 :MmagentSetup
-title Настройка sysmain
 
 set _SystemPath=%SystemRoot:~0,-8%
 set par1=solid state device
@@ -652,7 +626,6 @@ If "%errorlevel%"=="1" (smartctl -i %_SystemPath% |>NUL find /i "%err2%")
 If "%errorlevel%"=="0" (goto :IdentityFailed) Else (goto :MmagentSetupHDD)
 
 :IdentityFailed
-title Ошибка в определении диска
 call :message "Ошибка в определении диска, проверьте его целостность и корректность работы"
 echo.	1. HDD..
 echo.	2. SSD..
@@ -666,14 +639,12 @@ if %_erl%==3 cls && call :message && goto :MainMenu
 goto IdentityFailed
 
 :MmagentSetupHDD
-title Настройка для HDD
 call :regEditImport "prefetcher 0" && cls && call :message "Настроено для HDD!" && goto MainMenu
 call :message "ОШИБКА!"
 Pause
 goto MainMenu
 
 :MmagentSetupSSD
-title Настройка для SSD
 call :regEditImport "prefetcher 3" 
 
 for /f %%a in ('powershell -command "(Get-WmiObject Win32_PhysicalMemory).capacity | Measure-Object -Sum | Foreach {[int]($_.Sum/1GB)}"') do (set _memory=%%a)
@@ -689,11 +660,9 @@ if %_mmMemory% LEQ 128 (
 )
 
 if %_build% GEQ 22000 (
-	title Настройка для SSD, windows 11
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "enable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
 	cls && call :message "Настроено для SSD, windows 11!" && goto MainMenu
 ) else (
-	title Настройка для SSD, windows 10
 	call :powershell "enable-mmagent -ApplicationPreLaunch" "disable-mmagent -MC" "disable-mmagent -PC" "set-mmagent -moaf %_mmMemory%"
 	cls && call :message "Настроено для SSD, windows 10!" && goto MainMenu
 )
@@ -704,7 +673,6 @@ if %_build% GEQ 22000 (
 
 
 :PowerSchemesMenu
-title Меню схем питания
 echo.	1. Импортировать схемы, выбрать нужную и удалить неиспользующиеся
 echo.	2. Импортировать схемы и выбрать нужную
 echo.	3. Удалить неиспользующиеся
@@ -762,7 +730,6 @@ goto :eof
 
 
 :ProgramDownload
-title Загрузка программ
 echo.	1. Библиотеки..
 echo.	2. Полезные программы..
 echo.	9. Вернуться в главное меню..
@@ -776,7 +743,6 @@ goto ProgramDownload
 
 
 :RuntimeMenu
-title Библиотеки
 echo.	1. Visual C++
 echo.	2. .Net
 echo.	3. DirectX
@@ -839,7 +805,6 @@ goto RuntimeMenu
 
 
 :klitecodecs
-title Полезные программы
 echo.	1. Basic
 echo.	2. Standard - Рекомендуется
 echo.	3. Full
@@ -873,7 +838,6 @@ goto klitecodecs
 
 
 :UsefullProgs
-title Полезные программы
 echo.	1. 7-zip
 echo.	2. Notepad++
 echo.	3. Autoruns
@@ -927,7 +891,6 @@ goto UsefullProgs
 
 
 :SecondUsefullProgs
-title Полезные программы
 echo.	1. Text-Grab
 echo.	2. qBittorent
 echo.	3. TranslucentTB
@@ -991,7 +954,6 @@ goto SecondUsefullProgs
 
 
 :ThirdUsefullProgs
-title Полезные программы
 echo.	1. ExplorerPatcher
 echo.	2. QEMU
 echo.	3. PowerToys
@@ -1108,7 +1070,6 @@ goto :eof
 
 
 :CheerUpAuthorMenu
-title Я старался!
 echo.	1. Скинуть смешную гифку ребятам из техношахты!
 echo.	2. Пощекотав кнопку подписки на youtube канале
 echo.
@@ -1131,32 +1092,127 @@ if %_erl%==5 cls && start https://boosty.to/vijor && call :message
 if %_erl%==6 cls && call :message && goto MainMenu
 goto CheerUpAuthorMenu
 
-::													Cleaner setup
+::													Localization
 :: ========================================================================================================
 :: Created by Vijorich
 
+:RU
+set MainMenu_CleanupMenu=Меню очистки..
+set MainMenu_RegSettingsMenu=Меню настроек реестра..
+set MainMenu_PowerSchemesMenu=Меню схем питания..
+set MainMenu_AdditionalSettingsMenu=Меню дополнительных настроек..
+set MainMenu_ConfigureMMAgent=Настроить mmagent..
+set MainMenu_DownloadInstallMenu=Скачать и установить программы..
+set MainMenu_Exit=Выйти из программы
+set MainMenu_SupportAuthorMenu=Поддержать автора!..
 
-:CleanerSetup
-SET FLAG=StateFlags0777 && SET REG_VALUE=00000002
-SET REG_LOC=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches
-Set "NUM_ENTRIES=0" && Set "LAST_ENTRY=0"
-SET VOLUME_LOCATIONS=("Active Setup Temp Folders", "Content Indexer Cleaner", "Downloaded Program Files", "Internet Cache Files", "Memory Dump Files", "Microsoft_Event_Reporting_2.0_Temp_Files", "Offline Pages Files", "Old ChkDsk Files", "Previous Installations", "Remote Desktop Cache Files", "ServicePack Cleanup", "Setup Log Files", "System error memory dump files", "System error minidump files", "Temporary Files", "Temporary Setup Files", "Temporary Sync Files", "Update Cleanup", "Upgrade Discarded Files", "WebClient and WebPublisher Cache", "Windows Defender", "Windows Error Reporting Archive Files", "Windows Error Reporting Queue Files", "Windows Error Reporting System Archive Files", "Windows Error Reporting System Queue Files", "Windows ESD installation files", "Windows Upgrade Log Files")
-for /F "delims=" %%i IN ('reg query "%REG_LOC%"') do set /a "NUM_ENTRIES+=1"
-FOR /F "delims=" %%G IN ('reg query "%REG_LOC%"') do (
-set /a "LAST_ENTRY+=1"
-Set DYNAMIC_ARRAY_VOLUMES=!DYNAMIC_ARRAY_VOLUMES!, "%%~nxG"
-Set DYNAMIC_ARRAY_VOLUMES[%%~nxG]=!LAST_ENTRY!
-if !LAST_ENTRY! == 1 Set DYNAMIC_ARRAY_VOLUMES="%%~nxG"
-if !LAST_ENTRY! == %NUM_ENTRIES% GOTO :ARRAY_BUILT
-)
-:ARRAY_BUILT
-echo. && echo (%DYNAMIC_ARRAY_VOLUMES%) && echo.
-SET OMITTED_LOCATIONS=("")
-for %%q in %OMITTED_LOCATIONS% do SET DYNAMIC_ARRAY_VOLUMES=!DYNAMIC_ARRAY_VOLUMES:%%q, =!
-for %%q in %OMITTED_LOCATIONS% do SET DYNAMIC_ARRAY_VOLUMES=!DYNAMIC_ARRAY_VOLUMES:, %%q=!
-echo The following would be a reduced list of locations: && echo (%DYNAMIC_ARRAY_VOLUMES%) && echo.
-for %%i in (%DYNAMIC_ARRAY_VOLUMES%) do (
-REG ADD "%REG_LOC%\%%~i" /v %FLAG% /t REG_DWORD /d %REG_VALUE% /f
-)
-cls
-goto :eof
+set AdditionalSettingsMenu_BackupStorage=Отключить резервное хранилище
+set AdditionalSettingsMenu_HibernationMode=Отключить режим гибернации
+set AdditionalSettingsMenu_WindgetsWWEP=Отключить виджеты (Windows Web Experience Pack)
+set AdditionalSettingsMenu_XboxOverlays=Отключить Xbox оверлеи
+set AdditionalSettingsMenu_NvidiaAnsel=Отключить Nvidia Ansel
+set AdditionalSettingsMenu_Return=Вернуться в главное меню
+
+set CleanupMenu_CleanupCheck=Нужна ли мне очистка?
+set CleanupMenu_Fast=Быстрая ~1min-5min
+set CleanupMenu_Recommended=Рекомендуемая ~5min-1hour
+set CleanupMenu_Return=Вернуться в главное меню
+set CleanupMenu_ReadMe=Прочитай меня.тхт
+
+set RegEditMenu_Recommended=Просто применить рекомендуемые настройки
+set RegEditMenu_FineTuning=Точечная настройка (для любой версии шиндус)
+set RegEditMenu_Win10Only=Только для 10 windows
+set RegEditMenu_Win11Only=Только для 11 windows
+set RegEditMenu_Return=Вернуться в главное меню!
+set RegEditMenu_ReadMe=Прочитай меня.тхт
+
+set RegEditMenuFirstPage_DefendOff=Отключение защиты Spectre, Meltdown и т.д
+set RegEditMenuFirstPage_UpdatesOff=Отключить все автообновления
+set RegEditMenuFirstPage_CompatibilityOff=Отключение компонентов совместимости
+set RegEditMenuFirstPage_BackgroundAppsOff=Отключение фоновых приложений
+set RegEditMenuFirstPage_FileSystemOptimization=Оптимизация файловой системы
+set RegEditMenuFirstPage_EnableLargesystemcache=Включить функцию largesystemcache
+set RegEditMenuFirstPage_GameBarOff=Отключение гейм бара
+set RegEditMenuFirstPage_NextPage=Следующая страница
+set RegEditMenuFirstPage_Return=Вернуться
+
+set RegEditMenuSecondPage_BackOldPhotoViewer=Возвращение старого просмотрщика фото
+set RegEditMenuSecondPage_RemoveShowingMenusDelay=Убрать задержку показа менюшек
+set RegEditMenuSecondPage_DisableWebSearchSearchMenu=Отключить веб поиск в меню поиска
+set RegEditMenuSecondPage_LowPriorityTasksReduce=Уменьшение процента используемых ресурсов для лоу-приорити задач
+set RegEditMenuSecondPage_DisableRecovery=Отключить точки восстановления
+set RegEditMenuSecondPage_RemoveModifyWithPaint3D=Убрать "Изменить с помощью Paint 3D"
+set RegEditMenuSecondPage_IncreaseGamesPriority=Увеличить приоритет для игр
+set RegEditMenuSecondPage_NextPage=Следующая страница
+set RegEditMenuSecondPage_PreviousPage=Предыдущая страница
+set RegEditMenuSecondPage_Return=Вернуться
+
+set RegEditMenuThirdPage_UseLatestVersionsNET=Использование только последних версий .NET
+set RegEditMenuThirdPage_SetPrefetchTwo=Поставить префетч в значение 2
+set RegEditMenuThirdPage_DisableEdgeBrowserAutoUpdate=Отключить службы автообновления и фоновых процессов Edge браузера
+set RegEditMenuThirdPage_DisableDisabilitiesSettings=Отключение настроек для людей с ограниченными возможностями
+set RegEditMenuThirdPage_PreviousPage=Предыдущая страница
+set RegEditMenuThirdPage_Return=Вернуться
+
+
+goto :EOF
+
+:EN
+set MainMenu_CleanupMenu=Cleanup Menu..
+set MainMenu_RegSettingsMenu=Registry settings menu..
+set MainMenu_PowerSchemesMenu=Power Schemes Menu..
+set MainMenu_AdditionalSettingsMenu=Additional settings menu..
+set MainMenu_ConfigureMMAgent=Configure mmagent..
+set MainMenu_DownloadInstallMenu=Download and install programs..
+set MainMenu_Exit=Exit
+set MainMenu_SupportAuthorMenu=Support Author!..
+
+set AdditionalSettingsMenu_BackupStorage=Отключить резервное хранилище
+set AdditionalSettingsMenu_HibernationMode=Отключить режим гибернации
+set AdditionalSettingsMenu_WindgetsWWEP=Отключить виджеты (Windows Web Experience Pack)
+set AdditionalSettingsMenu_XboxOverlays=Отключить Xbox оверлеи
+set AdditionalSettingsMenu_NvidiaAnsel=Отключить Nvidia Ansel
+set AdditionalSettingsMenu_Return=Вернуться в главное меню
+
+set CleanupMenu_CleanupCheck=Нужна ли мне очистка?
+set CleanupMenu_Fast=Быстрая ~1min-5min
+set CleanupMenu_Recommended=Рекомендуемая ~5min-1hour
+set CleanupMenu_Return=Вернуться в главное меню
+set CleanupMenu_ReadMe=Прочитай меня.тхт
+
+set RegEditMenu_Recommended=Просто применить рекомендуемые настройки
+set RegEditMenu_FineTuning=Точечная настройка (для любой версии шиндус)
+set RegEditMenu_Win10Only=Только для 10 windows
+set RegEditMenu_Win11Only=Только для 11 windows
+set RegEditMenu_Return=Вернуться в главное меню!
+set RegEditMenu_ReadMe=Прочитай меня.тхт
+
+set RegEditMenuFirstPage_DefendOff=Отключение защиты Spectre, Meltdown и т.д
+set RegEditMenuFirstPage_UpdatesOff=Отключить все автообновления
+set RegEditMenuFirstPage_CompatibilityOff=Отключение компонентов совместимости
+set RegEditMenuFirstPage_BackgroundAppsOff=Отключение фоновых приложений
+set RegEditMenuFirstPage_FileSystemOptimization=Оптимизация файловой системы
+set RegEditMenuFirstPage_EnableLargesystemcache=Включить функцию largesystemcache
+set RegEditMenuFirstPage_GameBarOff=Отключение гейм бара
+set RegEditMenuFirstPage_NextPage=Next page
+set RegEditMenuFirstPage_Return=Return
+
+set RegEditMenuSecondPage_BackOldPhotoViewer=Return old photo viewer
+set RegEditMenuSecondPage_RemoveShowingMenusDelay=Remove the delay in showing menus
+set RegEditMenuSecondPage_DisableWebSearchSearchMenu=Disable web search in the search menu
+set RegEditMenuSecondPage_LowPriorityTasksReduce=Reduce the percentage of resources used for low-priority tasks
+set RegEditMenuSecondPage_DisableRecovery=Disable recovery points
+set RegEditMenuSecondPage_RemoveModifyWithPaint3D=Remove "Modify with Paint 3D".
+set RegEditMenuSecondPage_IncreaseGamesPriority=Increase priority for games
+set RegEditMenuSecondPage_NextPage=Next page
+set RegEditMenuSecondPage_PreviousPage=Previous page
+set RegEditMenuSecondPage_Return=Return
+
+set RegEditMenuThirdPage_UseLatestVersionsNET=Use only the latest versions of .NET
+set RegEditMenuThirdPage_SetPrefetchTwo=Set prefetch to 2
+set RegEditMenuThirdPage_DisableEdgeBrowserAutoUpdate=Disable the Edge browser's auto-update and Edge background process services
+set RegEditMenuThirdPage_DisableDisabilitiesSettings=Disable settings for people with disabilities
+set RegEditMenuThirdPage_PreviousPage=Previous page
+set RegEditMenuThirdPage_Return=Return
+
+goto :EOF
