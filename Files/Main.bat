@@ -2,7 +2,7 @@
 @setlocal enabledelayedexpansion
 @chcp 65001 >nul
 
-set _version=1.8.5
+set _version=1.8.6
 verify on
 cd /d "%~dp0"
 
@@ -349,23 +349,21 @@ call :message && goto RegEditFirstPage
 
 :RegEditFullReg
 if %_build% GEQ 22000 (
-	call :regEditImport "\Windows 11 Only\win11contextmenu" "\Windows 11 Only\win11shareitem"
+	call :regEditImport "\Windows 11 Only\win11shareitem"
 	call :regEditTrustedImport "\Windows 11 Only\win11defenderX"
 	call :batTrustedImport "\Windows 11 Only\win11defsubsvcX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы для шиндус 11!" && goto MainMenu
 ) else (
-	call :regEditImport "\Windows 10 Only\win10folder3d" "\Windows 10 Only\win10networkwizard" "\Windows 10 Only\win10shareitem" "\Windows 10 Only\win10showsecondsinsystemclock"
+	call :regEditImport "\Windows 10 Only\win10folder3d" "\Windows 10 Only\win10networkwizard" "\Windows 10 Only\win10shareitem"
     call :regEditTrustedImport "\Windows 10 Only\win10defenderX"
 	call :regEditFullRegForAll
 	cls && call :message "Применил общие .рег файлы для шиндус 10!" && goto MainMenu
 )
 
 :regEditFullRegForAll
-call :regEditImport "appcompatibility" "attachmentmanager" "backgroundapps" "filesystem" "explorer" "driversearching" "cloudcontent"
-call :regEditImport "responsiveness" "search" "menushowdelay" "maintenance" "latestclr" "inspectre" "gamebar" "3dedit"
-call :regEditImport "uac" "priority" "systemrestore" "accessibility"
-call :regEditTrustedImport "foldernetworkX"
+call :regEditImport "accessibility" "appcompatibility" "attachmentmanager" "backgroundapps" "cloudcontent" "driversearching" "inspectre" "latestclr" "priority"
+call :regEditImport "responsiveness" "search" "systemrestore" "3dedit" "menushowdelay"
 goto :eof
 
 
