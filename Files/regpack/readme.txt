@@ -1,5 +1,5 @@
 
-|regpack-1.54
+|regpack-1.55
 
 Пак с .reg файлами для базовой оптимизации реестра Windows 10 и 11
 Используйте папку «Restore» чтобы восстановить применённые .reg файлики
@@ -34,6 +34,7 @@ https://github.com/donkrage/regpack
 |win10defenderX.reg - полное отключение Windows Defender, его служб и эксплойтов
 |win11defenderX.reg - полное отключение Windows Defender, его служб и эксплойтов
 |win11defsubsvcX.bat - определяет под-службу Defender с уникальным ID и отключает её. Нужно применять для полного отключения Windows Defender
+|win11widgets.reg - отключение Виджетов и Copilot
 
 Explorer
 |3dedit.reg - убирает пункт «Изменить с помощью Paint 3D» из контекстного меню

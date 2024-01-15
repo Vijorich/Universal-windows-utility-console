@@ -23,6 +23,10 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\kernel]
 "MitigationAuditOptions"=hex:00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
 "MitigationOptions"=hex:22,22,22,00,00,02,00,00,00,02,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MDCoreSvc]
+"ErrorControl"=dword:0
+"LaunchProtected"=dword:4
+"Start"=dword:4
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SecurityHealthService]
 "ErrorControl"=dword:0
 "LaunchProtected"=dword:4
