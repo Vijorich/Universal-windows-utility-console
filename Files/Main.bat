@@ -6,6 +6,16 @@ set _version=1.8.6
 verify on
 cd /d "%~dp0"
 
+:: Запрос запуска от имени админа
+fltmc >nul 2>&1 || (
+    echo Administrator privileges are required.
+    PowerShell Start -Verb RunAs '%0' 2> nul || (
+        echo Right-click on the script and select "Run as administrator".
+        pause & exit 1
+    )
+    exit 0
+)
+setlocal EnableExtensions DisableDelayedExpansion
 
 ::													Startup check
 :: ========================================================================================================
@@ -182,9 +192,11 @@ echo.	3. Отключить виджеты (Windows Web Experience Pack)
 echo.	4. Отключить Xbox оверлеи
 echo.	5. Отключить Nvidia Ansel
 echo.	6. Активировать Windows (massgrave)
+echo.	7. Проверить файловую систему (компьютер сразу перезагрузится)
+
 echo.	9. Вернуться в главное меню
 call :message
-choice /C:1234569 /N
+choice /C:12345679 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto offReservedStorage
 if %_erl%==2 cls && powercfg -h off && call :message "Режим гибернации отключен"
@@ -192,7 +204,8 @@ if %_erl%==3 cls && goto offWindowsWebExperiencePack
 if %_erl%==4 cls && goto offXboxOverlays
 if %_erl%==5 cls && goto offNvidiaAnsel
 if %_erl%==6 cls && goto massgrave
-if %_erl%==7 cls && call :message && goto MainMenu
+if %_erl%==7 cls && goto checkdsk
+if %_erl%==8 cls && call :message && goto MainMenu
 goto :AdditionalSettingsMenu
 
 :offReservedStorage
@@ -232,6 +245,10 @@ goto :AdditionalSettingsMenu
 PowerShell -Command "irm https://massgrave.dev/get | iex"
 goto :AdditionalSettingsMenu
 
+:checkdsk
+echo Y | chkdsk /f /r /b
+shutdown /r
+
 
 ::													Cleanup Menu
 :: ========================================================================================================
@@ -242,16 +259,18 @@ goto :AdditionalSettingsMenu
 echo.	1. Нужна ли мне очистка?
 echo.	2. Быстрая ~1min-5min
 echo.	3. Рекомендуемая ~5min-1hour
+echo.	4. Максимальная (эксперементальная)
 echo.	9. Вернуться в главное меню
 echo.	0. Прочитай меня.тхт
 call :message
-choice /C:12390 /N
+choice /C:123490 /N
 set _erl=%errorlevel%
 if %_erl%==1 cls && goto checkUp
 if %_erl%==2 cls && goto fastCleanup
 if %_erl%==3 cls && goto recommendedCleanup
-if %_erl%==4 cls && call :message && goto MainMenu
-if %_erl%==5 cls && goto cleanupInfo
+if %_erl%==4 cls && goto maxCleanup
+if %_erl%==5 cls && call :message && goto MainMenu
+if %_erl%==6 cls && goto cleanupInfo
 goto CleanupMenu
 
 :cleanupInfo
@@ -271,9 +290,9 @@ call :message "Чищу, чищу, чищу"
 call :delete %Temp%
 call :delete %WINDIR%\Temp
 call :delete %SYSTEMDRIVE%\Temp
-del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
-del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
-del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
+del /F /S /Q %SYSTEMDRIVE%\*.log
+del /F /S /Q %SYSTEMDRIVE%\*.bak
+del /F /S /Q %SYSTEMDRIVE%\*.gid
 start /min /wait WSReset.exe >nul 2>&1
 taskkill /f /im WinStore.App.exe >nul 2>&1
 endlocal
@@ -296,9 +315,7 @@ call :delete %UserProfile%\AppData\Local\Microsoft\Windows\IEDownloadHistory
 call :delete %UserProfile%\AppData\Local\Microsoft\Windows\INetCache
 call :delete %UserProfile%\AppData\Local\Microsoft\Windows\INetCookies
 call :delete %UserProfile%\AppData\Local\Microsoft\Terminal Server Client\Cache
-net stop wuauserv >nul
-call :delete %WINDIR%\SoftwareDistribution\Download
-net start wuauserv >nul
+net stop wuauserv >nul && call :delete %WINDIR%\SoftwareDistribution\Download && net start wuauserv >nul
 del /F /S /Q %SYSTEMDRIVE%\*.log >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.bak >nul 2>&1
 del /F /S /Q %SYSTEMDRIVE%\*.gid >nul 2>&1
@@ -314,11 +331,14 @@ ipconfig /renew >nul 2>&1
 Dism /online /Cleanup-Image /StartComponentCleanup /ResetBase >nul 2>&1
 Dism /online /Cleanup-Image /SPSuperseded >nul 2>&1
 vssadmin delete shadows /all /quiet >nul 2>&1
-echo Y | chkdsk /f /r /b
-shutdown /r /t 60 /c "Через минуту перезагрузка, сохраните все данные!"
 endlocal
-exit
+cls
+call :message "Готово!" && goto MainMenu
 
+:maxCleanup
+call maxCleanup.bat
+cls
+call :message "Готово!" && goto MainMenu
 
 ::													Reg Edit Menu
 :: ========================================================================================================
@@ -1003,6 +1023,10 @@ goto :eof
 
 :delete
 pushd "%~1" 2>nul && ( rd /Q /S . 2>nul & popd )
+goto :eof
+
+:TestDelete
+pushd "%~1" 2>nul  && ( rd /Q /S . 2>nul & popd )
 goto :eof
 
 :wingetInstall
