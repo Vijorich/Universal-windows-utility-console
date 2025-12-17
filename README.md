@@ -1,3 +1,6 @@
+> [!CAUTION]
+> Обновлений больше не будет, как и поддержки. Не рекомендую более пользоваться этой программой, она устаревшая и может принести только вред.
+
 <p align="center">
 <picture>
  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Vijorich/universal-windows-utility/main/.github/images/UWU_Logo_Light.svg">
@@ -28,10 +31,10 @@
 ## Функционал
 - Проверка надобности в очистке для вашего пк.
 - 2 варианта очистки.
-- Автоматическое и точечное применение .reg файлов из репозитория [📘Regpack](https://github.com/donkrage/regpack).
+- Автоматическое и точечное применение .reg файлов.
 - Отключение резервного хранилища, режима гибернации, виджетов Windows Web Experience Pack, Xbox оверлея и Nvidia Ansel.
 - Автоматическая настройка mmagent'а, для вашего ssd или hdd.
-- Импорт схем питания из дискорд канала [🔋Схемы питания](https://discord.com/channels/1231680327337115799/1253512045790363718) и удаление не использующихся.
+- Импорт схем питания.
 - Скачивание софта и библиотек 
 
 <div align="right"> 
